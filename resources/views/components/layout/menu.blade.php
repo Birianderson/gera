@@ -14,7 +14,14 @@
                     <i class="fa fa-person"></i>
                   </span>
                 <span class="menu-title">Minha Conta</span>
-
+            </a>
+        </li>
+        <li class="menu-item @if(str_contains(request()->route()->getName(), 'pessoa')) active @endif">
+            <a href="{{route('pessoa.index')}}">
+                  <span class="menu-icon">
+                    <i class="fa fa-people-group"></i>
+                  </span>
+                <span class="menu-title">Pessoas</span>
             </a>
         </li>
         <li class="menu-item sub-menu @if(str_contains(request()->route()->getName(), 'competencia') || str_contains(request()->route()->getName(), 'usuario')) open @endif">
