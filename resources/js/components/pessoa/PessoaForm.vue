@@ -6,9 +6,43 @@
 
                 <div class="col-lg-6 col-md-6 mb-3">
                     <label for="cpf" class="form-label required">CPF/CNPJ</label>
-                    <input v-model="info.cpf" required type="text" name="cpf" id="cpf" class="form-control" :disabled="readOnly" />
+                    <div class="input-group">
+                        <input
+                            v-model="info.cpf"
+                            required
+                            type="text"
+                            name="cpf_find"
+                            id="cpf_find"
+                            v-mask="['###.###.###-##', '##.###.###/####-##']"
+                            class="form-control"
+                            :disabled="cpfSearched !== 0"
+                        />
+                        <input
+                            v-model="info.cpf"
+                            required
+                            type="hidden"
+                            name="cpf"
+                            id="cpf"
+                        />
+                        <button
+                            type="button"
+                            :disabled="cpfSearched === 1 || cpfSearched === 2 || info.cpf.length !== 14 && info.cpf.length !== 18"
+                            :class="{'btn btn-primary': cpfSearched === 0, 'btn btn-success': cpfSearched === 2 , 'btn btn-warning': cpfSearched === 1}"
+                            @click="cpfSearched  ? enableForm() : findCPF()"
+                        >
+                            <i class="fa"  :class="{'fa-search': cpfSearched === 0, 'fa-check': cpfSearched === 2 , 'fa-warning': cpfSearched === 1}"></i>
+                            {{ cpfSearched === 0 ? 'Buscar' : cpfSearched === 2 ? 'Liberado' : 'Cadastrado' }}
+                        </button>
+                        <button
+                            v-if="cpfSearched === 1 || cpfSearched === 2"
+                            type="button"
+                            class="btn btn-secondary"
+                            @click="resetForm"
+                        >
+                            <i class="fa fa-trash"></i> Limpar
+                        </button>
+                    </div>
                 </div>
-
                 <div class="col-lg-6 col-md-6 mb-3">
                     <label for="nome" class="form-label required">Nome</label>
                     <input v-model="info.nome" required type="text" name="nome" id="nome" class="form-control" :disabled="readOnly" />
@@ -21,7 +55,7 @@
 
                 <div class="col-lg-6 col-md-6 mb-3">
                     <label for="renda" class="form-label">Renda</label>
-                    <input v-model="info.renda" type="text" name="renda" id="renda" class="form-control" :disabled="readOnly" />
+                    <input-money id="valor" name="valor" :value="info.renda"></input-money>
                 </div>
 
                 <div class="col-lg-6 col-md-6 mb-3">
@@ -36,12 +70,12 @@
 
                 <div class="col-lg-6 col-md-6 mb-3">
                     <label for="telefone" class="form-label">Telefone</label>
-                    <input v-model="info.telefone" type="text" name="telefone" id="telefone" class="form-control" :disabled="readOnly" />
+                    <input v-model="info.telefone"  type="text" name="telefone" id="telefone" class="form-control"  v-mask="'(##) #####-####'" :disabled="readOnly" />
                 </div>
 
                 <div class="col-lg-6 col-md-6 mb-3">
                     <label for="registro_geral" class="form-label">Registro Geral</label>
-                    <input v-model="info.registro_geral" type="number" name="registro_geral" id="registro_geral" class="form-control" :disabled="readOnly" />
+                    <input v-model="info.registro_geral"  type="text" name="registro_geral" id="registro_geral" v-mask="'#######-#'" class="form-control" :disabled="readOnly" />
                 </div>
 
                 <div class="col-lg-6 col-md-6 mb-3">
@@ -111,7 +145,7 @@
 </template>
 
 <script>
-import { inject, onMounted, ref } from 'vue';
+import { inject, onMounted, ref, computed } from 'vue';
 
 export default {
     setup(props, { emit }) {
@@ -121,17 +155,19 @@ export default {
         const acao = ref('/pessoa/');
         const checkedFalecida = ref(false);
         const checkedUniaoEstavel = ref(false);
-        const readOnly = ref(false);
+        const readOnly = ref(true);
+        const cpfSearched = ref(0);
 
         const loadData = async () => {
             try {
                 const response = await axios.get(`${acao.value}${props.data.id}`);
                 acao.value += props.data.id;
                 info.value = response.data;
-                if(info.value.falecida === '1') {
+                console.log(info.value)
+                if (info.value.falecida === '1') {
                     checkedFalecida.value = true;
                 }
-                if(info.value.uniao_estavel === '1') {
+                if (info.value.uniao_estavel === '1') {
                     checkedUniaoEstavel.value = true;
                 }
                 readOnly.value = Boolean(props.data.readOnly);
@@ -143,6 +179,53 @@ export default {
             }
             ready.value = true;
         }
+
+        const resetForm = () => {
+            info.value = {};
+            info.value.cpf = '';
+            checkedFalecida.value = false;
+            checkedUniaoEstavel.value = false;
+            cpfSearched.value = 0;
+            readOnly.value = true;
+        };
+
+        const isCPFComplete = computed(() => {
+            if (info.value.cpf) {
+                return info.value.cpf.length === 14 || info.value.cpf.length === 18;
+            }
+            return false;
+        });
+
+        const findCPF = async () => {
+            try {
+                const cpfNumeros = info.value.cpf.replace(/\D/g, '');
+                const response = await axios.get(`/pessoa/findCPF/${cpfNumeros}`);
+                if (response.data.id) {
+                    info.value = response.data;
+                    if (info.value.falecida === '1') {
+                        checkedFalecida.value = true;
+                    }
+                    if (info.value.uniao_estavel === '1') {
+                        checkedUniaoEstavel.value = true;
+                    }
+                    cpfSearched.value = 1; // CPF found, disable inputs
+                    readOnly.value = true;
+                } else {
+                    cpfSearched.value = 2; // CPF not found, enable inputs
+                    readOnly.value = false;
+                }
+            } catch (err) {
+                emit('notification', {
+                    type: 'error',
+                    message: 'Erro ao buscar CPF/CNPJ.'
+                });
+            }
+        };
+
+        const enableForm = () => {
+            cpfSearched.value = false;
+            readOnly.value = false;
+        };
 
         const close = () => {
             events.emit('popup-close', true);
@@ -160,7 +243,7 @@ export default {
                     emit('close', true);
                 }
             });
-            console.log(props.data,'anus')
+            info.value.cpf = ''
             if (props.data) {
                 await loadData();
             } else {
@@ -170,13 +253,13 @@ export default {
         });
 
         return {
-            info, ready, acao, checkedFalecida,checkedUniaoEstavel, readOnly, close
+            info, ready, acao, checkedFalecida, checkedUniaoEstavel, readOnly, close,enableForm, findCPF, cpfSearched, isCPFComplete, resetForm
         }
 
     },
 
     props: {
-        data: { default: null, required: true },
+        data: {default: null, required: true},
     }
 
 }

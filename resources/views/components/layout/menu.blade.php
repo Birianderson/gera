@@ -8,14 +8,6 @@
                 <span class="menu-title">Home</span>
             </a>
         </li>
-        <li class="menu-item @if(str_contains(request()->route()->getName(), 'minha_conta')) active @endif">
-            <a href="#">
-                  <span class="menu-icon">
-                    <i class="fa fa-person"></i>
-                  </span>
-                <span class="menu-title">Minha Conta</span>
-            </a>
-        </li>
         <li class="menu-item @if(str_contains(request()->route()->getName(), 'pessoa')) active @endif">
             <a href="{{route('pessoa.index')}}">
                   <span class="menu-icon">
@@ -33,19 +25,12 @@
             </a>
             <div class="sub-menu-list ">
                 <ul>
-                    <li class="menu-item">
+                    <li class="menu-item @if(str_contains(request()->route()->getName(), 'minha_conta')) active @endif">
                         <a href="#">
-                            <span class="menu-title">Entidades</span>
-                        </a>
-                    </li>
-                    <li class="menu-item @if(str_contains(request()->route()->getName(), 'usuario')) active @endif" >
-                        <a href="#">
-                            <span class="menu-title">Usuários</span>
-                        </a>
-                    </li>
-                    <li class="menu-item @if(str_contains(request()->route()->getName(), 'competencia')) active @endif" >
-                        <a href="#">
-                            <span class="menu-title">Competência</span>
+                  <span class="menu-icon">
+                    <i class="fa fa-person"></i>
+                  </span>
+                            <span class="menu-title">Minha Conta</span>
                         </a>
                     </li>
                 </ul>

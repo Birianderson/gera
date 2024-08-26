@@ -75,6 +75,17 @@ class PessoaController extends Controller
      * @param int $id
      * @return JsonResponse
      */
+    public function findCPF(string $cpf): JsonResponse
+    {
+        $categoria = $this->PessoaRepository->getByCPF($cpf);
+        return response()->json($categoria);
+    }
+
+    /**
+     * Editar Unidade de Atendimento
+     * @param int $id
+     * @return JsonResponse
+     */
     public function edit(int $id): JsonResponse
     {
         $categoria = $this->PessoaRepository->getById($id);

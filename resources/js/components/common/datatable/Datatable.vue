@@ -253,6 +253,7 @@ export default defineComponent({
                 if (filters.hasOwnProperty(p) && filters[p] !== null) {
                     if(typeof filters[p] === 'object') {
                         filters[p].map(filterItem => {
+
                             str.push(encodeURIComponent(p) + "=" + encodeURIComponent(filterItem));
                         })
                     } else {

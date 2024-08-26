@@ -24,6 +24,19 @@ class PessoaRepository implements PessoaContract
      * @param int $id
      * @return Model
      */
+    public function getByCPF(string $cpf): Model|null
+    {
+
+        return Pessoa::query()
+            ->where('cpf', '=', $cpf)
+            ->first();
+    }
+
+    /**
+     * Busca 1 registro de Unidade de Atendimento
+     * @param int $id
+     * @return Model
+     */
     public function getById(int $id): Model
     {
 
@@ -82,6 +95,9 @@ class PessoaRepository implements PessoaContract
     {
         $autoCommit && DB::beginTransaction();
         try {
+            $params['cpf'] = preg_replace('/\D/', '', $params['cpf']);
+            $params['registro_geral'] = preg_replace('/\D/', '', $params['registro_geral']);
+            $params['telefone'] = preg_replace('/\D/', '', $params['telefone']);
             $Pessoa = new Pessoa([
                 'nome' => $params['nome'],
                 'profissao' => $params['profissao'],

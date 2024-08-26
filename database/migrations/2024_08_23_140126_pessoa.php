@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nome_mae')->nullable();
             $table->string('telefone')->nullable();
             $table->string('cpf');
+            $table->float('renda');
             $table->string('registro_geral')->nullable();
             $table->string('orgao_expedidor')->nullable();
             $table->string('nacionalidade')->nullable();

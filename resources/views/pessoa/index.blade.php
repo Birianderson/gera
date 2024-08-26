@@ -8,7 +8,7 @@
             <div class="d-flex">
                 <div class="ms-2">
                     <popup-button id="nova-pessoa" title="Nova Pessoa"
-                                  component="pessoa-form" action="/pessoa/" size="lg">
+                                  component="pessoa-form" action="/pessoa/" size="xl">
                         <i class="fa fa-plus"></i>
                         Nova Pessoa
                     </popup-button>

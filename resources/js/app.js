@@ -1,5 +1,5 @@
 import './bootstrap.js';
-
+import VueTheMask from 'vue-the-mask'
 import { createApp, defineAsyncComponent } from 'vue/dist/vue.esm-bundler';
 import { createPinia } from 'pinia';
 import mitt from 'mitt';
@@ -15,6 +15,7 @@ Object.entries(components).forEach(([path, definition]) => {
     }
 })
 
+app.use(VueTheMask);
 app.use(Toast, {});
 app.use(pinia);
 app.config.globalProperties.$events = mitt();
