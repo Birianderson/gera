@@ -3,9 +3,9 @@
         <li class="menu-item">
             <a href="#">
                   <span class="menu-icon">
-                    <i class="fa fa-home"></i>
+                    <i class="fa fa-chart-pie"></i>
                   </span>
-                <span class="menu-title">Home</span>
+                <span class="menu-title">Dashboard</span>
             </a>
         </li>
         <li class="menu-item @if(str_contains(request()->route()->getName(), 'pessoa')) active @endif">
@@ -14,6 +14,14 @@
                     <i class="fa fa-people-group"></i>
                   </span>
                 <span class="menu-title">Pessoas</span>
+            </a>
+        </li>
+        <li class="menu-item @if(str_contains(request()->route()->getName(), 'imovel')) active @endif">
+            <a href="{{route('imovel.index')}}">
+                  <span class="menu-icon">
+                    <i class="fa fa-home"></i>
+                  </span>
+                <span class="menu-title">Imóveis</span>
             </a>
         </li>
         <li class="menu-item sub-menu @if(str_contains(request()->route()->getName(), 'competencia') || str_contains(request()->route()->getName(), 'usuario')) open @endif">
