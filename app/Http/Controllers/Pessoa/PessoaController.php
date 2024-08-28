@@ -56,6 +56,7 @@ class PessoaController extends Controller
         ];
         return response()->json($dados);
     }
+
     /**
      * Criar Unidade de Atendimento
      * @param PessoaRequest $request
@@ -115,7 +116,6 @@ class PessoaController extends Controller
     }
 
 
-
     /**
      * Atualizar Unidade de Atendimento
      * @param PessoaRequest $request
@@ -137,10 +137,7 @@ class PessoaController extends Controller
      */
     public function delete(int $id): JsonResponse
     {
-        DB::transaction(function () use ($id) {
-            $this->PessoaRepository->destroy($id);
-            $this->PessoaRepository->updateOrderAfterDeletion();
-        });
+        $this->PessoaRepository->destroy($id);
 
         return response()->json('success');
     }

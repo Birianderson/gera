@@ -3,11 +3,13 @@ namespace App\Databases\Repositories;
 
 use App\Databases\Contracts\ImovelContract;
 use App\Databases\Models\Imovel;
+use App\Imports\ExcelImport;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ImovelRepository implements ImovelContract
 {
@@ -205,23 +207,6 @@ class ImovelRepository implements ImovelContract
         return true;
     }
 
-    /**
-     * Ordenar ao deletar Unidade de Atendimento
-     * @return void
-     */
-    public function updateOrderAfterDeletion(): void
-    {
-        $unidades = Imovel::query()
-            ->orderBy('ordem')
-            ->get();
-
-        $ordem = 1;
-        foreach ($unidades as $unidade) {
-            $unidade->ordem = $ordem;
-            $unidade->save();
-            $ordem++;
-        }
-    }
 
     /**
      * Busca todas Unidade de Atendimento para componente de ordenação
@@ -237,15 +222,11 @@ class ImovelRepository implements ImovelContract
      * @param array $data
      * @throws Exception
      */
-    public function saveOrder(array $data): void
+    public function upload(array $data): void
     {
         DB::beginTransaction();
         try {
-            foreach ($data as $index => $item) {
-                $this->model::query()->orderBy('ordem')->where('id', '=', $item['id'])->update([
-                    'ordem' => $index + 1
-                ]);
-            }
+            Excel::import(new ExcelImport, $data['file']);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollBack();

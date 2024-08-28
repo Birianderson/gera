@@ -107,11 +107,11 @@ class ImovelController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function salvarOrdem(Request $request): JsonResponse
+    public function upload(Request $request): JsonResponse
     {
         $data = $request->all();
-        $this->ImovelRepository->saveOrder($data);
-        return response()->json([]);
+        $this->ImovelRepository->upload($data);
+        return response()->json(['message' => 'File imported successfully'], 200);
     }
 
 

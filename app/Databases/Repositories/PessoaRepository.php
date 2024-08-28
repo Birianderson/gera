@@ -112,7 +112,6 @@ class PessoaRepository implements PessoaContract
                 'orgao_expedidor' => $params['orgao_expedidor'],
                 'nacionalidade' => $params['nacionalidade'],
                 'falecida' => $params['falecida'] ?? 0,
-
             ]);
             $Pessoa->save();
 
