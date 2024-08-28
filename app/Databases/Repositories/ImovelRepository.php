@@ -1,21 +1,23 @@
 <?php
 namespace App\Databases\Repositories;
 
-use App\Databases\Contracts\PessoaContract;
-use App\Databases\Models\Pessoa;
+use App\Databases\Contracts\ImovelContract;
+use App\Databases\Models\Imovel;
+use App\Imports\ExcelImport;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Maatwebsite\Excel\Facades\Excel;
 
-class PessoaRepository implements PessoaContract
+class ImovelRepository implements ImovelContract
 {
     /**
      * Constructor
-     * @param Pessoa $model
+     * @param Imovel $model
      */
-    public function __construct(private Pessoa $model)
+    public function __construct(private Imovel $model)
     {
     }
 
@@ -27,7 +29,7 @@ class PessoaRepository implements PessoaContract
     public function getByCPF(string $cpf): Model|null
     {
 
-        return Pessoa::query()
+        return Imovel::query()
             ->where('cpf', '=', $cpf)
             ->first();
     }
@@ -40,7 +42,7 @@ class PessoaRepository implements PessoaContract
     public function getById(int $id): Model
     {
 
-        return Pessoa::query()
+        return Imovel::query()
             ->where('id', '=', $id)
             ->firstOrFail();
     }
@@ -51,7 +53,7 @@ class PessoaRepository implements PessoaContract
      */
     public function getAll(): Collection
     {
-        return Pessoa::query()->get();
+        return Imovel::query()->get();
     }
 
     /**
@@ -62,7 +64,7 @@ class PessoaRepository implements PessoaContract
      */
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
-        $query = Pessoa::query();
+        $query = Imovel::query();
 
         if (isset($pagination['nome'])) {
             $keyword = mb_strtolower($pagination['nome']);
@@ -95,25 +97,35 @@ class PessoaRepository implements PessoaContract
     {
         $autoCommit && DB::beginTransaction();
         try {
-            $params['cpf'] = preg_replace('/\D/', '', $params['cpf']);
-            $params['registro_geral'] = preg_replace('/\D/', '', $params['registro_geral']);
-            $params['telefone'] = preg_replace('/\D/', '', $params['telefone']);
-            $Pessoa = new Pessoa([
-                'nome' => $params['nome'],
-                'profissao' => $params['profissao'],
-                'estado_civil' => $params['estado_civil'],
-                'regime_casamento' => $params['regime_casamento'] ?? 0,
-                'uniao_estavel' => $params['uniao_estavel'] ?? 0,
-                'nome_pai' => $params['nome_pai'],
-                'nome_mae' => $params['nome_mae'],
-                'telefone' => $params['telefone'],
-                'cpf' => $params['cpf'],
-                'registro_geral' => $params['registro_geral'],
-                'orgao_expedidor' => $params['orgao_expedidor'],
-                'nacionalidade' => $params['nacionalidade'],
-                'falecida' => $params['falecida'] ?? 0,
+            $Imovel = new Imovel([
+                'municipio' => $params['municipio'],
+                'loteamento' => $params['loteamento'],
+                'quadra' => $params['quadra'],
+                'lote' => $params['lote'],
+                'casa' => $params['casa'],
+                'inscricao_imobiliaria' => $params['inscricao_imobiliaria'],
+                'matricula_reurb' => $params['matricula_reurb'],
+                'area' => $params['area'],
+                'area_construida' => $params['area_construida'],
+                'perimetro' => $params['perimetro'],
+                'medida_frente' => $params['medida_frente'],
+                'medida_fundo' => $params['medida_fundo'],
+                'medida_lado_direito' => $params['medida_lado_direito'],
+                'medida_lado_esquerdo' => $params['medida_lado_esquerdo'],
+                'confinante_frente' => $params['confinante_frente'],
+                'confinante_fundo' => $params['confinante_fundo'],
+                'confinante_lado_direito' => $params['confinante_lado_direito'],
+                'confinante_lado_esquerdo' => $params['confinante_lado_esquerdo'],
+                'valor_venal' => $params['valor_venal'],
+                'valor_terreno' => $params['valor_terreno'],
+                'valor_construcao' => $params['valor_construcao'],
+                'numero_processo_administrativo' => $params['numero_processo_administrativo'],
+                'prefixo_titulo' => $params['prefixo_titulo'],
+                'ano_titulo' => $params['ano_titulo'],
+                'numero_titulo' => $params['numero_titulo'],
             ]);
-            $Pessoa->save();
+
+            $Imovel->save();
 
             $autoCommit && DB::commit();
             return true;
@@ -135,12 +147,35 @@ class PessoaRepository implements PessoaContract
     {
         $autoCommit && DB::beginTransaction();
         try {
-            if (!isset($params['ativo'])) {
-                $params['ativo'] = 0;
-            }
 
-            $competencia = $this->getById($id);
-            $competencia->update($params);
+            $imovel = $this->getById($id);
+            $imovel->update([
+                'municipio' => $params['municipio'],
+                'loteamento' => $params['loteamento'],
+                'quadra' => $params['quadra'],
+                'lote' => $params['lote'],
+                'casa' => $params['casa'],
+                'inscricao_imobiliaria' => $params['inscricao_imobiliaria'],
+                'matricula_reurb' => $params['matricula_reurb'],
+                'area' => $params['area'],
+                'area_construida' => $params['area_construida'],
+                'perimetro' => $params['perimetro'],
+                'medida_frente' => $params['medida_frente'],
+                'medida_fundo' => $params['medida_fundo'],
+                'medida_lado_direito' => $params['medida_lado_direito'],
+                'medida_lado_esquerdo' => $params['medida_lado_esquerdo'],
+                'confinante_frente' => $params['confinante_frente'],
+                'confinante_fundo' => $params['confinante_fundo'],
+                'confinante_lado_direito' => $params['confinante_lado_direito'],
+                'confinante_lado_esquerdo' => $params['confinante_lado_esquerdo'],
+                'valor_venal' => $params['valor_venal'],
+                'valor_terreno' => $params['valor_terreno'],
+                'valor_construcao' => $params['valor_construcao'],
+                'numero_processo_administrativo' => $params['numero_processo_administrativo'],
+                'prefixo_titulo' => $params['prefixo_titulo'],
+                'ano_titulo' => $params['ano_titulo'],
+                'numero_titulo' => $params['numero_titulo'],
+            ]);
 
             $autoCommit && DB::commit();
             return true;
@@ -161,8 +196,8 @@ class PessoaRepository implements PessoaContract
     {
         $autoCommit && DB::beginTransaction();
         try {
-            $Pessoa = $this->getById($id);
-            $Pessoa->delete();
+            $Imovel = $this->getById($id);
+            $Imovel->delete();
             $autoCommit && DB::commit();
         } catch (Exception $ex) {
             $autoCommit && DB::rollBack();
@@ -172,23 +207,6 @@ class PessoaRepository implements PessoaContract
         return true;
     }
 
-    /**
-     * Ordenar ao deletar Unidade de Atendimento
-     * @return void
-     */
-    public function updateOrderAfterDeletion(): void
-    {
-        $unidades = Pessoa::query()
-            ->orderBy('ordem')
-            ->get();
-
-        $ordem = 1;
-        foreach ($unidades as $unidade) {
-            $unidade->ordem = $ordem;
-            $unidade->save();
-            $ordem++;
-        }
-    }
 
     /**
      * Busca todas Unidade de Atendimento para componente de ordenação
@@ -196,7 +214,7 @@ class PessoaRepository implements PessoaContract
      */
     public function getAllOrdem(): Collection
     {
-        return Pessoa::query()->orderBy('ordem')->get(['id', 'nome_unidade as name', 'ordem']);
+        return Imovel::query()->orderBy('ordem')->get(['id', 'nome_unidade as name', 'ordem']);
     }
 
     /**
@@ -204,15 +222,11 @@ class PessoaRepository implements PessoaContract
      * @param array $data
      * @throws Exception
      */
-    public function saveOrder(array $data): void
+    public function upload(array $data): void
     {
         DB::beginTransaction();
         try {
-            foreach ($data as $index => $item) {
-                $this->model::query()->orderBy('ordem')->where('id', '=', $item['id'])->update([
-                    'ordem' => $index + 1
-                ]);
-            }
+            Excel::import(new ExcelImport, $data['file']);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollBack();

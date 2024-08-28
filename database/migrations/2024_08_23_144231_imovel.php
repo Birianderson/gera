@@ -11,22 +11,27 @@ return new class extends Migration
             $table->id();
             $table->dateTime('data_escritura')->nullable();
             $table->string('loteamento')->nullable();
+            $table->string('municipio')->nullable();
             $table->string('matricula_reurb')->nullable();
+            $table->string('inscricao_imobiliaria')->nullable();
+            $table->string('casa')->nullable();
             $table->string('quadra')->nullable();
             $table->string('lote')->nullable();
-            $table->float('medida_frente')->nullable();
-            $table->float('medida_fundo')->nullable();
-            $table->float('medida_lado_direito')->nullable();
-            $table->float('medida_lado_esquerdo')->nullable();
-            $table->float('area_m2')->nullable();
-            $table->float('perimetro')->nullable();
+            $table->string('medida_frente')->nullable();
+            $table->string('medida_fundo')->nullable();
+            $table->string('medida_lado_direito')->nullable();
+            $table->string('medida_lado_esquerdo')->nullable();
+            $table->string('area')->nullable();
+            $table->string('area_construida')->nullable();
+            $table->string('perimetro')->nullable();
             $table->float('area_numerico')->nullable();
             $table->string('confinante_frente')->nullable();
             $table->string('confinante_fundo')->nullable();
             $table->string('confinante_lado_direito')->nullable();
             $table->string('confinante_lado_esquerdo')->nullable();
-            $table->decimal('valor_venal', 15, 2)->nullable();
-            $table->text('valor_venal_extenso')->nullable();
+            $table->float('valor_venal')->nullable();
+            $table->float('valor_terreno')->nullable();
+            $table->float('valor_construcao')->nullable();
             $table->string('numero_processo_administrativo')->nullable();
             $table->string('prefixo_titulo')->nullable();
             $table->string('ano_titulo')->nullable();
@@ -38,6 +43,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('imoveis');
+        Schema::dropIfExists('imovel');
     }
 };

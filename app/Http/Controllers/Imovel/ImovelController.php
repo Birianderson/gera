@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Pessoa;
+namespace App\Http\Controllers\Imovel;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
-use App\Databases\Contracts\PessoaContract;
-use App\Http\Requests\PessoaRequest;
+use App\Databases\Contracts\ImovelContract;
+use App\Http\Requests\ImovelRequest;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
-class PessoaController extends Controller
+class ImovelController extends Controller
 {
-    public function __construct(private readonly PessoaContract $PessoaRepository)
+    public function __construct(private readonly ImovelContract $ImovelRepository)
     {
     }
 
@@ -23,7 +23,7 @@ class PessoaController extends Controller
      */
     public function index(): View
     {
-        return view('pessoa.index');
+        return view('imovel.index');
     }
 
     /**
@@ -34,7 +34,7 @@ class PessoaController extends Controller
     public function list(Request $request): JsonResponse
 
     {
-        $dados = $this->PessoaRepository->paginate($request->all())->toArray();
+        $dados = $this->ImovelRepository->paginate($request->all())->toArray();
         $dados['filter_options'] = [
             'nome' => [
                 'type' => 'text',
@@ -56,17 +56,16 @@ class PessoaController extends Controller
         ];
         return response()->json($dados);
     }
-
     /**
      * Criar Unidade de Atendimento
-     * @param PessoaRequest $request
+     * @param ImovelRequest $request
      * @return JsonResponse
      */
-    public function create(PessoaRequest $request): JsonResponse
+    public function create(ImovelRequest $request): JsonResponse
     {
         $params = $request->except('_token');
 
-        $this->PessoaRepository->create($params);
+        $this->ImovelRepository->create($params);
 
         return response()->json('success', 201);
     }
@@ -78,7 +77,7 @@ class PessoaController extends Controller
      */
     public function findCPF(string $cpf): JsonResponse
     {
-        $categoria = $this->PessoaRepository->getByCPF($cpf);
+        $categoria = $this->ImovelRepository->getByCPF($cpf);
         return response()->json($categoria);
     }
 
@@ -89,7 +88,7 @@ class PessoaController extends Controller
      */
     public function edit(int $id): JsonResponse
     {
-        $categoria = $this->PessoaRepository->getById($id);
+        $categoria = $this->ImovelRepository->getById($id);
         return response()->json($categoria);
     }
 
@@ -99,7 +98,7 @@ class PessoaController extends Controller
      */
     public function ordem(): JsonResponse
     {
-        $data = $this->PessoaRepository->getAllOrdem();
+        $data = $this->ImovelRepository->getAllOrdem();
         return response()->json($data);
     }
 
@@ -108,24 +107,25 @@ class PessoaController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function salvarOrdem(Request $request): JsonResponse
+    public function upload(Request $request): JsonResponse
     {
         $data = $request->all();
-        $this->PessoaRepository->saveOrder($data);
-        return response()->json([]);
+        $this->ImovelRepository->upload($data);
+        return response()->json(['message' => 'File imported successfully'], 200);
     }
+
 
 
     /**
      * Atualizar Unidade de Atendimento
-     * @param PessoaRequest $request
+     * @param ImovelRequest $request
      * @param int $id
      * @return JsonResponse
      */
-    public function update(PessoaRequest $request, int $id): JsonResponse
+    public function update(ImovelRequest $request, int $id): JsonResponse
     {
         $params = $request->except('_token');
-        $this->PessoaRepository->update($id, $params);
+        $this->ImovelRepository->update($id, $params);
         return response()->json(['success', $params]);
     }
 
@@ -137,7 +137,10 @@ class PessoaController extends Controller
      */
     public function delete(int $id): JsonResponse
     {
-        $this->PessoaRepository->destroy($id);
+        DB::transaction(function () use ($id) {
+            $this->ImovelRepository->destroy($id);
+            $this->ImovelRepository->updateOrderAfterDeletion();
+        });
 
         return response()->json('success');
     }
