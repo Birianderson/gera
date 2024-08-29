@@ -2,6 +2,7 @@
 namespace App\Databases\Repositories;
 
 use App\Databases\Contracts\UploadContract;
+use App\Imports\CoordenadasImport;
 use App\Imports\TerrenosImport;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -16,7 +17,7 @@ class UploadRepository implements UploadContract
     {
         DB::beginTransaction();
         try {
-            Excel::import(new TerrenosImport, $data['file']);
+            Excel::import(new TerrenosImport($data['cidade']), $data['file']);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollBack();
@@ -31,12 +32,30 @@ class UploadRepository implements UploadContract
     {
         DB::beginTransaction();
         try {
-            Excel::import(new TerrenosImport, $data['file']);
+            $extension = $data['file']->getClientOriginalExtension();
+
+            if ($extension === 'kml') {
+                $this->processKML($data['file'], $data['cidade']);
+            } else {
+                Excel::import(new CoordenadasImport($data['cidade']), $data['file']);
+            }
+
             DB::commit();
         } catch (Exception $ex) {
             DB::rollBack();
             throw new Exception($ex->getMessage());
         }
+    }
+
+    /**
+     * Processar arquivo KML
+     * @throws Exception
+     */
+    protected function processKML($file, string $cidade): void
+    {
+        $xmlContent = file_get_contents($file);
+        $importer = new CoordenadasImport($cidade);
+        $importer->importKML($xmlContent);
     }
 
 }

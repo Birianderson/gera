@@ -6,7 +6,6 @@
             </h2>
             <div class="d-flex">
                 <div class="ms-2">
-                    <import-excel></import-excel>
                     <popup-button id="nova-imovel" title="Nova imovel"
                                   component="imovel-form" action="/imovel/" size="xl">
                         <i class="fa fa-plus"></i>

@@ -28,22 +28,17 @@ class UploadController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function Terreno(Request $request): JsonResponse
+    public function terrenos(Request $request): JsonResponse
     {
         $data = $request->all();
-        $this->UploadRepository->uploadCoordenadas($data);
+        $this->UploadRepository->uploadTerrenos($data);
         return response()->json(['message' => 'File imported successfully'], 200);
     }
 
-    /**
-     * Salvar ordem Unidade de Atendimento
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function Coordenadas(Request $request): JsonResponse
+    public function coordenadas(Request $request): JsonResponse
     {
         $data = $request->all();
-        $this->UploadRepository->uploadTerreno($data);
+        $this->UploadRepository->uploadCoordenadas($data);
         return response()->json(['message' => 'File imported successfully'], 200);
     }
 }

@@ -7,12 +7,17 @@ use App\Databases\Models\Pessoa;
 use App\Databases\Models\VinculacaoImovelPessoas;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class TerrenosImport implements ToCollection, WithHeadingRow
 {
-    public function collection(Collection|\Illuminate\Support\Collection $rows)
+    private $cidade;
+
+    public function __construct(string $cidade)
+    {
+        $this->cidade = $cidade;
+    }
+    public function collection(Collection|\Illuminate\Support\Collection $rows): void
     {
         $estadoCivilMap = [
             'CASADO(A)' => 'C',
@@ -93,7 +98,7 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'conjuge_id' => $conjugue->id,
                             ]);
                             $imovel = new Imovel([
-                                'municipio' => $row['10_municipio'],
+                                'municipio' => $this->cidade,
                                 'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
@@ -121,7 +126,7 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                             $vinculacao->save();
                         } else {
                             $imovel = new Imovel([
-                                'municipio' => $row['10_municipio'],
+                                'municipio' => $this->cidade,
                                 'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
@@ -156,7 +161,7 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                         }
                     } else {
                         $imovel = new Imovel([
-                            'municipio' => $row['10_municipio'],
+                            'municipio' => $this->cidade,
                             'loteamento' => $row['9_bairro_loteamento'],
                             'quadra' => $row['8_complemento_quadra'],
                             'lote' => $row['7_numero_lote'],
@@ -214,7 +219,7 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'conjuge_id' => $conjugue->id,
                             ]);
                             $imovel = new Imovel([
-                                'municipio' => $row['10_municipio'],
+                                'municipio' => $this->cidade,
                                 'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
@@ -248,7 +253,7 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'conjuge_id' => $pessoaExistente->id,
                             ]);
                             $imovel = new Imovel([
-                                'municipio' => $row['10_municipio'],
+                                'municipio' => $this->cidade,
                                 'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
@@ -277,7 +282,7 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                         }
                     } else {
                         $imovel = new Imovel([
-                            'municipio' => $row['10_municipio'],
+                            'municipio' => $this->cidade,
                             'loteamento' => $row['9_bairro_loteamento'],
                             'quadra' => $row['8_complemento_quadra'],
                             'lote' => $row['7_numero_lote'],
@@ -307,7 +312,7 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                 }
             } else {
                 $imovel = new Imovel([
-                    'municipio' => $row['10_municipio'],
+                    'municipio' => $this->cidade,
                     'loteamento' => $row['9_bairro_loteamento'],
                     'quadra' => $row['8_complemento_quadra'],
                     'lote' => $row['7_numero_lote'],

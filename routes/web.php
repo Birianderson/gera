@@ -43,8 +43,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['prefix' => 'upload'], function () {
         Route::get('/', [UploadController::class, 'index'])->name('upload.index');
-        Route::post('/terreno', [UploadController::class, 'Terreno'])->name('imovel.Terreno');
-        Route::post('/coordenadas', [UploadController::class, 'Coordenadas'])->name('imovel.Coordenadas');
+        Route::post('/terrenos', [UploadController::class, 'terrenos'])->name('imovel.Terreno');
+        Route::post('/coordenadas', [UploadController::class, 'coordenadas'])->name('imovel.Coordenadas');
     });
 
     Route::group(['prefix' => 'mapa'], function () {
