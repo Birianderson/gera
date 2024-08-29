@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Mapa;
 
+use App\Databases\Contracts\MapaContract;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
@@ -9,7 +11,7 @@ use Illuminate\View\View;
 
 class MapaController extends Controller
 {
-    public function __construct()
+    public function __construct(private readonly MapaContract $MapaRepository)
     {
     }
 
@@ -22,4 +24,10 @@ class MapaController extends Controller
         return view('mapa.index');
     }
 
+    public function getByCidade(String $municipio): JsonResponse
+    {
+        $dados = $this->MapaRepository->getByCidade($municipio);
+
+        return response()->json($dados);
+    }
 }

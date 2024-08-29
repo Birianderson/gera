@@ -1,20 +1,86 @@
 <script setup>
-import { GoogleMap, AdvancedMarker } from 'vue3-google-map'
-import {ref} from "vue";
+import { GoogleMap, Polygon } from 'vue3-google-map'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
-const center = { lat: 40.689247, lng: -74.044502 }
-const markerOptions = ref({ position: center,  title: 'LADY LIBERTY' });
-const pinOptions = { background: '#FBBC04' }
+const municipios = ref([]);
+const selectedCity = ref('');
+const center = ref(null);
+const polygons = ref([]); // Lista de polígonos
+const mapLoaded = ref(false); // Controla quando o mapa deve ser carregado
+onMounted(async () => {
+    await carregarMunicipios();
+});
+
+const carregarMunicipios = async () => {
+    try {
+        const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/51/municipios');
+        municipios.value = response.data;
+    } catch (error) {
+        console.error('Erro ao carregar municípios:', error);
+    }
+};
+
+const carregarCoordenadas = async () => {
+    try {
+        const response = await axios.get(`/mapa/getByCidade/${selectedCity.value}`);
+        const coordenadas = response.data;
+
+        if (coordenadas.length > 0) {
+            const primeiraCoordenada = coordenadas[0];
+            center.value = {
+                lat: parseFloat(primeiraCoordenada.lat.split(',')[0]),
+                lng: parseFloat(primeiraCoordenada.long.split(',')[0])
+            };
+            polygons.value = [];
+            coordenadas.forEach(coordenada => {
+                const latitudes = coordenada.lat.split(',').map(parseFloat);
+                const longitudes = coordenada.long.split(',').map(parseFloat);
+
+                const path = latitudes.map((lat, index) => ({
+                    lat: lat,
+                    lng: longitudes[index]
+                }));
+
+                polygons.value.push({path});
+
+            });
+            console.log( polygons.value)
+            mapLoaded.value = true; // Carregar o mapa
+        }
+    } catch (error) {
+        console.error('Erro ao carregar coordenadas:', error);
+    }
+};
 </script>
 
 <template>
-    <GoogleMap
-        api-key="AIzaSyBx1KWiOM70BALJjUC5QI0jrQC0QdEc7Jo"
-        mapId="DEMO_MAP_ID"
-        style="width: 100%; height: 500px"
-        :center="center"
-        :zoom="15"
-    >
-        <AdvancedMarker :options="markerOptions" :pin-options="pinOptions"/>
-    </GoogleMap>
+    <div>
+        <p>Selecione uma cidade da lista abaixo para visualizar as coordenadas no mapa.</p>
+
+        <label class="form-label">Selecione uma cidade:</label>
+        <select v-model="selectedCity" @change="carregarCoordenadas" class="form-select mb-3">
+            <option value="" disabled>Escolha uma cidade para Importar</option>
+            <option v-for="municipio in municipios" :key="municipio.id" :value="municipio.nome">
+                {{ municipio.nome }}
+            </option>
+        </select>
+
+        <div v-if="mapLoaded">
+            <GoogleMap
+                api-key="AIzaSyBx1KWiOM70BALJjUC5QI0jrQC0QdEc7Jo"
+                mapId="DEMO_MAP_ID"
+                style="width: 100%; height: 500px"
+                :center="center"
+                :zoom="15"
+            >
+                <Polygon
+                    v-for="(polygon, index) in polygons"
+                    :key="index"
+                    :path="polygon.path"
+                    :options="{ fillColor: '#FBBC04', fillOpacity: 0.35, strokeColor: '#FBBC04', strokeOpacity: 0.8, strokeWeight: 2 }"
+                />
+            </GoogleMap>
+        </div>
+    </div>
 </template>
