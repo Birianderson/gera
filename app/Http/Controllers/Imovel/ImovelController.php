@@ -91,28 +91,6 @@ class ImovelController extends Controller
         return response()->json($categoria);
     }
 
-    /**
-     * Ordenar Unidade de Atendimento
-     * @return JsonResponse
-     */
-    public function ordem(): JsonResponse
-    {
-        $data = $this->ImovelRepository->getAllOrdem();
-        return response()->json($data);
-    }
-
-    /**
-     * Salvar ordem Unidade de Atendimento
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function upload(Request $request): JsonResponse
-    {
-        $data = $request->all();
-        $this->ImovelRepository->upload($data);
-        return response()->json(['message' => 'File imported successfully'], 200);
-    }
-
 
 
     /**
@@ -138,7 +116,6 @@ class ImovelController extends Controller
     {
         DB::transaction(function () use ($id) {
             $this->ImovelRepository->destroy($id);
-            $this->ImovelRepository->updateOrderAfterDeletion();
         });
 
         return response()->json('success');

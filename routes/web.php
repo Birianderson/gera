@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Imovel\ImovelController;
+use App\Http\Controllers\Mapa\MapaController;
 use App\Http\Controllers\Pessoa\PessoaController;
+use App\Http\Controllers\Upload\UploadController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -38,6 +40,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/', [ImovelController::class, 'create'])->name('imovel.create');
         Route::post('/{id}', [ImovelController::class, 'update'])->name('imovel.update');
         Route::delete('/{id}', [ImovelController::class, 'delete'])->name('imovel.delete');
+    });
+
+    Route::group(['prefix' => 'upload'], function () {
+        Route::get('/', [UploadController::class, 'index'])->name('upload.index');
+    });
+
+    Route::group(['prefix' => 'mapa'], function () {
+        Route::get('/', [MapaController::class, 'index'])->name('mapa.index');
     });
 
 });
