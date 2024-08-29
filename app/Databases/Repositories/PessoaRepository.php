@@ -2,6 +2,7 @@
 namespace App\Databases\Repositories;
 
 use App\Databases\Contracts\PessoaContract;
+use App\Databases\Models\Imovel;
 use App\Databases\Models\Pessoa;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -62,7 +63,7 @@ class PessoaRepository implements PessoaContract
      */
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
-        $query = Pessoa::query();
+        $query = Pessoa::query()->with(['imoveis','conjuge']);
 
         if (isset($pagination['nome'])) {
             $keyword = mb_strtolower($pagination['nome']);
@@ -173,30 +174,18 @@ class PessoaRepository implements PessoaContract
     }
 
     /**
-     * Ordenar ao deletar Unidade de Atendimento
-     * @return void
-     */
-    public function updateOrderAfterDeletion(): void
-    {
-        $unidades = Pessoa::query()
-            ->orderBy('ordem')
-            ->get();
-
-        $ordem = 1;
-        foreach ($unidades as $unidade) {
-            $unidade->ordem = $ordem;
-            $unidade->save();
-            $ordem++;
-        }
-    }
-
-    /**
      * Busca todas Unidade de Atendimento para componente de ordenação
      * @return Collection
      */
-    public function getAllOrdem(): Collection
+    public function getImoveisByID($id): Collection
     {
-        return Pessoa::query()->orderBy('ordem')->get(['id', 'nome_unidade as name', 'ordem']);
+        $pessoa = Pessoa::query()->where('id', '=', $id)->with('imoveis')->first();
+
+        if ($pessoa) {
+            $imoveis = $pessoa->imoveis;
+        }
+
+        return $imoveis;
     }
 
     /**

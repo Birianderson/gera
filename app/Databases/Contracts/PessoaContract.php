@@ -16,8 +16,6 @@ interface PessoaContract
     public function create(array $params, bool $autoCommit = true) : bool;
     public function update(int $id, array $params, bool $autoCommit = true): bool;
     public function destroy(int $id, bool $autoCommit = true): bool;
-    public function getAllOrdem():Collection;
-    public function updateOrderAfterDeletion(): void;
     public function saveOrder(array $data): void;
 }
 

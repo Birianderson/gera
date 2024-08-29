@@ -97,10 +97,13 @@ class PessoaController extends Controller
      * Ordenar Unidade de Atendimento
      * @return JsonResponse
      */
-    public function ordem(): JsonResponse
+    public function imoveis($id): JsonResponse
     {
-        $data = $this->PessoaRepository->getAllOrdem();
-        return response()->json($data);
+        $data = $this->PessoaRepository->getImoveisByID($id);
+        return response()->json([
+            'data' => $data->all(),
+        ]);
+
     }
 
     /**

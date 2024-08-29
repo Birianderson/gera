@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'pessoa'], function () {
         Route::get('/', [PessoaController::class, 'index'])->name('pessoa.index');
         Route::get('/list', [PessoaController::class, 'list'])->name('pessoa.list');
-        Route::get('/ordem', [PessoaController::class, 'ordem'])->name('pessoa.ordem')->can('painel.unidades_atendimento.update');
+        Route::get('/imoveis/{id}', [PessoaController::class, 'imoveis'])->name('pessoa.imoveis');
         Route::get('/findCPF/{CPF}', [PessoaController::class, 'findCPF'])->name('pessoa.findCPF');
         Route::get('/{id}', [PessoaController::class, 'edit'])->name('pessoa.edit');
         Route::post('/ordem', [PessoaController::class, 'salvarOrdem'])->name('pessoa.salvar-ordem')->can('painel.unidades_atendimento.update');

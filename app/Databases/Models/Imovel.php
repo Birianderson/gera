@@ -12,4 +12,7 @@ class Imovel extends Model
     public string $sequence = 'imovel_id_seq';
     protected $guarded = [];
 
+    public function pessoa(){
+        return $this->hasOne(Pessoa::class,'id','id');
+    }
 }

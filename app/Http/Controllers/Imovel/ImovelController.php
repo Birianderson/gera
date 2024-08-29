@@ -36,21 +36,20 @@ class ImovelController extends Controller
     {
         $dados = $this->ImovelRepository->paginate($request->all())->toArray();
         $dados['filter_options'] = [
-            'nome' => [
+            'municipio' => [
                 'type' => 'text',
             ],
-            'cpf' => [
+            'loteamento' => [
                 'type' => 'text',
             ],
-            'estado_civil' => [
-                'type' => 'select',
-                'options' => [
-                    ['id' => 'D', 'name' => 'DIVORCIADO(A)'],
-                    ['id' => 'E', 'name' => 'SEPARADO(A)'],
-                    ['id' => 'O', 'name' => 'SOLTEIRO(A)'],
-                    ['id' => 'U', 'name' => 'UNIÃO ESTÁVEL'],
-                    ['id' => 'V', 'name' => 'VIÚVO(A)'],
-                ]
+            'prefixo_titulo' => [
+                'type' => 'text',
+            ],
+            'quadra' => [
+                'type' => 'text',
+            ],
+            'lote' => [
+                'type' => 'text',
             ],
 
         ];

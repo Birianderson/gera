@@ -36,7 +36,7 @@ class ExcelImport implements ToCollection, WithHeadingRow
             'VIUVA' => 'V',
         ];
         foreach ($rows as $row) {
-            if ($row['1_nome'] !== null) {
+            if (isset($row['1_nome']) && $row['1_nome'] !== null) {
                 $cpf = preg_replace('/[^0-9]/', '', $row['2_cpfcnpj']);  // Limpa o CPF removendo caracteres especiais
                 $pessoaExistente = Pessoa::query()->where('cpf', $cpf)->first();
                 if (!$pessoaExistente) {
@@ -110,7 +110,7 @@ class ExcelImport implements ToCollection, WithHeadingRow
                                 'confinante_fundo' => $row['confinante_fundo'],
                                 'confinante_lado_direito' => $row['confinante_lado_direito'],
                                 'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                                'prefixo_titulo' => $this->getPrefixoTitulo($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                             ]);
                             $imovel->save();
                             $vinculacao = new VinculacaoImovelPessoas([
@@ -138,7 +138,7 @@ class ExcelImport implements ToCollection, WithHeadingRow
                                 'confinante_fundo' => $row['confinante_fundo'],
                                 'confinante_lado_direito' => $row['confinante_lado_direito'],
                                 'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                                'prefixo_titulo' => $this->getPrefixoTitulo($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                             ]);
                             $imovel->save();
                             $vinculacao = new VinculacaoImovelPessoas([
@@ -173,7 +173,7 @@ class ExcelImport implements ToCollection, WithHeadingRow
                             'confinante_fundo' => $row['confinante_fundo'],
                             'confinante_lado_direito' => $row['confinante_lado_direito'],
                             'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                            'prefixo_titulo' => $this->getPrefixoTitulo($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                            'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                         ]);
                         $imovel->save();
                         $vinculacao = new VinculacaoImovelPessoas([
@@ -231,7 +231,7 @@ class ExcelImport implements ToCollection, WithHeadingRow
                                 'confinante_fundo' => $row['confinante_fundo'],
                                 'confinante_lado_direito' => $row['confinante_lado_direito'],
                                 'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                                'prefixo_titulo' => $this->getPrefixoTitulo($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                             ]);
                             $imovel->save();
                             $vinculacao = new VinculacaoImovelPessoas([
@@ -265,7 +265,7 @@ class ExcelImport implements ToCollection, WithHeadingRow
                                 'confinante_fundo' => $row['confinante_fundo'],
                                 'confinante_lado_direito' => $row['confinante_lado_direito'],
                                 'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                                'prefixo_titulo' => $this->getPrefixoTitulo($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                             ]);
                             $imovel->save();
                             $vinculacao = new VinculacaoImovelPessoas([
@@ -294,7 +294,7 @@ class ExcelImport implements ToCollection, WithHeadingRow
                             'confinante_fundo' => $row['confinante_fundo'],
                             'confinante_lado_direito' => $row['confinante_lado_direito'],
                             'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                            'prefixo_titulo' => $this->getPrefixoTitulo($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                            'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                         ]);
                         $imovel->save();
                         $vinculacao = new VinculacaoImovelPessoas([
@@ -324,50 +324,32 @@ class ExcelImport implements ToCollection, WithHeadingRow
                     'confinante_fundo' => $row['confinante_fundo'],
                     'confinante_lado_direito' => $row['confinante_lado_direito'],
                     'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                    'prefixo_titulo' => $this->getPrefixoTitulo($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                    'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                 ]);
                 $imovel->save();
             }
         }
     }
 
-    public function getPrefixoTitulo($bairroLoteamento, $ifString)
+    function getAbreviacaoBairro($bairroLoteamento, $inputString)
     {
-        // Parseando a string para criar o array de prefixos
-        list($prefixoMap, $defaultPrefix) = $this->parseIfString($ifString);
-
-        // Retornar o prefixo correspondente ou um padrão se não encontrado
-        return $prefixoMap[$bairroLoteamento] ?? $defaultPrefix;
-    }
-
-    public function parseIfString($ifString)
-    {
-        $prefixoMap = [];
-        $defaultPrefix = null;
-
-        // Remove os "IF(" do início e ")" do final da string
-        $ifString = trim($ifString, 'IF()');
-
-        // Divide a string em blocos usando "),IF(" como delimitador
-        $conditions = explode('),IF(', $ifString);
-
-        foreach ($conditions as $condition) {
-            // Divide cada condição em partes "condição" e "valor"
-            preg_match('/K2="([^"]+)",\s*"(.*?)"/', $condition, $matches);
-
-            if (count($matches) === 3) {
-                $bairro = $matches[1];
-                $prefixo = $matches[2];
-                $prefixoMap[$bairro] = $prefixo;
-            } else {
-                // Caso especial: valor padrão
-                if (preg_match('/,\s*"(.*?)"$/', $condition, $matches)) {
-                    $defaultPrefix = $matches[1];
-                }
+        // Extrai todas as strings entre aspas duplas
+        $quotedStrings = $this->extractQuotedStrings($inputString);
+        for ($i = 0; $i < count($quotedStrings); $i += 2) {
+            $bairro = $quotedStrings[$i];
+            $prefixo = $quotedStrings[$i + 1];
+            if ($bairroLoteamento === $bairro) {
+                return $prefixo;
             }
         }
+        return $inputString;
+    }
 
-        return [$prefixoMap, $defaultPrefix];
+// Função para extrair as strings entre aspas duplas
+    function extractQuotedStrings($inputString)
+    {
+        preg_match_all('/"([^"]+)"/', $inputString, $matches);
+        return $matches[1];
     }
 
 }

@@ -16,15 +16,16 @@ const events = inject('events');
 const source = '/imovel/list';
 
 const columns = ref([
-    {name: 'municipio', title: 'Município', width: '30%', sort: 'municipio', nowrap: true},
-    {name: 'loteamento', title: 'Loteamento', width: '30%', sort: 'loteamento', nowrap: true},
-    {name: 'casa', title: 'Casa', width: '30%', sort: 'casa', nowrap: true},
-
+    {name: 'municipio', title: 'Município', width: '10%', sort: 'municipio', nowrap: true},
+    {name: 'loteamento', title: 'Loteamento', width: '10%', sort: 'loteamento', nowrap: true},
+    {name: 'prefixo_titulo', title: 'Titulo', width: '10%', sort: 'prefixo_titulo'},
+    {name: 'quadra', title: 'Quadra', width: '10%', sort: 'quadra'},
+    {name: 'lote', title: 'Lote', width: '10%', sort: 'lote'},
+    {name: 'pessoa.nome', title: 'Titular', width: '20%', sort: 'lote'},
     {
         name: 'id',
         title: 'Ação',
-        width: '5%',
-        nowrap: true,
+        width: '3%',
         contentClass: 'text-center',
         formatter: (value, row) => {
             let output = "";

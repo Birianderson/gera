@@ -64,19 +64,27 @@ class ImovelRepository implements ImovelContract
      */
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
-        $query = Imovel::query();
+        $query = Imovel::query()->with('pessoa');
 
-        if (isset($pagination['nome'])) {
-            $keyword = mb_strtolower($pagination['nome']);
-            $query->whereRaw('lower(nome) like ?', ["%{$keyword}%"]);
+        if (isset($pagination['municipio'])) {
+            $keyword = mb_strtolower($pagination['municipio']);
+            $query->whereRaw('lower(municipio) like ?', ["%{$keyword}%"]);
         }
-        if (isset($pagination['cpf'])) {
-            $keyword = mb_strtolower($pagination['cpf']);
-            $query->whereRaw('lower(cpf) like ?', ["%{$keyword}%"]);
+        if (isset($pagination['loteamento'])) {
+            $keyword = mb_strtolower($pagination['loteamento']);
+            $query->whereRaw('lower(loteamento) like ?', ["%{$keyword}%"]);
         }
-        if (isset($pagination['estado_civil'])) {
-            $keyword = mb_strtolower($pagination['estado_civil']);
-            $query->whereRaw('lower(estado_civil) like ?', ["%{$keyword}%"]);
+        if (isset($pagination['prefixo_titulo'])) {
+            $keyword = mb_strtolower($pagination['prefixo_titulo']);
+            $query->whereRaw('lower(prefixo_titulo) like ?', ["%{$keyword}%"]);
+        }
+        if (isset($pagination['quadra'])) {
+            $keyword = mb_strtolower($pagination['quadra']);
+            $query->whereRaw('lower(quadra) like ?', ["%{$keyword}%"]);
+        }
+        if (isset($pagination['lote'])) {
+            $keyword = mb_strtolower($pagination['lote']);
+            $query->whereRaw('lower(lote) like ?', ["%{$keyword}%"]);
         }
         $query->orderBy($pagination['sort'] ?? 'nome', $pagination['sort_direction'] ?? 'asc');
         return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
