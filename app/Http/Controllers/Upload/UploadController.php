@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Upload;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Databases\Contracts\UploadContract;
-use App\Http\Requests\UploadRequest;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class UploadController extends Controller
 {
-    public function __construct()
+    public function __construct(private readonly UploadContract $UploadRepository)
     {
     }
 
@@ -26,4 +23,27 @@ class UploadController extends Controller
         return view('upload.index');
     }
 
+    /**
+     * Salvar ordem Unidade de Atendimento
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function Terreno(Request $request): JsonResponse
+    {
+        $data = $request->all();
+        $this->UploadRepository->uploadCoordenadas($data);
+        return response()->json(['message' => 'File imported successfully'], 200);
+    }
+
+    /**
+     * Salvar ordem Unidade de Atendimento
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function Coordenadas(Request $request): JsonResponse
+    {
+        $data = $request->all();
+        $this->UploadRepository->uploadTerreno($data);
+        return response()->json(['message' => 'File imported successfully'], 200);
+    }
 }

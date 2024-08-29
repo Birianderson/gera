@@ -2,7 +2,7 @@
 namespace App\Databases\Repositories;
 
 use App\Databases\Contracts\UploadContract;
-use App\Imports\ExcelImport;
+use App\Imports\TerrenosImport;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -19,7 +19,7 @@ class MapaRepository implements UploadContract
     {
         DB::beginTransaction();
         try {
-            Excel::import(new ExcelImport, $data['file']);
+            Excel::import(new TerrenosImport, $data['file']);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollBack();

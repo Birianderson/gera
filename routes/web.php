@@ -36,7 +36,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/ordem', [ImovelController::class, 'ordem'])->name('imovel.ordem');
         Route::get('/findCPF/{CPF}', [ImovelController::class, 'findCPF'])->name('imovel.findCPF');
         Route::get('/{id}', [ImovelController::class, 'edit'])->name('imovel.edit');
-        Route::post('/upload-excel', [ImovelController::class, 'upload'])->name('imovel.upload');
         Route::post('/', [ImovelController::class, 'create'])->name('imovel.create');
         Route::post('/{id}', [ImovelController::class, 'update'])->name('imovel.update');
         Route::delete('/{id}', [ImovelController::class, 'delete'])->name('imovel.delete');
@@ -44,6 +43,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['prefix' => 'upload'], function () {
         Route::get('/', [UploadController::class, 'index'])->name('upload.index');
+        Route::post('/terreno', [UploadController::class, 'Terreno'])->name('imovel.Terreno');
+        Route::post('/coordenadas', [UploadController::class, 'Coordenadas'])->name('imovel.Coordenadas');
     });
 
     Route::group(['prefix' => 'mapa'], function () {

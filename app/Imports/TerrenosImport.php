@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ExcelImport implements ToCollection, WithHeadingRow
+class TerrenosImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection|\Illuminate\Support\Collection $rows)
     {

@@ -35,9 +35,9 @@
         <li class="menu-item @if(str_contains(request()->route()->getName(), 'upload')) active @endif">
             <a href="{{route('upload.index')}}">
                   <span class="menu-icon">
-                    <i class="fa fa-upload"></i>
+                    <i class="fa fa-file-import"></i>
                   </span>
-                <span class="menu-title">Upload</span>
+                <span class="menu-title">Importar</span>
             </a>
         </li>
         <li class="menu-item sub-menu @if(str_contains(request()->route()->getName(), 'competencia') || str_contains(request()->route()->getName(), 'usuario')) open @endif">

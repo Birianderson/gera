@@ -3,7 +3,7 @@ namespace App\Databases\Repositories;
 
 use App\Databases\Contracts\ImovelContract;
 use App\Databases\Models\Imovel;
-use App\Imports\ExcelImport;
+use App\Imports\TerrenosImport;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -213,33 +213,6 @@ class ImovelRepository implements ImovelContract
         }
 
         return true;
-    }
-
-
-    /**
-     * Busca todas Unidade de Atendimento para componente de ordenação
-     * @return Collection
-     */
-    public function getAllOrdem(): Collection
-    {
-        return Imovel::query()->orderBy('ordem')->get(['id', 'nome_unidade as name', 'ordem']);
-    }
-
-    /**
-     * Salva a ordem de todas Unidade de Atendimento
-     * @param array $data
-     * @throws Exception
-     */
-    public function upload(array $data): void
-    {
-        DB::beginTransaction();
-        try {
-            Excel::import(new ExcelImport, $data['file']);
-            DB::commit();
-        } catch (Exception $ex) {
-            DB::rollBack();
-            throw new Exception($ex->getMessage());
-        }
     }
 
 }

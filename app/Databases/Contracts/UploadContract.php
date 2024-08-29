@@ -4,6 +4,7 @@ namespace App\Databases\Contracts;
 
 interface UploadContract
 {
-    public function upload(array $data): void;
+    public function uploadTerrenos(array $data): void;
+    public function uploadCoordenadas(array $data): void;
 }
 
