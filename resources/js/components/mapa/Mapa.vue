@@ -1,13 +1,15 @@
 <script setup>
-import { GoogleMap, Polygon } from 'vue3-google-map'
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import {GoogleMap, Polygon, AdvancedMarker} from 'vue3-google-map';
+import {ref, onMounted, inject} from 'vue';
+import axios from 'axios';
 
 const municipios = ref([]);
 const selectedCity = ref('');
 const center = ref(null);
 const polygons = ref([]); // Lista de polígonos
+const advancedMarkers = ref([]); // Lista de marcadores
 const mapLoaded = ref(false); // Controla quando o mapa deve ser carregado
+const events = inject('events');
 onMounted(async () => {
     await carregarMunicipios();
 });
@@ -21,19 +23,36 @@ const carregarMunicipios = async () => {
     }
 };
 
+const calcularPosition = (path) => {
+    const numCoords = path.length;
+    let sumLat = 0;
+    let sumLng = 0;
+
+    path.forEach(coord => {
+        sumLat += coord.lat;
+        sumLng += coord.lng;
+    });
+
+    return {
+        lat: sumLat / numCoords,
+        lng: sumLng / numCoords
+    };
+};
+
 const carregarCoordenadas = async () => {
     try {
         const response = await axios.get(`/mapa/getByCidade/${selectedCity.value}`);
         const coordenadas = response.data;
-
         if (coordenadas.length > 0) {
             const primeiraCoordenada = coordenadas[0];
             center.value = {
                 lat: parseFloat(primeiraCoordenada.lat.split(',')[0]),
                 lng: parseFloat(primeiraCoordenada.long.split(',')[0])
             };
-            polygons.value = [];
-            coordenadas.forEach(coordenada => {
+
+
+            console.log(coordenadas)
+            polygons.value = coordenadas.map(coordenada => {
                 const latitudes = coordenada.lat.split(',').map(parseFloat);
                 const longitudes = coordenada.long.split(',').map(parseFloat);
 
@@ -42,15 +61,60 @@ const carregarCoordenadas = async () => {
                     lng: longitudes[index]
                 }));
 
-                polygons.value.push({path});
+                // Calcula o position do polígono
+                const position = calcularPosition(path);
 
+                if (coordenada.imovel_id !== null) {
+                    if(coordenada.imovel.vinculacao_imovel_pessoa){
+                        console.log(coordenada.imovel.vinculacao_imovel_pessoa.pessoa.nome)
+                    }
+                    const markerOptions = {
+                        position: position,
+                        title: 'Polígono1',
+                    };
+                    const pinOptions = {
+                        background: '#0d6efd',
+                    };
+                    const customData = {
+                        coordenada_id: coordenada.id,
+                        imovel_id: coordenada.imovel_id
+                    }
+                    advancedMarkers.value.push({options: markerOptions, pinOptions: pinOptions, customData: customData});
+                } else {
+                    const markerOptions = {
+                        position: position,
+                        title: 'Polígono1',
+                    };
+                    const pinOptions = {
+                        background: '#FBBC04',
+                    };
+                    const customData = {
+                        coordenada_id: coordenada.id,
+                    }
+                    advancedMarkers.value.push({options: markerOptions, pinOptions: pinOptions, customData: customData});
+                }
+
+
+                return {
+                    paths: path,
+                    strokeColor: '#FBBC04',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FBBC04',
+                    fillOpacity: 0.35,
+                };
             });
-            console.log( polygons.value)
+
             mapLoaded.value = true; // Carregar o mapa
         }
     } catch (error) {
         console.error('Erro ao carregar coordenadas:', error);
     }
+};
+
+// Função para ser chamada ao clicar em um AdvancedMarker
+const handleMarkerClick = (marker_id) => {
+    console.log(marker_id, 'marker_id')
 };
 </script>
 
@@ -69,16 +133,22 @@ const carregarCoordenadas = async () => {
         <div v-if="mapLoaded">
             <GoogleMap
                 api-key="AIzaSyBx1KWiOM70BALJjUC5QI0jrQC0QdEc7Jo"
-                mapId="DEMO_MAP_ID"
-                style="width: 100%; height: 500px"
+                mapId="SATELLITE"
+                style="width: 100%; height: 650px"
                 :center="center"
                 :zoom="15"
             >
                 <Polygon
                     v-for="(polygon, index) in polygons"
                     :key="index"
-                    :path="polygon.path"
-                    :options="{ fillColor: '#FBBC04', fillOpacity: 0.35, strokeColor: '#FBBC04', strokeOpacity: 0.8, strokeWeight: 2 }"
+                    :options="polygon"
+                />
+                <AdvancedMarker
+                    v-for="(marker, index) in advancedMarkers"
+                    :key="index"
+                    :options="marker.options"
+                    :pin-options="marker.pinOptions"
+                    @click="handleMarkerClick(marker.customData)"
                 />
             </GoogleMap>
         </div>

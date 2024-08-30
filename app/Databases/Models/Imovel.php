@@ -11,8 +11,13 @@ class Imovel extends Model
     protected $table = 'imovel';
     public string $sequence = 'imovel_id_seq';
     protected $guarded = [];
+    public function coordenadas()
+    {
+        return $this->hasOne(Coordenadas::class);
+    }
 
-    public function pessoa(){
-        return $this->hasOne(Pessoa::class,'id','id');
+    public function vinculacaoImovelPessoa()
+    {
+        return $this->hasOne(VinculacaoImovelPessoas::class);
     }
 }

@@ -26,6 +26,11 @@ class Pessoa extends Model
         );
     }
 
+    public function vinculacaoImovelPessoa()
+    {
+        return $this->hasMany(VinculacaoImovelPessoas::class);
+    }
+
     public function conjuge(){
         return $this->hasOne(Pessoa::class,'id','conjuge_id');
     }

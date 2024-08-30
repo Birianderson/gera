@@ -12,4 +12,13 @@ class VinculacaoImovelPessoas extends Model
     public string $sequence = 'vinculacao_imovel_pessoas_id_seq';
     protected $guarded = [];
 
+    public function imovel()
+    {
+        return $this->belongsTo(Imovel::class);
+    }
+
+    public function pessoa()
+    {
+        return $this->belongsTo(Pessoa::class);
+    }
 }

@@ -12,7 +12,8 @@ class Coordenadas extends Model
     public string $sequence = 'coordenadas_id_seq';
     protected $guarded = [];
 
-    public function imovel(){
-        return $this->hasOne(Imovel::class,'id','id');
+    public function imovel()
+    {
+        return $this->belongsTo(Imovel::class);
     }
 }
