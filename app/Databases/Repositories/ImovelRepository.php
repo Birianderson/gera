@@ -2,6 +2,7 @@
 namespace App\Databases\Repositories;
 
 use App\Databases\Contracts\ImovelContract;
+use App\Databases\Models\Coordenadas;
 use App\Databases\Models\Imovel;
 use App\Imports\TerrenosImport;
 use Illuminate\Database\Eloquent\Collection;
@@ -44,6 +45,7 @@ class ImovelRepository implements ImovelContract
 
         return Imovel::query()
             ->where('id', '=', $id)
+            ->with('coordenadas')
             ->firstOrFail();
     }
 
@@ -183,6 +185,31 @@ class ImovelRepository implements ImovelContract
                 'prefixo_titulo' => $params['prefixo_titulo'],
                 'ano_titulo' => $params['ano_titulo'],
                 'numero_titulo' => $params['numero_titulo'],
+            ]);
+
+            $autoCommit && DB::commit();
+            return true;
+        } catch (Exception $ex) {
+            $autoCommit && DB::rollBack();
+            throw new Exception($ex);
+        }
+    }
+
+    /**
+     * Salva nova Unidade de Atendimento
+     * @param array $params
+     * @param bool $autoCommit
+     * @return bool
+     * @throws Exception
+     */
+    public function vincula(array $params, bool $autoCommit = true): bool
+    {
+        $autoCommit && DB::beginTransaction();
+        try {
+
+            $coordenadas = Coordenadas::query()->where('id', '=', $params['coordenada'])->first();
+            $coordenadas->update([
+                'imovel_id' => $params['search'],
             ]);
 
             $autoCommit && DB::commit();

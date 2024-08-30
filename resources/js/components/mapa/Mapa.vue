@@ -12,6 +12,7 @@ const mapLoaded = ref(false); // Controla quando o mapa deve ser carregado
 const events = inject('events');
 onMounted(async () => {
     await carregarMunicipios();
+    events.on('recarrega_mapa', carregarCoordenadas);
 });
 
 const carregarMunicipios = async () => {
@@ -39,7 +40,9 @@ const calcularPosition = (path) => {
     };
 };
 
+
 const carregarCoordenadas = async () => {
+
     try {
         const response = await axios.get(`/mapa/getByCidade/${selectedCity.value}`);
         const coordenadas = response.data;
@@ -51,7 +54,6 @@ const carregarCoordenadas = async () => {
             };
 
 
-            console.log(coordenadas)
             polygons.value = coordenadas.map(coordenada => {
                 const latitudes = coordenada.lat.split(',').map(parseFloat);
                 const longitudes = coordenada.long.split(',').map(parseFloat);
@@ -66,43 +68,79 @@ const carregarCoordenadas = async () => {
 
                 if (coordenada.imovel_id !== null) {
                     if(coordenada.imovel.vinculacao_imovel_pessoa){
-                        console.log(coordenada.imovel.vinculacao_imovel_pessoa.pessoa.nome)
+                        const markerOptions = {
+                            position: position,
+                            title: 'Imóvel COM morador',
+                        };
+                        const pinOptions = {
+                            background: '#00ff00',
+                            glyphColor:'#00ff00',
+                        };
+                        const customData = {
+                            coordenada_id: coordenada.id,
+                            imovel_id: coordenada.imovel_id
+                        }
+                        advancedMarkers.value.push({options: markerOptions, pinOptions: pinOptions, customData: customData});
+                        return {
+                            paths: path,
+                            strokeColor: '#00ff00',
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: '#00ff00',
+                            fillOpacity: 0.35,
+                        };
+                    }else {
+                        const markerOptions = {
+                            position: position,
+                            title: 'Imóvel SEM morador',
+                        };
+                        const pinOptions = {
+                            background: '#0d6efd',
+                            glyphColor:'#0d6efd',
+                        };
+                        const customData = {
+                            coordenada_id: coordenada.id,
+                            imovel_id: coordenada.imovel_id
+                        }
+                        advancedMarkers.value.push({
+                            options: markerOptions,
+                            pinOptions: pinOptions,
+                            customData: customData
+                        });
+                        return {
+                            paths: path,
+                            strokeColor: '#0d6efd',
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: '#0d6efd',
+                            fillOpacity: 0.35,
+                        };
                     }
-                    const markerOptions = {
-                        position: position,
-                        title: 'Polígono1',
-                    };
-                    const pinOptions = {
-                        background: '#0d6efd',
-                    };
-                    const customData = {
-                        coordenada_id: coordenada.id,
-                        imovel_id: coordenada.imovel_id
-                    }
-                    advancedMarkers.value.push({options: markerOptions, pinOptions: pinOptions, customData: customData});
                 } else {
                     const markerOptions = {
                         position: position,
-                        title: 'Polígono1',
+                        title: 'Sem imóvel cadastrado',
                     };
                     const pinOptions = {
-                        background: '#FBBC04',
+                        background: '#D3D3D3',
+                        glyphColor:'#D3D3D3',
                     };
                     const customData = {
                         coordenada_id: coordenada.id,
                     }
                     advancedMarkers.value.push({options: markerOptions, pinOptions: pinOptions, customData: customData});
+                    return {
+                        paths: path,
+                        strokeColor: '#D3D3D3',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: '#D3D3D3',
+                        fillOpacity: 0.35,
+                    };
                 }
 
 
-                return {
-                    paths: path,
-                    strokeColor: '#FBBC04',
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: '#FBBC04',
-                    fillOpacity: 0.35,
-                };
+
             });
 
             mapLoaded.value = true; // Carregar o mapa
@@ -112,11 +150,20 @@ const carregarCoordenadas = async () => {
     }
 };
 
+
 // Função para ser chamada ao clicar em um AdvancedMarker
 const handleMarkerClick = (marker_id) => {
-    console.log(marker_id, 'marker_id')
+    events.emit('popup', {
+        title: 'Vincular coordenada a Imóvel',
+        component: 'vincula-coord-imovel',
+        data: marker_id,
+        size: 'md',
+        id: 'vinculacao'
+    });
 };
 </script>
+
+
 
 <template>
     <div>

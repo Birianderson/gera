@@ -16,5 +16,6 @@ interface ImovelContract
     public function create(array $params, bool $autoCommit = true) : bool;
     public function update(int $id, array $params, bool $autoCommit = true): bool;
     public function destroy(int $id, bool $autoCommit = true): bool;
+    public function vincula(array $params, bool $autoCommit = true): bool;
 }
 

@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/findCPF/{CPF}', [ImovelController::class, 'findCPF'])->name('imovel.findCPF');
         Route::get('/{id}', [ImovelController::class, 'edit'])->name('imovel.edit');
         Route::post('/', [ImovelController::class, 'create'])->name('imovel.create');
+        Route::post('/vincula', [ImovelController::class, 'vincula'])->name('imovel.vincula');
         Route::post('/{id}', [ImovelController::class, 'update'])->name('imovel.update');
         Route::delete('/{id}', [ImovelController::class, 'delete'])->name('imovel.delete');
     });

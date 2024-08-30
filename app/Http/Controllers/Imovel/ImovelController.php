@@ -91,6 +91,18 @@ class ImovelController extends Controller
         return response()->json($categoria);
     }
 
+    /**
+     * Editar Unidade de Atendimento
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function vincula(Request $request): JsonResponse
+    {
+        $params = $request->except('_token');
+        $vincula = $this->ImovelRepository->vincula($params);
+        return response()->json($vincula);
+    }
+
 
 
     /**
