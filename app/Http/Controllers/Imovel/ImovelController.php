@@ -51,6 +51,9 @@ class ImovelController extends Controller
             'lote' => [
                 'type' => 'text',
             ],
+            'pessoa.nome' => [
+                'type' => 'text',
+            ],
 
         ];
         return response()->json($dados);

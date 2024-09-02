@@ -9,6 +9,7 @@ return new class extends Migration
     {
         Schema::create('imovel', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('pessoa_id')->nullable();
             $table->dateTime('data_escritura')->nullable();
             $table->string('loteamento')->nullable();
             $table->string('municipio')->nullable();
@@ -38,6 +39,8 @@ return new class extends Migration
             $table->string('numero_titulo')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+
         });
     }
 

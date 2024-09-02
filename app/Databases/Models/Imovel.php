@@ -16,20 +16,8 @@ class Imovel extends Model
         return $this->hasOne(Coordenadas::class);
     }
 
-    public function vinculacaoImovelPessoa()
-    {
-        return $this->hasOne(VinculacaoImovelPessoas::class);
-    }
-
     public function pessoa()
     {
-        return $this->hasOneThrough(
-            Pessoa::class,
-            VinculacaoImovelPessoas::class,
-            'imovel_id', // Chave estrangeira em VinculacaoImovelPessoa que referencia Imovel
-            'id', // Chave estrangeira em PEssoa que referencia VinculacaoImovelPessoa
-            'id', // Chave primária local em Imovel
-            'pessoa_id' // Chave estrangeira em VinculacaoImovelPessoa que referencia Pessoa
-        );
+        return $this->belongsTo(Pessoa::class);
     }
 }

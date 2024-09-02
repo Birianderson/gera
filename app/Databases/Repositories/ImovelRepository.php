@@ -66,7 +66,8 @@ class ImovelRepository implements ImovelContract
      */
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
-        $query = Imovel::query()->with('pessoa');
+        $query = Imovel::query()
+            ->with('pessoa');
 
         if (isset($pagination['municipio'])) {
             $keyword = mb_strtolower($pagination['municipio']);
@@ -87,6 +88,11 @@ class ImovelRepository implements ImovelContract
         if (isset($pagination['lote'])) {
             $keyword = mb_strtolower($pagination['lote']);
             $query->whereRaw('lower(lote) like ?', ["%{$keyword}%"]);
+        }
+
+        if (isset($pagination['pessoa_nome'])){
+            $keyword = mb_strtolower($pagination['pessoa_nome']);
+            $query->whereRaw('lower(pessoa.nome) like ?', ["%{$keyword}%"]);
         }
         $query->orderBy($pagination['sort'] ?? 'nome', $pagination['sort_direction'] ?? 'asc');
         return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);

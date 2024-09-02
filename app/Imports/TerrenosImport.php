@@ -99,6 +99,8 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                             ]);
                             $imovel = new Imovel([
                                 'municipio' => $this->cidade,
+                                'pessoa_id' => $pessoa->id,
+                                'data_escritura' => $row['data_escritura'],
                                 'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
@@ -116,17 +118,15 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'confinante_lado_direito' => $row['confinante_lado_direito'],
                                 'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
                                 'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
+                                'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                             ]);
                             $imovel->save();
-                            $vinculacao = new VinculacaoImovelPessoas([
-                                'pessoa_id' => $pessoa->id,
-                                'imovel_id' => $imovel->id,
-                                'data_vinculacao' => $row['data_escritura']
-                            ]);
-                            $vinculacao->save();
                         } else {
                             $imovel = new Imovel([
                                 'municipio' => $this->cidade,
+                                'pessoa_id' => $pessoa->id,
+                                'data_escritura' => $row['data_escritura'],
                                 'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
@@ -144,14 +144,10 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'confinante_lado_direito' => $row['confinante_lado_direito'],
                                 'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
                                 'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
+                                'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                             ]);
                             $imovel->save();
-                            $vinculacao = new VinculacaoImovelPessoas([
-                                'pessoa_id' => $pessoa->id,
-                                'imovel_id' => $imovel->id,
-                                'data_vinculacao' => $row['data_escritura']
-                            ]);
-                            $vinculacao->save();
                             $pessoa->update([
                                 'conjuge_id' => $conjugeExistente->id,
                             ]);
@@ -162,6 +158,8 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                     } else {
                         $imovel = new Imovel([
                             'municipio' => $this->cidade,
+                            'pessoa_id' => $pessoa->id,
+                            'data_escritura' => $row['data_escritura'],
                             'loteamento' => $row['9_bairro_loteamento'],
                             'quadra' => $row['8_complemento_quadra'],
                             'lote' => $row['7_numero_lote'],
@@ -179,14 +177,10 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                             'confinante_lado_direito' => $row['confinante_lado_direito'],
                             'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
                             'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                            'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
+                            'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                         ]);
                         $imovel->save();
-                        $vinculacao = new VinculacaoImovelPessoas([
-                            'pessoa_id' => $pessoa->id,
-                            'imovel_id' => $imovel->id,
-                            'data_vinculacao' => $row['data_escritura']
-                        ]);
-                        $vinculacao->save();
                     }
                 } else {
                     if ($row['17_nome_conjuge'] !== null) {
@@ -220,6 +214,8 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                             ]);
                             $imovel = new Imovel([
                                 'municipio' => $this->cidade,
+                                'pessoa_id' => $pessoa->id,
+                                'data_escritura' => $row['data_escritura'],
                                 'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
@@ -237,14 +233,10 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'confinante_lado_direito' => $row['confinante_lado_direito'],
                                 'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
                                 'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
+                                'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                             ]);
                             $imovel->save();
-                            $vinculacao = new VinculacaoImovelPessoas([
-                                'pessoa_id' => $pessoa->id,
-                                'imovel_id' => $imovel->id,
-                                'data_vinculacao' => $row['data_escritura']
-                            ]);
-                            $vinculacao->save();
                         } else {
                             $pessoaExistente->update([
                                 'conjuge_id' => $conjugeExistente->id,
@@ -254,6 +246,8 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                             ]);
                             $imovel = new Imovel([
                                 'municipio' => $this->cidade,
+                                'pessoa_id' => $pessoa->id,
+                                'data_escritura' => $row['data_escritura'],
                                 'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
@@ -271,18 +265,16 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'confinante_lado_direito' => $row['confinante_lado_direito'],
                                 'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
                                 'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
+                                'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                             ]);
                             $imovel->save();
-                            $vinculacao = new VinculacaoImovelPessoas([
-                                'pessoa_id' => $pessoaExistente->id,
-                                'imovel_id' => $imovel->id,
-                                'data_vinculacao' => $row['data_escritura']
-                            ]);
-                            $vinculacao->save();
                         }
                     } else {
                         $imovel = new Imovel([
                             'municipio' => $this->cidade,
+                            'pessoa_id' => $pessoa->id,
+                            'data_escritura' => $row['data_escritura'],
                             'loteamento' => $row['9_bairro_loteamento'],
                             'quadra' => $row['8_complemento_quadra'],
                             'lote' => $row['7_numero_lote'],
@@ -300,14 +292,10 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                             'confinante_lado_direito' => $row['confinante_lado_direito'],
                             'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
                             'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                            'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
+                            'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                         ]);
                         $imovel->save();
-                        $vinculacao = new VinculacaoImovelPessoas([
-                            'pessoa_id' => $pessoaExistente->id,
-                            'imovel_id' => $imovel->id,
-                            'data_vinculacao' => $row['data_escritura']
-                        ]);
-                        $vinculacao->save();
                     }
                 }
             } else {
@@ -330,6 +318,8 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                     'confinante_lado_direito' => $row['confinante_lado_direito'],
                     'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
                     'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                    'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
+                    'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
                 ]);
                 $imovel->save();
             }
