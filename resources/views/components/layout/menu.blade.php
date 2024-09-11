@@ -1,78 +1,45 @@
 <nav class="menu open-current-submenu">
     <ul>
-        <li class="menu-item">
-            <a href="#">
+        <li class="menu-item @if(str_contains(request()->route()->getName(), 'home')) active @endif">
+            <a href="{{route('home')}}">
+                  <span class="menu-icon">
+                    <i class="fa fa-chart-pie"></i>
+                  </span>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="menu-item @if(str_contains(request()->route()->getName(), 'pessoa')) active @endif">
+            <a href="{{route('pessoa.index')}}">
+                  <span class="menu-icon">
+                    <i class="fa fa-people-group"></i>
+                  </span>
+                <span class="menu-title">Pessoas</span>
+            </a>
+        </li>
+        <li class="menu-item @if(str_contains(request()->route()->getName(), 'imovel')) active @endif">
+            <a href="{{route('imovel.index')}}">
                   <span class="menu-icon">
                     <i class="fa fa-home"></i>
                   </span>
-                <span class="menu-title">Home</span>
+                <span class="menu-title">Imóveis</span>
             </a>
         </li>
-        <li class="menu-item @if(str_contains(request()->route()->getName(), 'minha_conta')) active @endif">
-            <a href="#">
+        <li class="menu-item @if(str_contains(request()->route()->getName(), 'mapa')) active @endif">
+            <a href="{{route('mapa.index')}}">
                   <span class="menu-icon">
-                    <i class="fa fa-person"></i>
+                    <i class="fa fa-map-location-dot"></i>
                   </span>
-                <span class="menu-title">Minha Conta</span>
-
+                <span class="menu-title">Mapa</span>
             </a>
         </li>
-        <li class="menu-item @if(str_contains(request()->route()->getName(), 'entidade_info')) active @endif">
-            <a href="#">
+        <li class="menu-item @if(str_contains(request()->route()->getName(), 'upload')) active @endif">
+            <a href="{{route('upload.index')}}">
                   <span class="menu-icon">
-                    <i class="fa fa-building"></i>
+                    <i class="fa fa-file-import"></i>
                   </span>
-                <span class="menu-title">Dados da Entidade</span>
+                <span class="menu-title">Importar</span>
             </a>
         </li>
-        <li class="menu-item @if(str_contains(request()->route()->getName(), 'unidades_atendimento')) active @endif">
-            <a href="#">
-                  <span class="menu-icon">
-                    <i class="fa fa-headset"></i>
-                  </span>
-                <span class="menu-title">Unidades de Atendimento</span>
-
-            </a>
-        </li>
-        <li class="menu-item @if(str_contains(request()->route()->getName(), 'assunto')) active @endif">
-            <a href="#">
-                  <span class="menu-icon">
-                    <i class="fa fa-list"></i>
-                  </span>
-                <span class="menu-title">Assuntos</span>
-
-            </a>
-        </li>
-        <li class="menu-item @if(str_contains(request()->route()->getName(), 'lista_publicacao')) active @endif">
-            <a href="#">
-                  <span class="menu-icon">
-                    <i class="fa fa-sticky-note"></i>
-                  </span>
-                <span class="menu-title">Publicações</span>
-
-            </a>
-        </li>
-        <li class="menu-item @if(str_contains(request()->route()->getName(), 'solicitacao')) active @endif">
-            <a href="#">
-                  <span class="menu-icon">
-                    <i class="fa fa-calendar-check"></i>
-                  </span>
-                <span class="menu-title">Solicitações</span>
-
-            </a>
-        </li>
-
-        <li class="menu-item">
-            <a href="#">
-                  <span class="menu-icon">
-                    <i class="fa fa-mortar-pestle"></i>
-                  </span>
-                <span class="menu-title">Escola Transparência</span>
-
-            </a>
-        </li>
-
-
         <li class="menu-item sub-menu @if(str_contains(request()->route()->getName(), 'competencia') || str_contains(request()->route()->getName(), 'usuario')) open @endif">
             <a href="#">
                   <span class="menu-icon">
@@ -82,19 +49,12 @@
             </a>
             <div class="sub-menu-list ">
                 <ul>
-                    <li class="menu-item">
+                    <li class="menu-item @if(str_contains(request()->route()->getName(), 'minha_conta')) active @endif">
                         <a href="#">
-                            <span class="menu-title">Entidades</span>
-                        </a>
-                    </li>
-                    <li class="menu-item @if(str_contains(request()->route()->getName(), 'usuario')) active @endif" >
-                        <a href="#">
-                            <span class="menu-title">Usuários</span>
-                        </a>
-                    </li>
-                    <li class="menu-item @if(str_contains(request()->route()->getName(), 'competencia')) active @endif" >
-                        <a href="#">
-                            <span class="menu-title">Competência</span>
+                  <span class="menu-icon">
+                    <i class="fa fa-person"></i>
+                  </span>
+                            <span class="menu-title">Minha Conta</span>
                         </a>
                     </li>
                 </ul>

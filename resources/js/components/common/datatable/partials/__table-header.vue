@@ -35,6 +35,7 @@ import {ref, onMounted} from 'vue';
 import { useTableFilters } from '../../../../stores/table-filters';
 import TableCheckbox from "./__table-checkbox.vue";
 import TableFilterText from './filters/__table-filter-text.vue'
+import TableFilterCPF from './filters/__table-filter-cpf.vue'
 import TableFilterCheckbox from './filters/__table-filter-checkbox.vue'
 import TableFilterSelect from './filters/__table-filter-select.vue'
 import TableFilterDateRange from './filters/__table-filter-date-range.vue'
@@ -45,6 +46,7 @@ export default {
     components: {
         TableCheckbox,
         TableFilterText,
+        TableFilterCPF,
         TableFilterCheckbox,
         TableFilterSelect,
         TableFilterDateRange,

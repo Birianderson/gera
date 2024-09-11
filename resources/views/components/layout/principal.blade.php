@@ -29,7 +29,7 @@
             </div>
             <div class="sidebar-footer">
                 <div class="logo_tce d-flex justify-content-center">
-                    <img src="{{asset('imagens/logo_tce.png')}}" width="64px" alt="Logo GPE">
+
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
 
         <footer>
             <div class="content">
-                © 2024, Tribunal de Contas de Mato Grosso
+                © 2024, SibiriSystem
             </div>
         </footer>
 
