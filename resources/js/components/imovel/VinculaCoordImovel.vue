@@ -62,7 +62,7 @@ export default {
         const events = inject('events');
         const searchQuery = ref('');
         const ready = ref(true);
-        const acao = ref('/imovel/vincula/');
+        const acao = ref('/imovel/vincula');
         const isSearching = ref(false);
         const isFound = ref(false);
         const hasCoordinates = ref(false); // Nova variável para controlar se já existem coordenadas
