@@ -16,20 +16,9 @@ class Pessoa extends Model
 
     public function imoveis()
     {
-        return $this->hasManyThrough(
-            Imovel::class,
-            VinculacaoImovelPessoas::class,
-            'pessoa_id', // Chave estrangeira em VinculacaoImovelPessoa que referencia Pessoa
-            'id', // Chave estrangeira em Imovel que referencia VinculacaoImovelPessoa
-            'id', // Chave primária local em Pessoa
-            'imovel_id' // Chave estrangeira em VinculacaoImovelPessoa que referencia Imovel
-        );
+        return $this->hasMany(Imovel::class, 'pessoa_id', 'id');
     }
 
-    public function vinculacaoImovelPessoa()
-    {
-        return $this->hasMany(VinculacaoImovelPessoas::class);
-    }
 
     public function conjuge(){
         return $this->hasOne(Pessoa::class,'id','conjuge_id');

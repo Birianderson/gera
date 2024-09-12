@@ -152,7 +152,7 @@ export default {
         const events = inject('events');
         const info = ref({});
         const ready = ref(false);
-        const acao = ref('/pessoa/');
+        const acao = ref('/pessoa/create');
         const checkedFalecida = ref(false);
         const checkedUniaoEstavel = ref(false);
         const readOnly = ref(true);
@@ -161,6 +161,7 @@ export default {
         const loadData = async () => {
             try {
                 const response = await axios.get(`${acao.value}${props.data.id}`);
+                acao.value = '/pessoa/'
                 acao.value += props.data.id;
                 info.value = response.data;
                 console.log(info.value)
