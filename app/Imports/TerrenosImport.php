@@ -273,7 +273,7 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                     } else {
                         $imovel = new Imovel([
                             'municipio' => $this->cidade,
-                            'pessoa_id' => $pessoa->id,
+                            'pessoa_id' => $pessoaExistente->id,
                             'data_escritura' => $row['data_escritura'],
                             'loteamento' => $row['9_bairro_loteamento'],
                             'quadra' => $row['8_complemento_quadra'],

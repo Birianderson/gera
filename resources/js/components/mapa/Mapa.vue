@@ -67,7 +67,7 @@ const carregarCoordenadas = async () => {
                 const position = calcularPosition(path);
 
                 if (coordenada.imovel_id !== null) {
-                    if(coordenada.imovel.vinculacao_imovel_pessoa){
+                    if(coordenada.imovel.pessoa){
                         const markerOptions = {
                             position: position,
                             title: 'Imóvel COM morador',

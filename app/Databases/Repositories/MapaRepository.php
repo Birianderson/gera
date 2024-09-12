@@ -16,7 +16,7 @@ class MapaRepository implements MapaContract
      */
     public function getByCidade(string $municipio): Collection
     {
-        return Coordenadas::query()->where('municipio','=',$municipio)->with('imovel.vinculacaoImovelPessoa.pessoa')->get();
+        return Coordenadas::query()->where('municipio','=',$municipio)->with('imovel.pessoa')->get();
     }
 
 }

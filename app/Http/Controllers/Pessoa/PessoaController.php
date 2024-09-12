@@ -42,6 +42,9 @@ class PessoaController extends Controller
             'cpf' => [
                 'type' => 'text',
             ],
+            'telefone' => [
+                'type' => 'text',
+            ],
             'estado_civil' => [
                 'type' => 'select',
                 'options' => [

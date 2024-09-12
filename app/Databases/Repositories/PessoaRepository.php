@@ -73,6 +73,12 @@ class PessoaRepository implements PessoaContract
             $keyword = mb_strtolower($pagination['cpf']);
             $query->whereRaw('lower(cpf) like ?', ["%{$keyword}%"]);
         }
+
+        if (isset($pagination['telefone'])) {
+            $keyword = mb_strtolower($pagination['telefone']);
+            $query->whereRaw('lower(telefone) like ?', ["%{$keyword}%"]);
+        }
+
         if (isset($pagination['estado_civil'])) {
             $keyword = mb_strtolower($pagination['estado_civil']);
             $query->whereRaw('lower(estado_civil) like ?', ["%{$keyword}%"]);

@@ -90,10 +90,14 @@ class ImovelRepository implements ImovelContract
             $query->whereRaw('lower(lote) like ?', ["%{$keyword}%"]);
         }
 
-        if (isset($pagination['pessoa_nome'])){
+        // Ajuste para filtrar pelo nome da pessoa
+        if (isset($pagination['pessoa_nome'])) {
             $keyword = mb_strtolower($pagination['pessoa_nome']);
-            $query->whereRaw('lower(pessoa.nome) like ?', ["%{$keyword}%"]);
+            $query->whereHas('pessoa', function ($q) use ($keyword) {
+                $q->whereRaw('lower(nome) like ?', ["%{$keyword}%"]);
+            });
         }
+
         $query->orderBy($pagination['sort'] ?? 'nome', $pagination['sort_direction'] ?? 'asc');
         return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
 
