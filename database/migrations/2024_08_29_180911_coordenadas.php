@@ -12,8 +12,8 @@ return new class extends Migration
             $table->foreignId('imovel_id')->nullable();
             $table->string('municipio');
             $table->string('loteamento')->nullable();
-            $table->string('lat');
-            $table->string('long');
+            $table->text('lat');
+            $table->text('long');
             $table->timestamps();
             $table->softDeletes();
 

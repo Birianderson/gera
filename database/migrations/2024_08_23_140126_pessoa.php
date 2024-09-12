@@ -12,7 +12,7 @@ return new class extends Migration
             $table->string('nome');
             $table->string('profissao')->nullable();
             $table->char('estado_civil',1)->nullable();
-            $table->char('regime_casamento',1)->nullable();
+            $table->string('regime_casamento')->nullable();
             $table->char('uniao_estavel',1)->nullable();
             $table->string('nome_pai')->nullable();
             $table->string('nome_mae')->nullable();
