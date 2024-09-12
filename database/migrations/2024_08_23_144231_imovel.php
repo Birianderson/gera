@@ -10,7 +10,7 @@ return new class extends Migration
         Schema::create('imovel', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pessoa_id')->nullable();
-            $table->dateTime('data_escritura')->nullable();
+            $table->string('data_escritura')->nullable();
             $table->string('loteamento')->nullable();
             $table->string('municipio')->nullable();
             $table->string('matricula_reurb')->nullable();
