@@ -89,20 +89,23 @@ const carregarCoordenadas = async () => {
                 const position = calcularPosition(path);
 
                 if (coordenada.imovel_id !== null) {
-                    if(coordenada.imovel.pessoa){
+                    if (coordenada.imovel.pessoa) {
                         const markerOptions = {
                             position: position,
                             title: 'Imóvel COM morador',
                         };
                         const pinOptions = {
                             background: '#00ff00',
-                            glyphColor:'#00ff00',
+                            glyphColor: '#00ff00',
                         };
                         const customData = {
-                            coordenada_id: coordenada.id,
                             imovel_id: coordenada.imovel_id
                         }
-                        advancedMarkers.value.push({options: markerOptions, pinOptions: pinOptions, customData: customData});
+                        advancedMarkers.value.push({
+                            options: markerOptions,
+                            pinOptions: pinOptions,
+                            customData: customData
+                        });
                         return {
                             paths: path,
                             strokeColor: '#00ff00',
@@ -111,17 +114,16 @@ const carregarCoordenadas = async () => {
                             fillColor: '#00ff00',
                             fillOpacity: 0.35,
                         };
-                    }else {
+                    } else {
                         const markerOptions = {
                             position: position,
                             title: 'Imóvel SEM morador',
                         };
                         const pinOptions = {
                             background: '#0d6efd',
-                            glyphColor:'#0d6efd',
+                            glyphColor: '#0d6efd',
                         };
                         const customData = {
-                            coordenada_id: coordenada.id,
                             imovel_id: coordenada.imovel_id
                         }
                         advancedMarkers.value.push({
@@ -145,13 +147,17 @@ const carregarCoordenadas = async () => {
                     };
                     const pinOptions = {
                         background: '#D3D3D3',
-                        glyphColor:'#D3D3D3',
+                        glyphColor: '#D3D3D3',
                     };
                     const customData = {
                         coordenada_id: coordenada.id,
                         loteamento_id: selectedLoteamento.value
                     }
-                    advancedMarkers.value.push({options: markerOptions, pinOptions: pinOptions, customData: customData});
+                    advancedMarkers.value.push({
+                        options: markerOptions,
+                        pinOptions: pinOptions,
+                        customData: customData
+                    });
                     return {
                         paths: path,
                         strokeColor: '#D3D3D3',
@@ -161,7 +167,6 @@ const carregarCoordenadas = async () => {
                         fillOpacity: 0.35,
                     };
                 }
-
 
 
             });
@@ -175,17 +180,29 @@ const carregarCoordenadas = async () => {
 
 
 // Função para ser chamada ao clicar em um AdvancedMarker
-const handleMarkerClick = (marker_id) => {
-    events.emit('popup', {
-        title: 'Vincular coordenada a Imóvel',
-        component: 'vincula-coord-imovel',
-        data: marker_id,
-        size: 'md',
-        id: 'vinculacao'
-    });
+const handleMarkerClick = (data) => {
+    if (data.imovel_id) {
+        events.emit('popup', {
+            title: 'Informações Imóvel',
+            component: 'imovel-card',
+            data: data,
+            size: 'xl',
+            id: 'imovel'
+        });
+    } else {
+        events.emit('popup', {
+            title: 'Vincular coordenada a Imóvel',
+            component: 'vincula-coord-imovel',
+            data: data,
+            size: 'md',
+            id: 'vinculacao'
+        });
+    }
+
+
+    console.log(data);
 };
 </script>
-
 
 
 <template>
@@ -201,7 +218,8 @@ const handleMarkerClick = (marker_id) => {
         </select>
 
         <label class="form-label">Selecione um loteamento:</label>
-        <select :disabled="!loteamentos.length > 0" v-model="selectedLoteamento"  @change="carregarCoordenadas" class="form-select mb-3">
+        <select :disabled="!loteamentos.length > 0" v-model="selectedLoteamento" @change="carregarCoordenadas"
+                class="form-select mb-3">
             <option value="" disabled>Escolha um loteamento</option>
             <option v-for="loteamento in loteamentos" :key="loteamento.id" :value="loteamento.id">
                 {{ loteamento.nome }}

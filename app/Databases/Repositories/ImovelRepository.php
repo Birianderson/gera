@@ -45,7 +45,7 @@ class ImovelRepository implements ImovelContract
 
         return Imovel::query()
             ->where('id', '=', $id)
-            ->with('coordenadas')
+            ->with(['coordenadas','pessoa.conjuge'])
             ->firstOrFail();
     }
 

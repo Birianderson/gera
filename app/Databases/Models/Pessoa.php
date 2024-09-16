@@ -13,7 +13,6 @@ class Pessoa extends Model
     protected $table = 'pessoa';
     public string $sequence = 'pessoa_id_seq';
     protected $guarded = [];
-
     public function imoveis()
     {
         return $this->hasMany(Imovel::class, 'pessoa_id', 'id');
