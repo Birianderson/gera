@@ -10,17 +10,39 @@ const polygons = ref([]); // Lista de polígonos
 const advancedMarkers = ref([]); // Lista de marcadores
 const mapLoaded = ref(false); // Controla quando o mapa deve ser carregado
 const events = inject('events');
+const loteamentos = ref([]);
+const selectedLoteamento = ref('');
 onMounted(async () => {
-    await carregarMunicipios();
+    await carregarMunicipio();
     events.on('recarrega_mapa', carregarCoordenadas);
 });
 
-const carregarMunicipios = async () => {
+const carregarMunicipio = async () => {
     try {
-        const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/51/municipios');
+        const response = await axios.get('/cidade/getAll');
         municipios.value = response.data;
     } catch (error) {
         console.error('Erro ao carregar municípios:', error);
+        events.emit('notification', {
+            type: 'error',
+            message: 'Erro ao carregar municípios.'
+        });
+    }
+};
+
+// Carregar os loteamentos ao selecionar uma cidade
+const carregarLoteamento = async () => {
+    if (!selectedCity.value) return;
+
+    try {
+        const response = await axios.get(`/loteamento/findLoteamentoByCidade/${selectedCity.value}`);
+        loteamentos.value = response.data;
+    } catch (error) {
+        console.error('Erro ao carregar loteamentos:', error);
+        events.emit('notification', {
+            type: 'error',
+            message: 'Erro ao carregar loteamentos.'
+        });
     }
 };
 
@@ -44,7 +66,7 @@ const calcularPosition = (path) => {
 const carregarCoordenadas = async () => {
 
     try {
-        const response = await axios.get(`/mapa/getByCidade/${selectedCity.value}`);
+        const response = await axios.get(`/mapa/getByLoteamento/${selectedLoteamento.value}`);
         const coordenadas = response.data;
         if (coordenadas.length > 0) {
             const primeiraCoordenada = coordenadas[0];
@@ -170,13 +192,20 @@ const handleMarkerClick = (marker_id) => {
         <p>Selecione uma cidade da lista abaixo para visualizar as coordenadas no mapa.</p>
 
         <label class="form-label">Selecione uma cidade:</label>
-        <select v-model="selectedCity" @change="carregarCoordenadas" class="form-select mb-3">
+        <select v-model="selectedCity" class="form-select mb-3" @change="carregarLoteamento">
             <option value="" disabled>Escolha uma cidade para Importar</option>
-            <option v-for="municipio in municipios" :key="municipio.id" :value="municipio.nome">
+            <option v-for="municipio in municipios" :key="municipio.id" :value="municipio.id">
                 {{ municipio.nome }}
             </option>
         </select>
 
+        <label class="form-label">Selecione um loteamento:</label>
+        <select :disabled="!loteamentos.length > 0" v-model="selectedLoteamento"  @change="carregarCoordenadas" class="form-select mb-3">
+            <option value="" disabled>Escolha um loteamento</option>
+            <option v-for="loteamento in loteamentos" :key="loteamento.id" :value="loteamento.id">
+                {{ loteamento.nome }}
+            </option>
+        </select>
         <div v-if="mapLoaded">
             <GoogleMap
                 api-key="AIzaSyBx1KWiOM70BALJjUC5QI0jrQC0QdEc7Jo"

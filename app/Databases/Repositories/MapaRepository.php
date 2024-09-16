@@ -14,9 +14,9 @@ class MapaRepository implements MapaContract
     /**
      * @throws Exception
      */
-    public function getByCidade(string $municipio): Collection
+    public function getByLoteamento(string $loteamento_id): Collection
     {
-        return Coordenadas::query()->where('municipio','=',$municipio)->with('imovel.pessoa')->get();
+        return Coordenadas::query()->where('loteamento_id','=',$loteamento_id)->with('imovel.pessoa')->get();
     }
 
 }

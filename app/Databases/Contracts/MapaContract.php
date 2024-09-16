@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface MapaContract
 {
-    public function getByCidade(String $cidade): Collection;
+    public function getByLoteamento(String $cidade): Collection;
 }
 

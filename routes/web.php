@@ -79,7 +79,7 @@ Route::middleware(['auth','admin'])->group(function () {
 
     Route::group(['prefix' => 'mapa'], function () {
         Route::get('/', [MapaController::class, 'index'])->name('mapa.index');
-        Route::get('/getByCidade/{cidade}', [MapaController::class, 'getByCidade'])->name('mapa.getByCidade');
+        Route::get('/getByLoteamento/{loteamento_id}', [MapaController::class, 'getByLoteamento'])->name('mapa.getByCidade');
     });
 
 });
