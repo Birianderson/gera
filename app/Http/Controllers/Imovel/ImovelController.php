@@ -83,6 +83,12 @@ class ImovelController extends Controller
         return response()->json($categoria);
     }
 
+    public function findByQuadraLote($loteamento_id, $quadra, $lote)
+    {
+       $imovel = $this->ImovelRepository->findByQuadraLote($loteamento_id, $quadra, $lote);
+       return $imovel;
+    }
+
     /**
      * Editar Unidade de Atendimento
      * @param int $id

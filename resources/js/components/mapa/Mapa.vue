@@ -149,6 +149,7 @@ const carregarCoordenadas = async () => {
                     };
                     const customData = {
                         coordenada_id: coordenada.id,
+                        loteamento_id: selectedLoteamento.value
                     }
                     advancedMarkers.value.push({options: markerOptions, pinOptions: pinOptions, customData: customData});
                     return {

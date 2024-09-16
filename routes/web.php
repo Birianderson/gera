@@ -36,6 +36,7 @@ Route::middleware(['auth','admin'])->group(function () {
         Route::get('/', [ImovelController::class, 'index'])->name('imovel.index');
         Route::get('/list', [ImovelController::class, 'list'])->name('imovel.list');
         Route::get('/ordem', [ImovelController::class, 'ordem'])->name('imovel.ordem');
+        Route::get('/findByQuadraLote/{loteamento_id}/{quadra}/{lote}', [ImovelController::class, 'findByQuadraLote'])->name('imovel.findByQuadraLote');
         Route::get('/findCPF/{CPF}', [ImovelController::class, 'findCPF'])->name('imovel.findCPF');
         Route::get('/{id}', [ImovelController::class, 'edit'])->name('imovel.edit');
         Route::post('/create', [ImovelController::class, 'create'])->name('imovel.create');

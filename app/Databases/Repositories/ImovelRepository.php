@@ -49,6 +49,15 @@ class ImovelRepository implements ImovelContract
             ->firstOrFail();
     }
 
+    public function findByQuadraLote($loteamento_id, $quadra, $lote)
+    {
+        return Imovel::query()
+            ->where('loteamento_id', $loteamento_id)
+            ->where('quadra', $quadra)
+            ->where('lote', $lote)
+            ->first();
+    }
+
     /**
      * Busca todos registros de Unidade de Atendimento
      * @return Collection
@@ -103,6 +112,7 @@ class ImovelRepository implements ImovelContract
 
 
     }
+
 
 
 
@@ -217,9 +227,14 @@ class ImovelRepository implements ImovelContract
         $autoCommit && DB::beginTransaction();
         try {
 
-            $coordenadas = Coordenadas::query()->where('id', '=', $params['coordenada'])->first();
+            $imovel = Imovel::query()
+                ->where('loteamento_id', $params['loteamento_id'])
+                ->where('quadra', $params['quadra'])
+                ->where('lote', $params['lote'])
+                ->first();
+            $coordenadas = Coordenadas::query()->where('id', '=', $params['coordenada_id'])->first();
             $coordenadas->update([
-                'imovel_id' => $params['search'],
+                'imovel_id' => $imovel->id,
             ]);
 
             $autoCommit && DB::commit();
