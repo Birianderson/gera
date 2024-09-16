@@ -7,20 +7,20 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('coordenadas', function (Blueprint $table) {
+        Schema::create('loteamento', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('imovel_id')->nullable();
-            $table->text('lat');
-            $table->text('long');
+            $table->foreignId('cidade_id')->nullable();
+            $table->string('nome');
+            $table->string('sigla')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('imovel_id')->references('id')->on('imovel');
+            $table->foreign('cidade_id')->references('id')->on('cidade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('coordenadas');
+        Schema::dropIfExists('loteamento');
     }
 };
