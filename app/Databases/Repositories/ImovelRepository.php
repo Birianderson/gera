@@ -98,7 +98,7 @@ class ImovelRepository implements ImovelContract
             });
         }
 
-        $query->orderBy($pagination['sort'] ?? 'nome', $pagination['sort_direction'] ?? 'asc');
+        $query->orderBy($pagination['sort'] ?? 'municipio', $pagination['sort_direction'] ?? 'asc');
         return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
 
 

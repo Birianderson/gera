@@ -9,38 +9,29 @@ return new class extends Migration
     {
         Schema::create('imovel', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pessoa_id')->nullable();
+            $table->unsignedInteger('pessoa_id')->nullable();
+            $table->unsignedInteger('loteamento_id')->nullable();
             $table->string('data_escritura')->nullable();
-            $table->string('loteamento')->nullable();
-            $table->string('municipio')->nullable();
             $table->string('matricula_reurb')->nullable();
             $table->string('inscricao_imobiliaria')->nullable();
             $table->string('casa')->nullable();
-            $table->string('quadra')->nullable();
-            $table->string('lote')->nullable();
-            $table->string('medida_frente')->nullable();
-            $table->string('medida_fundo')->nullable();
-            $table->string('medida_lado_direito')->nullable();
-            $table->string('medida_lado_esquerdo')->nullable();
-            $table->string('area')->nullable();
-            $table->string('area_construida')->nullable();
-            $table->string('perimetro')->nullable();
-            $table->float('area_numerico')->nullable();
-            $table->string('confinante_frente')->nullable();
-            $table->string('confinante_fundo')->nullable();
-            $table->string('confinante_lado_direito')->nullable();
-            $table->string('confinante_lado_esquerdo')->nullable();
-            $table->float('valor_venal')->nullable();
-            $table->float('valor_terreno')->nullable();
-            $table->float('valor_construcao')->nullable();
-            $table->string('numero_processo_administrativo')->nullable();
-            $table->string('prefixo_titulo')->nullable();
-            $table->string('ano_titulo')->nullable();
-            $table->string('numero_titulo')->nullable();
+            $table->string('quadra');
+            $table->string('lote');
+            $table->string('medida_frente');
+            $table->string('medida_fundo');
+            $table->string('medida_direita');
+            $table->string('medida_esquerda');
+            $table->string('area');
+            $table->string('perimetro');
+            $table->string('confinante_frente');
+            $table->string('confinante_fundo');
+            $table->string('confinante_direita');
+            $table->string('confinante_esquerda');
             $table->timestamps();
             $table->softDeletes();
 
-
+            $table->foreign('pessoa_id')->references('id')->on('pessoa');
+            $table->foreign('loteamento_id')->references('id')->on('loteamento');
         });
     }
 
