@@ -17,7 +17,7 @@ class UploadRepository implements UploadContract
     {
         DB::beginTransaction();
         try {
-            Excel::import(new TerrenosImport($data['cidade']), $data['file']);
+            Excel::import(new TerrenosImport($data['loteamento_id']), $data['file']);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollBack();

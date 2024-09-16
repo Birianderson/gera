@@ -13,4 +13,9 @@ class Loteamento extends Model
     protected $table = 'loteamento';
     public string $sequence = 'loteamento_id_seq';
     protected $guarded = [];
+
+    public function cidade()
+    {
+        return $this->belongsTo(Cidade::class);
+    }
 }

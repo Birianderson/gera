@@ -107,6 +107,17 @@ class CidadeController extends Controller
     }
 
 
+    /**
+     * Editar Unidade de Atendimento
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getAll(): JsonResponse
+    {
+        $cidade = $this->CidadeRepository->getAll();
+        return response()->json($cidade);
+    }
+
 
     /**
      * Atualizar Unidade de Atendimento

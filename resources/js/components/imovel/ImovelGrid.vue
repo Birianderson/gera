@@ -16,11 +16,10 @@ const events = inject('events');
 const source = '/imovel/list';
 
 const columns = ref([
-    {name: 'municipio', title: 'Município', width: '10%', sort: 'municipio', nowrap: true},
-    {name: 'loteamento', title: 'Loteamento', width: '10%', sort: 'loteamento', nowrap: true},
+    {name: 'cidade.nome', title: 'Município', width: '10%', sort: 'cidade.nome', nowrap: true},
+    {name: 'loteamento.nome', title: 'Loteamento', width: '10%', sort: 'loteamento.nome', nowrap: true},
     {name: 'quadra', title: 'Quadra', width: '10%', sort: 'quadra'},
     {name: 'lote', title: 'Lote', width: '10%', sort: 'lote'},
-    {name: 'numero_processo_administrativo', title: 'Número Processo', width: '10%', sort: 'prefixo_titulo'},
     {name: 'pessoa.nome', title: 'Titular', width: '20%'},
     {
         name: 'id',

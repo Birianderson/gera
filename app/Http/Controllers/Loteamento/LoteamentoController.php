@@ -92,7 +92,7 @@ class LoteamentoController extends Controller
      */
     public function findLoteamentoByCidade(string $id): JsonResponse
     {
-        $loteamento = $this->LoteamentoRepository->getLoteamentoByCidadeID($id);
+        $loteamento = $this->LoteamentoRepository->getByCidadeId($id);
         return response()->json($loteamento);
     }
 

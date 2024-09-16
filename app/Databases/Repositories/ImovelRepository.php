@@ -67,7 +67,7 @@ class ImovelRepository implements ImovelContract
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
         $query = Imovel::query()
-            ->with('pessoa');
+            ->with(['pessoa','loteamento','cidade']);
 
         if (isset($pagination['municipio'])) {
             $keyword = mb_strtolower($pagination['municipio']);

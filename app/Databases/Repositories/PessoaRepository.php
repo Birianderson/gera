@@ -185,13 +185,7 @@ class PessoaRepository implements PessoaContract
      */
     public function getImoveisByID($id): Collection
     {
-        $pessoa = Pessoa::query()->where('id', '=', $id)->with('imoveis')->first();
-
-        if ($pessoa) {
-            $imoveis = $pessoa->imoveis;
-        }
-
-        return $imoveis;
+        return Imovel::query()->where('pessoa_id', '=', $id)->with(['loteamento','cidade'])->get();
     }
 
     /**

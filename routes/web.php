@@ -48,6 +48,7 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::group(['prefix' => 'cidade'], function () {
         Route::get('/', [CidadeController::class, 'index'])->name('cidade.index');
         Route::get('/list', [CidadeController::class, 'list'])->name('cidade.list');
+        Route::get('/getAll', [CidadeController::class, 'getAll'])->name('cidade.getAll');
         Route::get('/ordem', [CidadeController::class, 'ordem'])->name('cidade.ordem');
         Route::get('/{id}', [CidadeController::class, 'edit'])->name('cidade.edit');
         Route::post('/create', [CidadeController::class, 'create'])->name('cidade.create');

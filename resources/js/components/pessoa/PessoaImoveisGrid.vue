@@ -15,9 +15,8 @@ const events = inject('events');
 const source = ref({});
 const ready = ref(false);
 const columns = ref([
-    {name: 'municipio', title: 'Município', width: '10%', sort: 'municipio'},
-    {name: 'loteamento', title: 'Loteamento', width: '10%', sort: 'loteamento'},
-    {name: 'prefixo_titulo', title: 'Prefixo', width: '10%', sort: 'prefixo_titulo'},
+    {name: 'cidade.nome', title: 'Município', width: '10%', sort: 'municipio'},
+    {name: 'loteamento.nome', title: 'Loteamento', width: '10%', sort: 'loteamento'},
     {name: 'quadra', title: 'Quadra', width: '10%', sort: 'quadra'},
     {name: 'lote', title: 'Lote', width: '10%', sort: 'lote'},
 ]);
