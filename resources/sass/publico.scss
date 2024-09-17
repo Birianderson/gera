@@ -1,0 +1,474 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap');
+
+@import "bootstrap/scss/bootstrap";
+
+// Configuration
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// Layout & components
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/tables";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/dropdown";
+@import "bootstrap/scss/button-group";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/accordion";
+@import "bootstrap/scss/breadcrumb";
+@import "bootstrap/scss/pagination";
+@import "bootstrap/scss/badge";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/progress";
+@import "bootstrap/scss/list-group";
+@import "bootstrap/scss/close";
+@import "bootstrap/scss/toasts";
+@import "bootstrap/scss/modal";
+@import "bootstrap/scss/popover";
+@import "bootstrap/scss/carousel";
+@import "bootstrap/scss/spinners";
+@import "bootstrap/scss/offcanvas";
+@import "bootstrap/scss/placeholders";
+@import "@fortawesome/fontawesome-free/css/fontawesome.css";
+@import "@fortawesome/fontawesome-free/css/solid.css";
+@import "@fortawesome/fontawesome-free/css/regular.css";
+@import "@fortawesome/fontawesome-free/css/brands.css";
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+
+// Variáveis de Cores
+$primary-color: #2E8B57; // Verde representando natureza/terra
+$secondary-color: #1E90FF; // Azul para tecnologia/céu
+$accent-color: #cd5407; // Amarelo para destacar pontos chave (como em pins de localização)
+$light-gray: #f5f5f5;
+$dark-gray: #333;
+$white: #fff;
+$background-color: #e0f7fa; // Azul claro de fundo para modernidade e leveza
+$primary: #005f73; // Exemplo de uma cor azul mais escura, altere conforme necessário
+$secondary: #94d2bd; // Outra cor de contraste que pode harmonizar melhor
+$success: #0a9396;
+$info: #e9d8a6;
+$warning: #ee9b00;
+$danger: #bb3e03;
+$light: #fefae0;
+$dark: #001219;
+// Corpo Geral da Página
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: $background-color;
+    color: $dark-gray;
+}
+
+// Cabeçalho
+header {
+    background-color: $primary-color;
+    color: $white;
+    text-align: center;
+    padding: 60px 0;
+
+    h1 {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 1.2rem;
+    }
+}
+
+// Seções Gerais
+section {
+    padding: 60px 0;
+
+    .section-heading {
+        background-color: $primary-color;
+        color: $white;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: $dark-gray;
+    }
+}
+
+// Cartões de Ícones
+.icon-card {
+    background-color: $light-gray;
+    padding: 20px;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    border: none !important;
+    i {
+        font-size: 3rem;
+        color: $secondary-color;
+    }
+
+    h4 {
+        margin-top: 15px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: $primary-color;
+    }
+
+    p {
+        color: $dark-gray;
+    }
+
+    &:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+}
+
+// Listas com Ícones de Benefícios
+ul.list-unstyled {
+    padding-left: 0;
+
+    li {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+
+        i {
+            color: $accent-color;
+            margin-right: 10px;
+        }
+    }
+}
+
+// Botões
+.btn {
+    &-primary {
+        background-color: $primary-color;
+        border: none;
+        color: $white;
+        font-size: 1rem;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: darken($primary-color, 10%);
+        }
+    }
+
+    &-link {
+        color: $secondary-color;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// Seção de Contato
+section.bg-light {
+    background-color: lighten($primary-color, 40%);
+}
+
+.section-spacing {
+    padding: 60px 0;
+}
+
+// Rodapé
+footer {
+    background-color: $dark-gray;
+    color: $white;
+    text-align: center;
+    padding: 20px 0;
+
+    p {
+        margin: 0;
+    }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+    header {
+        padding: 40px 0;
+
+        h1 {
+            font-size: 2.5rem;
+        }
+    }
+
+    section {
+        padding: 40px 0;
+    }
+
+    .icon-card {
+        margin-bottom: 20px;
+    }
+
+    .section-heading {
+        font-size: 1.2rem;
+    }
+}
+
+// Definindo as cores principais da empresa
+$primary-color: #2F4F4F; // Verde Escuro - estabilidade e natureza
+$secondary-color: #3CB371; // Verde Médio - progresso e segurança
+$light-gray: #D3D3D3; // Cinza Claro - neutralidade
+$dark-brown: #8B4513; // Marrom - estabilidade e conexão com a terra
+$white-color: #FFFFFF; // Branco - limpeza e clareza
+
+// Aplicando as cores ao layout geral
+body {
+    background-color: $light-gray;
+    color: $primary-color;
+    font-family: 'Arial', sans-serif;
+}
+
+a {
+    color: $secondary-color;
+
+    &:hover {
+        color: darken($secondary-color, 10%);
+    }
+}
+
+// Cabeçalho
+header {
+    background-color: $primary-color;
+    color: $white-color;
+
+    .lead {
+        font-size: 1.25rem;
+        color: lighten($white-color, 20%);
+    }
+}
+
+// Seções de Títulos
+.section-heading {
+    background-color: $secondary-color;
+    color: $white-color;
+    padding: 10px 0;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+// Cards de Benefícios
+.icon-card {
+    background-color: $white-color;
+    border: 1px solid $primary-color;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    i {
+        font-size: 2rem;
+        color: $secondary-color;
+    }
+
+    h4 {
+        color: $primary-color;
+    }
+
+    p {
+        color: $primary-color;
+    }
+}
+
+// Seções com Fundos Claros
+.bg-light {
+    background-color: lighten($primary-color, 40%);
+    color: $primary-color;
+
+    .list-unstyled li {
+        margin: 5px 0;
+
+        i {
+            color: $secondary-color;
+        }
+    }
+
+    p {
+        color: darken($primary-color, 10%);
+    }
+}
+
+// Botões
+.btn-primary {
+    background-color: $secondary-color;
+    border-color: $secondary-color;
+    color: $white-color;
+
+    &:hover {
+        background-color: darken($secondary-color, 10%);
+        border-color: darken($secondary-color, 10%);
+    }
+}
+
+// Seção de Contato
+section.bg-light.text-center {
+    background-color: lighten($primary-color, 30%);
+    color: $primary-color;
+
+    a {
+        background-color: $secondary-color;
+        border: none;
+
+        &:hover {
+            background-color: darken($secondary-color, 10%);
+        }
+    }
+}
+
+// Rodapé
+footer {
+    background-color: $dark-brown;
+    color: $white-color;
+
+    p {
+        margin: 0;
+    }
+}
+
+// Estilos para o cabeçalho e navegação
+header {
+    background-color: $primary-color;
+
+    .navbar {
+        padding: 1rem 0;
+
+        .navbar-brand img {
+            max-height: 50px;
+        }
+
+        .nav-link {
+            color: $white-color;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+
+            &:hover {
+                color: lighten($secondary-color, 10%);
+            }
+
+            &.active {
+                font-weight: bold;
+                color: $secondary-color;
+            }
+        }
+
+        .navbar-toggler {
+            border-color: $white-color;
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        .navbar-toggler-icon {
+            background-image: none;
+            position: relative;
+
+            &::before, &::after {
+                content: '';
+                display: block;
+                background-color: $white-color;
+                height: 2px;
+                width: 25px;
+                margin: 4px 0;
+            }
+        }
+    }
+}
+
+// Seção logo abaixo do cabeçalho
+.section-spacing {
+    background-color: $light-gray;
+    padding: 60px 0;
+
+    h1 {
+        font-size: 3rem;
+        color: $primary-color;
+    }
+
+    p {
+        font-size: 1.25rem;
+        color: darken($primary-color, 10%);
+    }
+}
+
+.benefits-section {
+    background-color: #f8f9fa;
+    padding: 60px 0;
+}
+
+.benefit-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.benefit-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.icon-benefit {
+    font-size: 50px;
+    color: #28a745; /* Verde para os ícones */
+    margin-bottom: 15px;
+}
+
+.highlight-number {
+    font-size: 2.5rem;
+    color: #cd5407; /* Azul para os números */
+    font-weight: bold;
+}
+
+.text-list-unstyled {
+    font-weight: bold
+}
+
+.text-accent {
+    color: $accent-color !important;
+}
+
+.bg-accent {
+    background-color: $accent-color !important;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #343a40; /* Cor mais escura para os títulos */
+}
+
+.benefit-text {
+    font-size: 1rem;
+    color: #6c757d; /* Cor cinza para o texto explicativo */
+}
+
+@media (max-width: 768px) {
+    .benefit-item {
+        margin-bottom: 20px;
+    }
+}

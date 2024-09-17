@@ -12,11 +12,11 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class CoordenadasImport implements ToCollection, WithHeadingRow
 {
-    private $cidade;
+    private $loteamento_id;
 
-    public function __construct(string $cidade)
+    public function __construct(string $loteamento_id)
     {
-        $this->cidade = $cidade;
+        $this->loteamento_id = $loteamento_id;
     }
 
     public function collection(Collection|\Illuminate\Support\Collection $rows): void
@@ -45,7 +45,7 @@ class CoordenadasImport implements ToCollection, WithHeadingRow
                 $longitude = ltrim($longitude, ',');
                 $latitude = ltrim($latitude, ',');
                 $coordenadas = new Coordenadas([
-                    'municipio' => $this->cidade,
+                    'loteamento_id' => $this->loteamento_id,
                     'lat' => $latitude,
                     'long' => $longitude,
                 ]);

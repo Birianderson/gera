@@ -36,10 +36,10 @@ class ImovelController extends Controller
     {
         $dados = $this->ImovelRepository->paginate($request->all())->toArray();
         $dados['filter_options'] = [
-            'municipio' => [
+            'cidade.nome' => [
                 'type' => 'text',
             ],
-            'loteamento' => [
+            'loteamento.nome' => [
                 'type' => 'text',
             ],
             'prefixo_titulo' => [
@@ -81,6 +81,12 @@ class ImovelController extends Controller
     {
         $categoria = $this->ImovelRepository->getByCPF($cpf);
         return response()->json($categoria);
+    }
+
+    public function findByQuadraLote($loteamento_id, $quadra, $lote)
+    {
+       $imovel = $this->ImovelRepository->findByQuadraLote($loteamento_id, $quadra, $lote);
+       return $imovel;
     }
 
     /**

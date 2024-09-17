@@ -24,9 +24,9 @@ class MapaController extends Controller
         return view('mapa.index');
     }
 
-    public function getByCidade(String $municipio): JsonResponse
+    public function getByLoteamento(String $loteamento_id): JsonResponse
     {
-        $dados = $this->MapaRepository->getByCidade($municipio);
+        $dados = $this->MapaRepository->getByLoteamento($loteamento_id);
 
         return response()->json($dados);
     }

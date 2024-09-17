@@ -25,7 +25,7 @@ export default defineConfig(({ command, mode }) => {
         },
         plugins: [
             laravel({
-                input: ['resources/sass/app.scss','resources/js/app.js'],
+                input: ['resources/sass/app.scss','resources/sass/public.scss','resources/js/app.js'],
                 refresh: true
             }),
 

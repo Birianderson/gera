@@ -45,8 +45,17 @@ class ImovelRepository implements ImovelContract
 
         return Imovel::query()
             ->where('id', '=', $id)
-            ->with('coordenadas')
+            ->with(['coordenadas','pessoa.conjuge'])
             ->firstOrFail();
+    }
+
+    public function findByQuadraLote($loteamento_id, $quadra, $lote)
+    {
+        return Imovel::query()
+            ->where('loteamento_id', $loteamento_id)
+            ->where('quadra', $quadra)
+            ->where('lote', $lote)
+            ->first();
     }
 
     /**
@@ -67,7 +76,7 @@ class ImovelRepository implements ImovelContract
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
         $query = Imovel::query()
-            ->with('pessoa');
+            ->with(['pessoa','loteamento','cidade']);
 
         if (isset($pagination['municipio'])) {
             $keyword = mb_strtolower($pagination['municipio']);
@@ -98,11 +107,12 @@ class ImovelRepository implements ImovelContract
             });
         }
 
-        $query->orderBy($pagination['sort'] ?? 'nome', $pagination['sort_direction'] ?? 'asc');
+        $query->orderBy($pagination['sort'] ?? 'municipio', $pagination['sort_direction'] ?? 'asc');
         return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
 
 
     }
+
 
 
 
@@ -217,9 +227,14 @@ class ImovelRepository implements ImovelContract
         $autoCommit && DB::beginTransaction();
         try {
 
-            $coordenadas = Coordenadas::query()->where('id', '=', $params['coordenada'])->first();
+            $imovel = Imovel::query()
+                ->where('loteamento_id', $params['loteamento_id'])
+                ->where('quadra', $params['quadra'])
+                ->where('lote', $params['lote'])
+                ->first();
+            $coordenadas = Coordenadas::query()->where('id', '=', $params['coordenada_id'])->first();
             $coordenadas->update([
-                'imovel_id' => $params['search'],
+                'imovel_id' => $imovel->id,
             ]);
 
             $autoCommit && DB::commit();

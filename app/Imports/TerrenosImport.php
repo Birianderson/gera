@@ -4,19 +4,19 @@ namespace App\Imports;
 
 use App\Databases\Models\Imovel;
 use App\Databases\Models\Pessoa;
-use App\Databases\Models\VinculacaoImovelPessoas;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class TerrenosImport implements ToCollection, WithHeadingRow
 {
-    private $cidade;
+    private $loteamento_id;
 
-    public function __construct(string $cidade)
+    public function __construct(string $loteamento_id)
     {
-        $this->cidade = $cidade;
+        $this->loteamento_id = $loteamento_id;
     }
+
     public function collection(Collection|\Illuminate\Support\Collection $rows): void
     {
         $estadoCivilMap = [
@@ -98,54 +98,44 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'conjuge_id' => $conjugue->id,
                             ]);
                             $imovel = new Imovel([
-                                'municipio' => $this->cidade,
+                                'loteamento_id' => $this->loteamento_id,
                                 'pessoa_id' => $pessoa->id,
                                 'data_escritura' => $row['data_escritura'],
-                                'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
-                                'casa' => $row['6_logradouro_frente'],
                                 'inscricao_imobiliaria' => $row['inscricao_imobiliaria'] ?? null,
                                 'matricula_reurb' => $row['matricula'],
                                 'area' => $row['area_m2'],
                                 'perimetro' => $row['perimetro'],
                                 'medida_frente' => $row['medida_frente'],
                                 'medida_fundo' => $row['medida_fundo'],
-                                'medida_lado_direito' => $row['medida_lado_direito'],
-                                'medida_lado_esquerdo' => $row['medida_lado_esquerdo'],
+                                'medida_direita' => $row['medida_lado_direito'],
+                                'medida_esquerda' => $row['medida_lado_esquerdo'],
                                 'confinante_frente' => $row['confinante_frente'],
                                 'confinante_fundo' => $row['confinante_fundo'],
-                                'confinante_lado_direito' => $row['confinante_lado_direito'],
-                                'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                                'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
-                                'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
-                                'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'confinante_direita' => $row['confinante_lado_direito'],
+                                'confinante_esquerda' => $row['confinante_lado_esquerdo'],
                             ]);
                             $imovel->save();
                         } else {
                             $imovel = new Imovel([
-                                'municipio' => $this->cidade,
+                                'loteamento_id' => $this->loteamento_id,
                                 'pessoa_id' => $pessoa->id,
                                 'data_escritura' => $row['data_escritura'],
-                                'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
-                                'casa' => $row['6_logradouro_frente'],
                                 'inscricao_imobiliaria' => $row['inscricao_imobiliaria'] ?? null,
                                 'matricula_reurb' => $row['matricula'],
                                 'area' => $row['area_m2'],
                                 'perimetro' => $row['perimetro'],
                                 'medida_frente' => $row['medida_frente'],
                                 'medida_fundo' => $row['medida_fundo'],
-                                'medida_lado_direito' => $row['medida_lado_direito'],
-                                'medida_lado_esquerdo' => $row['medida_lado_esquerdo'],
+                                'medida_direita' => $row['medida_lado_direito'],
+                                'medida_esquerda' => $row['medida_lado_esquerdo'],
                                 'confinante_frente' => $row['confinante_frente'],
                                 'confinante_fundo' => $row['confinante_fundo'],
-                                'confinante_lado_direito' => $row['confinante_lado_direito'],
-                                'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                                'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
-                                'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
-                                'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'confinante_direita' => $row['confinante_lado_direito'],
+                                'confinante_esquerda' => $row['confinante_lado_esquerdo'],
                             ]);
                             $imovel->save();
                             $pessoa->update([
@@ -157,28 +147,23 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                         }
                     } else {
                         $imovel = new Imovel([
-                            'municipio' => $this->cidade,
+                            'loteamento_id' => $this->loteamento_id,
                             'pessoa_id' => $pessoa->id,
                             'data_escritura' => $row['data_escritura'],
-                            'loteamento' => $row['9_bairro_loteamento'],
                             'quadra' => $row['8_complemento_quadra'],
                             'lote' => $row['7_numero_lote'],
-                            'casa' => $row['6_logradouro_frente'],
                             'inscricao_imobiliaria' => $row['inscricao_imobiliaria'] ?? null,
                             'matricula_reurb' => $row['matricula'],
                             'area' => $row['area_m2'],
                             'perimetro' => $row['perimetro'],
                             'medida_frente' => $row['medida_frente'],
                             'medida_fundo' => $row['medida_fundo'],
-                            'medida_lado_direito' => $row['medida_lado_direito'],
-                            'medida_lado_esquerdo' => $row['medida_lado_esquerdo'],
+                            'medida_direita' => $row['medida_lado_direito'],
+                            'medida_esquerda' => $row['medida_lado_esquerdo'],
                             'confinante_frente' => $row['confinante_frente'],
                             'confinante_fundo' => $row['confinante_fundo'],
-                            'confinante_lado_direito' => $row['confinante_lado_direito'],
-                            'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                            'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
-                            'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
-                            'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                            'confinante_direita' => $row['confinante_lado_direito'],
+                            'confinante_esquerda' => $row['confinante_lado_esquerdo'],
                         ]);
                         $imovel->save();
                     }
@@ -213,28 +198,23 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'conjuge_id' => $conjugue->id,
                             ]);
                             $imovel = new Imovel([
-                                'municipio' => $this->cidade,
+                                'loteamento_id' => $this->loteamento_id,
                                 'pessoa_id' => $pessoa->id,
                                 'data_escritura' => $row['data_escritura'],
-                                'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
-                                'casa' => $row['6_logradouro_frente'],
                                 'inscricao_imobiliaria' => $row['inscricao_imobiliaria'] ?? null,
                                 'matricula_reurb' => $row['matricula'],
                                 'area' => $row['area_m2'],
                                 'perimetro' => $row['perimetro'],
                                 'medida_frente' => $row['medida_frente'],
                                 'medida_fundo' => $row['medida_fundo'],
-                                'medida_lado_direito' => $row['medida_lado_direito'],
-                                'medida_lado_esquerdo' => $row['medida_lado_esquerdo'],
+                                'medida_direita' => $row['medida_lado_direito'],
+                                'medida_esquerda' => $row['medida_lado_esquerdo'],
                                 'confinante_frente' => $row['confinante_frente'],
                                 'confinante_fundo' => $row['confinante_fundo'],
-                                'confinante_lado_direito' => $row['confinante_lado_direito'],
-                                'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                                'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
-                                'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
-                                'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'confinante_direita' => $row['confinante_lado_direito'],
+                                'confinante_esquerda' => $row['confinante_lado_esquerdo'],
                             ]);
                             $imovel->save();
                         } else {
@@ -245,106 +225,69 @@ class TerrenosImport implements ToCollection, WithHeadingRow
                                 'conjuge_id' => $pessoaExistente->id,
                             ]);
                             $imovel = new Imovel([
-                                'municipio' => $this->cidade,
+                                'loteamento_id' => $this->loteamento_id,
                                 'pessoa_id' => $pessoa->id,
                                 'data_escritura' => $row['data_escritura'],
-                                'loteamento' => $row['9_bairro_loteamento'],
                                 'quadra' => $row['8_complemento_quadra'],
                                 'lote' => $row['7_numero_lote'],
-                                'casa' => $row['6_logradouro_frente'],
                                 'inscricao_imobiliaria' => $row['inscricao_imobiliaria'] ?? null,
                                 'matricula_reurb' => $row['matricula'],
                                 'area' => $row['area_m2'],
                                 'perimetro' => $row['perimetro'],
                                 'medida_frente' => $row['medida_frente'],
                                 'medida_fundo' => $row['medida_fundo'],
-                                'medida_lado_direito' => $row['medida_lado_direito'],
-                                'medida_lado_esquerdo' => $row['medida_lado_esquerdo'],
+                                'medida_direita' => $row['medida_lado_direito'],
+                                'medida_esquerda' => $row['medida_lado_esquerdo'],
                                 'confinante_frente' => $row['confinante_frente'],
                                 'confinante_fundo' => $row['confinante_fundo'],
-                                'confinante_lado_direito' => $row['confinante_lado_direito'],
-                                'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                                'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
-                                'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
-                                'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                                'confinante_direita' => $row['confinante_lado_direito'],
+                                'confinante_esquerda' => $row['confinante_lado_esquerdo'],
                             ]);
                             $imovel->save();
                         }
                     } else {
                         $imovel = new Imovel([
-                            'municipio' => $this->cidade,
+                            'loteamento_id' => $this->loteamento_id,
                             'pessoa_id' => $pessoaExistente->id,
                             'data_escritura' => $row['data_escritura'],
-                            'loteamento' => $row['9_bairro_loteamento'],
                             'quadra' => $row['8_complemento_quadra'],
                             'lote' => $row['7_numero_lote'],
-                            'casa' => $row['6_logradouro_frente'],
                             'inscricao_imobiliaria' => $row['inscricao_imobiliaria'] ?? null,
                             'matricula_reurb' => $row['matricula'],
                             'area' => $row['area_m2'],
                             'perimetro' => $row['perimetro'],
                             'medida_frente' => $row['medida_frente'],
                             'medida_fundo' => $row['medida_fundo'],
-                            'medida_lado_direito' => $row['medida_lado_direito'],
-                            'medida_lado_esquerdo' => $row['medida_lado_esquerdo'],
+                            'medida_direita' => $row['medida_lado_direito'],
+                            'medida_esquerda' => $row['medida_lado_esquerdo'],
                             'confinante_frente' => $row['confinante_frente'],
                             'confinante_fundo' => $row['confinante_fundo'],
-                            'confinante_lado_direito' => $row['confinante_lado_direito'],
-                            'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                            'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
-                            'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
-                            'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                            'confinante_direita' => $row['confinante_lado_direito'],
+                            'confinante_esquerda' => $row['confinante_lado_esquerdo'],
                         ]);
                         $imovel->save();
                     }
                 }
             } else {
                 $imovel = new Imovel([
-                    'municipio' => $this->cidade,
-                    'loteamento' => $row['9_bairro_loteamento'],
+                    'loteamento_id' => $this->loteamento_id,
                     'quadra' => $row['8_complemento_quadra'],
                     'lote' => $row['7_numero_lote'],
-                    'casa' => $row['6_logradouro_frente'],
                     'inscricao_imobiliaria' => $row['inscricao_imobiliaria'] ?? null,
                     'matricula_reurb' => $row['matricula'],
                     'area' => $row['area_m2'],
                     'perimetro' => $row['perimetro'],
                     'medida_frente' => $row['medida_frente'],
                     'medida_fundo' => $row['medida_fundo'],
-                    'medida_lado_direito' => $row['medida_lado_direito'],
-                    'medida_lado_esquerdo' => $row['medida_lado_esquerdo'],
+                    'medida_direita' => $row['medida_lado_direito'],
+                    'medida_esquerda' => $row['medida_lado_esquerdo'],
                     'confinante_frente' => $row['confinante_frente'],
                     'confinante_fundo' => $row['confinante_fundo'],
-                    'confinante_lado_direito' => $row['confinante_lado_direito'],
-                    'confinante_lado_esquerdo' => $row['confinante_lado_esquerdo'],
-                    'prefixo_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
-                    'numero_titulo' => $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']) . '.' . $row['7_numero_lote'] . '.' . $row['8_complemento_quadra'],
-                    'numero_processo_administrativo' =>$row['7_numero_lote'] . '.' . $row['8_complemento_quadra'] . '-' .  $this->getAbreviacaoBairro($row['9_bairro_loteamento'], $row['prefixo_titulo']),
+                    'confinante_direita' => $row['confinante_lado_direito'],
+                    'confinante_esquerda' => $row['confinante_lado_esquerdo'],
                 ]);
                 $imovel->save();
             }
         }
     }
-
-    function getAbreviacaoBairro($bairroLoteamento, $inputString)
-    {
-        // Extrai todas as strings entre aspas duplas
-        $quotedStrings = $this->extractQuotedStrings($inputString);
-        for ($i = 0; $i < count($quotedStrings); $i += 2) {
-            $bairro = $quotedStrings[$i];
-            $prefixo = $quotedStrings[$i + 1];
-            if ($bairroLoteamento === $bairro) {
-                return $prefixo;
-            }
-        }
-        return $inputString;
-    }
-
-// Função para extrair as strings entre aspas duplas
-    function extractQuotedStrings($inputString)
-    {
-        preg_match_all('/"([^"]+)"/', $inputString, $matches);
-        return $matches[1];
-    }
-
 }

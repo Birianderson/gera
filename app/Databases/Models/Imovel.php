@@ -20,4 +20,15 @@ class Imovel extends Model
     {
         return $this->belongsTo(Pessoa::class);
     }
+
+    public function loteamento()
+    {
+        return $this->belongsTo(Loteamento::class);
+    }
+
+    public function cidade()
+    {
+        // O imóvel se relaciona com a cidade através do loteamento
+        return $this->hasOneThrough(Cidade::class, Loteamento::class, 'id', 'id', 'loteamento_id', 'cidade_id');
+    }
 }

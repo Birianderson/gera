@@ -17,7 +17,7 @@ class UploadRepository implements UploadContract
     {
         DB::beginTransaction();
         try {
-            Excel::import(new TerrenosImport($data['cidade']), $data['file']);
+            Excel::import(new TerrenosImport($data['loteamento_id']), $data['file']);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollBack();
@@ -35,9 +35,9 @@ class UploadRepository implements UploadContract
             $extension = $data['file']->getClientOriginalExtension();
 
             if ($extension === 'kml') {
-                $this->processKML($data['file'], $data['cidade']);
+                $this->processKML($data['file'], $data['loteamento_id']);
             } else {
-                Excel::import(new CoordenadasImport($data['cidade']), $data['file']);
+                Excel::import(new CoordenadasImport($data['loteamento_id']), $data['file']);
             }
 
             DB::commit();

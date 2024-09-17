@@ -58,6 +58,16 @@
                         </a>
                     </li>
                 </ul>
+                <ul>
+                    <li class="menu-item @if(str_contains(request()->route()->getName(), 'cidade loteamento')) active @endif">
+                        <a href="{{route(('cidade.index'))}}">
+                  <span class="menu-icon">
+                    <i class="fa fa-location-pin-lock"></i>
+                  </span>
+                            <span class="menu-title">Localidades</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </li>
 
