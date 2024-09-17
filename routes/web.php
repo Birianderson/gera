@@ -10,16 +10,17 @@ use App\Http\Controllers\Upload\UploadController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('auth.login');
+    return view('publico.index');
 });
 
 Auth::routes();
+Route::get('/gerarQrcode/{id}', [PessoaController::class, 'gerarQrCode'])->name('formulario.imovel');
+Route::get('/formulario/{id}', [PessoaController::class, 'mostrarFormulario'])->name('formulario.imovel');
+Route::post('/api/formulario', [PessoaController::class, 'salvarFormulario']);
 
 
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-
     Route::group(['prefix' => 'pessoa'], function () {
         Route::get('/', [PessoaController::class, 'index'])->name('pessoa.index');
         Route::get('/list', [PessoaController::class, 'list'])->name('pessoa.list');

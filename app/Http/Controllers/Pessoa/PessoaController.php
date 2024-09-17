@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Pessoa;
 
+use App\Databases\Models\Imovel;
+use App\Databases\Models\Pessoa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use App\Databases\Contracts\PessoaContract;
 use App\Http\Requests\PessoaRequest;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class PessoaController extends Controller
 {
@@ -58,6 +61,31 @@ class PessoaController extends Controller
 
         ];
         return response()->json($dados);
+    }
+
+    public function gerarQrCode($imovelId)
+    {
+        $imovelIdCriptografado = Crypt::encryptString($imovelId);
+        $urlFormulario = route('formulario.imovel', ['id' => $imovelIdCriptografado]);
+        return QrCode::size(300)->generate($urlFormulario);
+    }
+
+    public function mostrarFormulario(string $id)
+    {
+        $imovelIdDescriptografado = Crypt::decryptString($id);
+        $imovel = Imovel::query()->where('id','=', $imovelIdDescriptografado)->with(['pessoa','loteamento','cidade'])->first();;
+        return view('pessoa.formulario', compact('imovel'));
+    }
+
+    public function salvarFormulario(Request $request)
+    {
+        // Salvar informações do morador
+        $morador = new Pessoa();
+        $morador->nome = $request->nome;
+        $morador->telefone = $request->telefone;
+        $morador->save();
+
+        return response()->json(['message' => 'Informações salvas com sucesso']);
     }
 
     /**
