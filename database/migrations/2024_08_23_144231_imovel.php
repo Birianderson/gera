@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('confinante_fundo');
             $table->string('confinante_direita');
             $table->string('confinante_esquerda');
+            $table->string('status');
             $table->timestamps();
             $table->softDeletes();
 

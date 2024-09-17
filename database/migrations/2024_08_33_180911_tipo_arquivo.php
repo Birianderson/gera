@@ -7,10 +7,10 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('estado', function (Blueprint $table) {
+        Schema::create('tipo_arquivo', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('sigla')->nullable();
+            $table->string('tabela');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -18,6 +18,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('estado');
+        Schema::dropIfExists('tipo_arquivo');
     }
 };
