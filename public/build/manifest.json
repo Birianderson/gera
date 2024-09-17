@@ -40,17 +40,22 @@
     "src": "public/imagens/ico_solicitacoes.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CUD5fltx.js",
+    "file": "assets/app-BJeFcbJe.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-xIsMmz_L.css"
+      "assets/app-HkFQGzhJ.css"
     ]
   },
   "resources/sass/app.scss": {
-    "file": "assets/app-DKckn80v.css",
+    "file": "assets/app-BtJXH2q7.css",
     "src": "resources/sass/app.scss",
+    "isEntry": true
+  },
+  "resources/sass/publico.scss": {
+    "file": "assets/publico-XjZnEgbK.css",
+    "src": "resources/sass/publico.scss",
     "isEntry": true
   }
 }
