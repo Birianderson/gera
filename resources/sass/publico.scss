@@ -119,6 +119,7 @@ section {
     border-radius: 8px;
     transition: transform 0.3s ease;
     border: none !important;
+
     i {
         font-size: 3rem;
         color: $secondary-color;
@@ -462,13 +463,42 @@ h3 {
     color: #343a40; /* Cor mais escura para os títulos */
 }
 
+.section-bg {
+
+    min-height: 500px;
+    background-image: url('../../public/imagens/fundo2.jpg');
+    background-size: cover;
+    background-position: center 60%; /* Mover a imagem um pouco para baixo */
+    background-repeat: no-repeat;
+}
+
 .benefit-text {
     font-size: 1rem;
     color: #6c757d; /* Cor cinza para o texto explicativo */
 }
 
+
+/* Para telas grandes (desktop) */
+.btn-container {
+    text-align: left; /* Alinha o botão à esquerda em telas maiores */
+}
+
 @media (max-width: 768px) {
     .benefit-item {
         margin-bottom: 20px;
+    }
+    .section-spacing h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+    .section-spacing p {
+        margin: 1rem;
+        text-align: justify;
+    }
+    .btn-container {
+        text-align: center; /* Centraliza o botão apenas no mobile */
+    }
+    .section-button {
+        width: 50%; /* O botão ocupará 100% da largura em telas pequenas */
     }
 }

@@ -33,16 +33,21 @@
         </div>
     </header>
 
-    <section class="section-spacing section-bg row ">
-        <div class="container text-start py-5 col-6 ">
-            <h1 class="display-4 text-white" style="text-decoration-style: solid; text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.3);">
+    <section class="section-spacing section-bg">
+        <div class="container py-5">
+            <h1 class="display-4 text-white"
+                style="text-decoration-style: solid; text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.3);">
                 REGULARIZAÇÃO <span class="text-accent">FUNDIÁRIA</span>
             </h1>
             <p class="lead text-white">Especialistas em Consultoria e realização de Projetos para Regularização
-                Fundiária oferecendo as melhores soluções para todas as etapas técnicas de REURB-S ou REURB-E</p>
-            <button class="btn btn-success">
-                <i class="fa fa-phone"></i> Fale conosco
-            </button>
+                Fundiária oferecendo as melhores soluções para todas as etapas técnicas de REURB-S ou REURB-E
+            </p>
+            <br/>
+            <div class="btn-container">
+                <button class="btn btn-success section-button">
+                    <i class="fa fa-phone"></i> Fale conosco
+                </button>
+            </div>
         </div>
     </section>
 
@@ -87,8 +92,10 @@
             <h2 class="section-heading">NOSSO PROCESSO AUTOMATIZADO É O MELHOR</h2>
             <div class="row mt-4">
                 <div class="col-md-6">
-                    <div class="lead text-dark mb-5">Nosso sistema de regularização fundiária é completamente automatizado, tornando o processo mais
-                        rápido e eficiente, evitando burocracia e atrasos.</div>
+                    <div class="lead text-dark mb-5">Nosso sistema de regularização fundiária é completamente
+                        automatizado, tornando o processo mais
+                        rápido e eficiente, evitando burocracia e atrasos.
+                    </div>
                     <ul class="list-unstyled text-list-unstyled">
                         <li><i class="fa fa-check-circle me-2"></i> Menos tempo gasto com papelada</li>
                         <li><i class="fa fa-check-circle  me-2"></i> Acompanhamento de cada fase online
