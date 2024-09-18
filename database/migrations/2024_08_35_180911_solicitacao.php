@@ -7,7 +7,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('atendimento', function (Blueprint $table) {
+        Schema::create('solicitacao', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('imovel_id')->nullable();
             $table->unsignedInteger('usuario_id')->nullable();
@@ -22,6 +22,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('atendimento');
+        Schema::dropIfExists('solicitacao');
     }
 };
