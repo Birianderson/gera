@@ -24,10 +24,14 @@ const columns = ref([
     {
         name: 'id',
         title: 'Ação',
-        width: '3%',
-        contentClass: 'text-center',
+        width: '5%',
+        contentClass: 'text-end',
+        headerClass: 'text-end',
         formatter: (value, row) => {
             let output = "";
+            if(row.pessoa === null){
+                output += `<a href="/gerarQrcode/${value}" data-json='{"id": "${value}"}' data-tooltip="QrCODE" target="_blank" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-qrcode"></i></a>`;
+            }
             output += `<a href="javascript:;" data-json='{"id": "${value}"}' data-tooltip="Editar" data-action="popup" data-size="xl" data-component="imovel-form" data-title="Editar imovel" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-pencil"></i></a>`;
             output += `<a href="javascript:;" data-json='{"id": "${value}"}' data-tooltip="Remover" data-action="delete" class="action mx-0 action-delete tooltip tooltip--top"><i class="fa fa-trash mx-1"></i></a>`;
             return output;
