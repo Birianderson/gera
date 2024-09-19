@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginSolicitacaoController;
+use App\Http\Controllers\Auth\RegisterSolicitacaoController;
 use App\Http\Controllers\Cidade\CidadeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Imovel\ImovelController;
 use App\Http\Controllers\Loteamento\LoteamentoController;
 use App\Http\Controllers\Mapa\MapaController;
 use App\Http\Controllers\Pessoa\PessoaController;
+use App\Http\Controllers\Solicitacao\SolicitacaoController;
 use App\Http\Controllers\Upload\UploadController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,14 +16,59 @@ Route::get('/', function () {
     return view('publico.index');
 });
 
-Auth::routes();
-Route::get('/gerarQrcode/{id}', [PessoaController::class, 'gerarQrCode'])->name('formulario.imovel');
-Route::get('/formulario/{id}', [PessoaController::class, 'mostrarFormulario'])->name('formulario.imovel');
-Route::post('/api/formulario', [PessoaController::class, 'salvarFormulario']);
+// Rotas de login
+Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::group(['prefix' => 'vinculacao'], function () {
+    Route::get('/verificaConta/{cpf}', [LoginSolicitacaoController::class, 'verificaConta'])->name('solicitacao.verificaConta');
+    Route::get('/verificaImovel/{imovel_id}', [LoginSolicitacaoController::class, 'verificaImovel'])->name('solicitacao.verificaImovel');
+    Route::get('/login/{id}', [LoginSolicitacaoController::class, 'showLoginForm'])
+        ->where('id', '[a-zA-Z0-9]{60,}')
+        ->name('solicitacao_login');
+
+    Route::post('/cadastro', [RegisterSolicitacaoController::class, 'create']);
+    Route::post('/loginSolicitacao', [LoginSolicitacaoController::class, 'solicitacao_login'])
+        ->where('id', '[a-zA-Z0-9]{60,}');
+
+});
+
+// Rotas de registro
+Route::get('register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
+
+// Rotas de redefinição de senha
+Route::get('password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset']);
+
+// Verificação de email
+Route::get('email/verify', [App\Http\Controllers\Auth\VerificationController::class, 'show'])->name('verification.notice');
+Route::get('email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('email/resend', [App\Http\Controllers\Auth\VerificationController::class, 'resend'])->name('verification.resend');
+
+Route::get('/gerarQrcode/{id}', [ImovelController::class, 'gerarQrCode'])->name('formulario.gerarQrCode');
 
 
-Route::middleware(['auth','admin'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::middleware(['solicitacao'])->group(function () {
+    Route::group(['prefix' => 'solicitacao'], function () {
+        Route::get('/', [SolicitacaoController::class, 'index'])->name('solicitacao.index');
+        Route::get('/list', [SolicitacaoController::class, 'list'])->name('solicitacao.list');
+        Route::get('/formulario/{id}', [SolicitacaoController::class, 'mostrarFormulario'])->name('formulario.imovel');
+        Route::post('/api/formulario', [SolicitacaoController::class, 'salvarFormulario']);
+        Route::post('/create', [SolicitacaoController::class, 'create'])->name('solicitacao.create');
+        Route::post('/{id}', [SolicitacaoController::class, 'update'])->name('solicitacao.update');
+        Route::delete('/{id}', [SolicitacaoController::class, 'delete'])->name('solicitacao.delete');
+    });
+});
+
+
+Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
+
+Route::middleware(['auth', 'admin'])->group(function () {
+
     Route::group(['prefix' => 'pessoa'], function () {
         Route::get('/', [PessoaController::class, 'index'])->name('pessoa.index');
         Route::get('/list', [PessoaController::class, 'list'])->name('pessoa.list');

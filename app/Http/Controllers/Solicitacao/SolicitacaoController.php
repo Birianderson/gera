@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Solicitacao;
 
 use App\Databases\Models\Imovel;
 use App\Databases\Models\Pessoa;
-use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;

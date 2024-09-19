@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Databases\Models\Solicitacao;
 use App\Databases\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterController extends Controller
+class RegisterSolicitacaoController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -58,15 +61,29 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
-     * @return \App\Databases\Models\User
+     * @param Request $request
+     * @return \Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    protected function create(array $data)
+    protected function create(Request $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        $params = $request->except('_token');
+        $params['cpf'] = preg_replace('/\D/', '', $params['cpf']);
+        $imovelIdDescriptografado = Crypt::decryptString($params['imovel_id']);
+        $usuario =  new User([
+            'name' => $params['name'],
+            'cpf' => $params['cpf'],
+            'email' => $params['email'],
+            'password' => Hash::make($params['password']),
         ]);
+        $usuario->save();
+        $solicitacao = new Solicitacao([
+            'imovel_id' => $imovelIdDescriptografado,
+            'usuario_id' => $usuario->id,
+            'status' => 'P'
+        ]);
+        $solicitacao->save();
+
+        $this->guard()->login($usuario);
+        return redirect($this->redirectTo);
     }
 }

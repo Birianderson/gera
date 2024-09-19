@@ -483,6 +483,10 @@ h3 {
     text-align: left; /* Alinha o botão à esquerda em telas maiores */
 }
 
+.bg-logo{
+    background-color: #4272c4;
+}
+
 @media (max-width: 768px) {
     .benefit-item {
         margin-bottom: 20px;
