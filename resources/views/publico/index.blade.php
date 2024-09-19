@@ -1,38 +1,4 @@
 <x-layout.publico>
-
-    <!-- Cabeçalho da Página -->
-    <header class="navbar navbar-expand-lg navbar-dark bg-light">
-        <div class="container">
-            <!-- Logotipo -->
-            <a class="navbar-brand" href="#">
-                <img src="imagens/logotipo.png" alt="Logotipo" class="img-fluid" style="max-height: 50px;">
-            </a>
-            <button class="navbar-toggler bg-accent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse text-black" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item ">
-                        <a class="nav-link active text-accent border-end" href="#">HOME</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black border-end" href="#quem-somos">QUEM SOMOS</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black border-end" href="#servicos">SERVIÇOS</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black border-end" href="#equipe">EQUIPE</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black border-end" href="#contato">CONTATO</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </header>
-
     <section class="section-spacing section-bg">
         <div class="container py-5">
             <h1 class="display-4 text-white"
