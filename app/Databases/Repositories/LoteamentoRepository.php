@@ -63,9 +63,9 @@ class LoteamentoRepository implements LoteamentoContract
      * @param array $columns
      * @return LengthAwarePaginator
      */
-    public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
+    public function paginate(String $cidade_id, array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
-        $query = Loteamento::query();
+        $query = Loteamento::query()->where('cidade_id','=', $cidade_id);
 
         if (isset($pagination['nome'])) {
             $keyword = mb_strtolower($pagination['nome']);

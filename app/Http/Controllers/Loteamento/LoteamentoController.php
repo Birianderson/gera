@@ -33,27 +33,15 @@ class LoteamentoController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function list(Request $request): JsonResponse
+    public function list(String $cidade_id, Request $request): JsonResponse
 
     {
-        $dados = $this->LoteamentoRepository->paginate($request->all())->toArray();
+        $dados = $this->LoteamentoRepository->paginate($cidade_id, $request->all())->toArray();
         $dados['filter_options'] = [
-            'municipio' => [
+            'nome' => [
                 'type' => 'text',
             ],
-            'loteamento' => [
-                'type' => 'text',
-            ],
-            'prefixo_titulo' => [
-                'type' => 'text',
-            ],
-            'quadra' => [
-                'type' => 'text',
-            ],
-            'lote' => [
-                'type' => 'text',
-            ],
-            'pessoa.nome' => [
+            'sigla' => [
                 'type' => 'text',
             ],
 
