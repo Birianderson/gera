@@ -1,5 +1,6 @@
 <?php
 
+use App\Databases\Models\SolicitacaoMensagem;
 use App\Http\Controllers\Auth\LoginSolicitacaoController;
 use App\Http\Controllers\Auth\RegisterSolicitacaoController;
 use App\Http\Controllers\Cidade\CidadeController;
@@ -67,9 +68,9 @@ Route::middleware(['solicitacao'])->group(function () {
 
 Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
-    Route::group(['prefix' => 'pessoa'], function () {
+    Route::group(['prefix' => 'pessoa'],  function () {
         Route::get('/', [PessoaController::class, 'index'])->name('pessoa.index');
         Route::get('/list', [PessoaController::class, 'list'])->name('pessoa.list');
         Route::get('/imoveis/{id}', [PessoaController::class, 'imoveis'])->name('pessoa.imoveis');

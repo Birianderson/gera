@@ -6,6 +6,7 @@ use App\Databases\Models\Imovel;
 use App\Databases\Models\Pessoa;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;

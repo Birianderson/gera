@@ -76,7 +76,7 @@ class SolicitacaoRepository implements SolicitacaoContract
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
         $query = Solicitacao::query()
-            ->with(['pessoa','loteamento','cidade']);
+            ->with(['usuario','imovel']);
 
         if (isset($pagination['municipio'])) {
             $keyword = mb_strtolower($pagination['municipio']);

@@ -40,6 +40,14 @@
                 <span class="menu-title">Importar</span>
             </a>
         </li>
+        <li class="menu-item @if(str_contains(request()->route()->getName(), 'solicitacao')) active @endif">
+            <a href="{{route('solicitacao.index')}}">
+                  <span class="menu-icon">
+                    <i class="fa fa-comment"></i>
+                  </span>
+                <span class="menu-title">Solicitações</span>
+            </a>
+        </li>
         <li class="menu-item sub-menu @if(str_contains(request()->route()->getName(), 'competencia') || str_contains(request()->route()->getName(), 'usuario')) open @endif">
             <a href="#">
                   <span class="menu-icon">
