@@ -1,6 +1,6 @@
 <template>
     <div v-if="ready">
-        <datatable id="pessoa" :columns="columns" @delete="confirmRemove" :source="source"></datatable>
+        <datatable id="pessoa" :columns="columns" :source="source"></datatable>
     </div>
 </template>
 

@@ -49,7 +49,7 @@ Route::get('email/verify', [App\Http\Controllers\Auth\VerificationController::cl
 Route::get('email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('email/resend', [App\Http\Controllers\Auth\VerificationController::class, 'resend'])->name('verification.resend');
 
-Route::get('/gerarQrcode/{id}', [ImovelController::class, 'gerarQrCode'])->name('formulario.gerarQrCode');
+
 
 
 
@@ -86,6 +86,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::get('/', [ImovelController::class, 'index'])->name('imovel.index');
         Route::get('/list', [ImovelController::class, 'list'])->name('imovel.list');
         Route::get('/ordem', [ImovelController::class, 'ordem'])->name('imovel.ordem');
+        Route::get('/gerarQrcode/{id}', [ImovelController::class, 'gerarQrCode'])->name('imovel.gerarQrCode');
         Route::get('/findByQuadraLote/{loteamento_id}/{quadra}/{lote}', [ImovelController::class, 'findByQuadraLote'])->name('imovel.findByQuadraLote');
         Route::get('/findCPF/{CPF}', [ImovelController::class, 'findCPF'])->name('imovel.findCPF');
         Route::get('/{id}', [ImovelController::class, 'edit'])->name('imovel.edit');
@@ -131,6 +132,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::group(['prefix' => 'mapa'], function () {
         Route::get('/', [MapaController::class, 'index'])->name('mapa.index');
         Route::get('/getByLoteamento/{loteamento_id}', [MapaController::class, 'getByLoteamento'])->name('mapa.getByCidade');
+    });
+
+    Route::group(['prefix' => 'solicitacoes'], function () {
+        Route::get('/', [SolicitacaoController::class, 'index'])->name('solicitacao.index');
+        Route::get('/list', [SolicitacaoController::class, 'list'])->name('solicitacao.list');
+    });
+
+    Route::group(['prefix' => 'mensagem_solicitacao', 'middleware' => ['web', 'auth']], function () {
+        Route::get('/solicitacao/{id}', [SolicitacaoMensagem::class, 'index'])->name('mensagem_solicitacao.index');
+        Route::get('/list', [SolicitacaoMensagem::class, 'list'])->name('mensagem_solicitacao.list');
+        Route::get('/{id}', [SolicitacaoMensagem::class, 'chat'])->name('mensagem_solicitacao.chat');
+        Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [SolicitacaoMensagem::class, 'download'])->name('mensagem_solicitacao.download');
+        Route::post('/', [SolicitacaoMensagem::class, 'create'])->name('mensagem_solicitacao.create');
+        Route::post('/mudar_situacao', [SolicitacaoMensagem::class, 'mudarSituacao'])->name('mensagem_solicitacao.mudarSituacao');
     });
 
 });

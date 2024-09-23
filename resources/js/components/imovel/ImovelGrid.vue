@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const events = inject('events');
-const source = '/imovel/list';
+const source = '/admin/imovel/list';
 
 const columns = ref([
     {name: 'cidade.nome', title: 'Município', width: '10%', sort: 'cidade.nome', nowrap: true},
@@ -30,7 +30,7 @@ const columns = ref([
         formatter: (value, row) => {
             let output = "";
             if(row.pessoa === null){
-                output += `<a href="/gerarQrcode/${value}" data-json='{"id": "${value}"}' data-tooltip="QrCODE" target="_blank" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-qrcode"></i></a>`;
+                output += `<a href="/admin/imovel/gerarQrcode/${value}" data-json='{"id": "${value}"}' data-tooltip="QrCODE" target="_blank" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-qrcode"></i></a>`;
             }
             output += `<a href="javascript:;" data-json='{"id": "${value}"}' data-tooltip="Editar" data-action="popup" data-size="xl" data-component="imovel-form" data-title="Editar imovel" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-pencil"></i></a>`;
             output += `<a href="javascript:;" data-json='{"id": "${value}"}' data-tooltip="Remover" data-action="delete" class="action mx-0 action-delete tooltip tooltip--top"><i class="fa fa-trash mx-1"></i></a>`;
@@ -41,7 +41,7 @@ const columns = ref([
 const confirmRemove = async (data) => {
     events.emit('loading', true);
     try {
-        await axios.delete(`/imovel/${data.id}`);
+        await axios.delete(`/admin/imovel/${data.id}`);
         events.emit('table-reload');
         events.emit('notification', {
             type: 'success',

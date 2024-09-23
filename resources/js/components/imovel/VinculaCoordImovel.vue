@@ -75,7 +75,7 @@ export default {
         const quadra = ref('');
         const lote = ref('');
         const ready = ref(true);
-        const acao = ref('/imovel/vincula');
+        const acao = ref('/admin/imovel/vincula');
         const isSearching = ref(false);
         const isFound = ref(false);
         const hasCoordinates = ref(false); // Nova variável para controlar se já existem coordenadas
@@ -90,7 +90,7 @@ export default {
 
             try {
                 isSearching.value = true;
-                const response = await axios.get(`/imovel/findByQuadraLote/${props.data.loteamento_id}/${quadra.value}/${lote.value}`);
+                const response = await axios.get(`/admin/imovel/findByQuadraLote/${props.data.loteamento_id}/${quadra.value}/${lote.value}`);
                 if (response.data && response.data.id) {
                     if (response.data.coordenadas) {
                         hasCoordinates.value = true;
