@@ -58,7 +58,7 @@ onMounted(async () => {
 
 const carregarMunicipio = async () => {
     try {
-        const response = await axios.get('/cidade/getAll');
+        const response = await axios.get('/admin/cidade/getAll');
         municipios.value = response.data;
     } catch (error) {
         console.error('Erro ao carregar municípios:', error);
@@ -74,7 +74,7 @@ const carregarLoteamento = async () => {
     if (!selectedCity.value) return;
 
     try {
-        const response = await axios.get(`/loteamento/findLoteamentoByCidade/${selectedCity.value}`);
+        const response = await axios.get(`/admin/loteamento/findLoteamentoByCidade/${selectedCity.value}`);
         loteamentos.value = response.data;
     } catch (error) {
         console.error('Erro ao carregar loteamentos:', error);
