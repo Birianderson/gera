@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const events = inject('events');
-const source = '/pessoa/list';
+const source = '/admin/pessoa/list';
 
 const columns = ref([
     {name: 'nome', title: 'Nome', width: '10%', sort: 'nome', nowrap: true},

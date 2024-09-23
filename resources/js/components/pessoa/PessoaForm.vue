@@ -152,7 +152,7 @@ export default {
         const events = inject('events');
         const info = ref({});
         const ready = ref(false);
-        const acao = ref('/pessoa/create');
+        const acao = ref('/admin/pessoa/create');
         const checkedFalecida = ref(false);
         const checkedUniaoEstavel = ref(false);
         const readOnly = ref(true);
@@ -160,8 +160,8 @@ export default {
 
         const loadData = async () => {
             try {
+                acao.value = '/admin/pessoa/'
                 const response = await axios.get(`${acao.value}${props.data.id}`);
-                acao.value = '/pessoa/'
                 acao.value += props.data.id;
                 info.value = response.data;
                 console.log(info.value)
@@ -200,7 +200,7 @@ export default {
         const findCPF = async () => {
             try {
                 const cpfNumeros = info.value.cpf.replace(/\D/g, '');
-                const response = await axios.get(`/pessoa/findCPF/${cpfNumeros}`);
+                const response = await axios.get(`/admin/pessoa/findCPF/${cpfNumeros}`);
                 if (response.data.id) {
                     info.value = response.data;
                     if (info.value.falecida === '1') {
