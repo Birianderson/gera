@@ -76,19 +76,30 @@ class ImovelRepository implements ImovelContract
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
         $query = Imovel::query()
-            ->with(['pessoa','loteamento','cidade']);
+            ->with(['pessoa','loteamento','cidade'])
+            ->leftJoin('pessoa', 'pessoa.id', '=', 'imovel.pessoa_id') // Alterado para leftJoin
+            ->join('loteamento', 'loteamento.id', '=', 'imovel.loteamento_id')
+            ->join('cidade', 'cidade.id', '=', 'loteamento.cidade_id')
+            ->select([
+                'imovel.id as id',
+                'imovel.quadra as quadra',
+                'imovel.lote as lote',
+                'cidade.nome as cidade_nome',
+                'loteamento.nome as loteamento_nome',
+                'pessoa.nome as pessoa_nome',
+            ]);
 
-        if (isset($pagination['municipio'])) {
-            $keyword = mb_strtolower($pagination['municipio']);
-            $query->whereRaw('lower(municipio) like ?', ["%{$keyword}%"]);
+        if (isset($pagination['cidade_nome'])) {
+            $keyword = mb_strtolower($pagination['cidade_nome']);
+            $query->whereRaw('lower(cidade.nome) like ?', ["%{$keyword}%"]);
         }
-        if (isset($pagination['loteamento'])) {
-            $keyword = mb_strtolower($pagination['loteamento']);
-            $query->whereRaw('lower(loteamento) like ?', ["%{$keyword}%"]);
+        if (isset($pagination['loteamento_nome'])) {
+            $keyword = mb_strtolower($pagination['loteamento_nome']);
+            $query->whereRaw('lower(loteamento.nome) like ?', ["%{$keyword}%"]);
         }
-        if (isset($pagination['prefixo_titulo'])) {
-            $keyword = mb_strtolower($pagination['prefixo_titulo']);
-            $query->whereRaw('lower(prefixo_titulo) like ?', ["%{$keyword}%"]);
+        if (isset($pagination['pessoa_nome'])) {
+            $keyword = mb_strtolower($pagination['pessoa_nome']);
+            $query->whereRaw('lower(pessoa.nome) like ?', ["%{$keyword}%"]);
         }
         if (isset($pagination['quadra'])) {
             $keyword = mb_strtolower($pagination['quadra']);
@@ -99,15 +110,7 @@ class ImovelRepository implements ImovelContract
             $query->whereRaw('lower(lote) like ?', ["%{$keyword}%"]);
         }
 
-        // Ajuste para filtrar pelo nome da pessoa
-        if (isset($pagination['pessoa_nome'])) {
-            $keyword = mb_strtolower($pagination['pessoa_nome']);
-            $query->whereHas('pessoa', function ($q) use ($keyword) {
-                $q->whereRaw('lower(nome) like ?', ["%{$keyword}%"]);
-            });
-        }
-
-        $query->orderBy($pagination['sort'] ?? 'municipio', $pagination['sort_direction'] ?? 'asc');
+        $query->orderBy($pagination['sort'] ?? 'cidade_nome', $pagination['sort_direction'] ?? 'asc');
         return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
 
 

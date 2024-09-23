@@ -15,7 +15,7 @@
                         <p class="text-muted mb-4">
                             Selecione o arquivo Excel contendo as informações dos terrenos. Certifique-se de que o arquivo segue o formato esperado.
                         </p>
-                        <import-excel title="Importar Terrenos" upload-url="/upload/terrenos"></import-excel>
+                        <import-excel title="Importar Terrenos" upload-url="/admin/upload/terrenos"></import-excel>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                         <p class="text-muted mb-4">
                             Selecione o arquivo KML contendo as coordenadas geográficas dos terrenos. Esse arquivo será usado para mapear as localizações no sistema.
                         </p>
-                        <import-excel title="Importar Coordenadas" upload-url="/upload/coordenadas"></import-excel>
+                        <import-excel title="Importar Coordenadas" upload-url="/admin/upload/coordenadas"></import-excel>
                     </div>
                 </div>
             </div>
