@@ -1,6 +1,6 @@
 <template>
     <div>
-        <datatable id="imovel" :columns="columns" @delete="confirmRemove" :source="source"></datatable>
+        <datatable id="imovel" :columns="columns"  :source="source"></datatable>
     </div>
 </template>
 
@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const events = inject('events');
-const source = '/cidade/list';
+const source = '/admin/cidade/list';
 
 const columns = ref([
     {name: 'nome', title: 'Nome', width: '10%', sort: 'nome', nowrap: true},
@@ -25,7 +25,7 @@ const columns = ref([
         contentClass: 'text-center',
         formatter: (value, row) => {
             let output = "";
-            output += `<a href='/loteamento/${value}/cidade' data-json='{"id": "${value}"}' data-tooltip="Editar" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-location-dot"></i></a>`;
+            output += `<a href='/admin/loteamento/${value}/cidade' data-json='{"id": "${value}"}' data-tooltip="Editar" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-location-dot"></i></a>`;
             output += `<a href="javascript:;" data-json='{"id": "${value}"}' data-tooltip="Editar" data-action="popup" data-size="xl" data-component="imovel-form" data-title="Editar imovel" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-pencil"></i></a>`;
             return output;
         }
