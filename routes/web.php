@@ -111,7 +111,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::group(['prefix' => 'loteamento'], function () {
         Route::get('/{cidade_id}/cidade', [LoteamentoController::class, 'index'])->name('loteamento.index');
-        Route::get('/list', [LoteamentoController::class, 'list'])->name('loteamento.list');
+        Route::get('/list/{cidade_id}', [LoteamentoController::class, 'list'])->name('loteamento.list');
         Route::get('/findCidade/{cidade_id}', [LoteamentoController::class, 'findCidade'])->name('cidade.findCidade');
         Route::get('/findLoteamentoByCidade/{cidade_id}', [LoteamentoController::class, 'findLoteamentoByCidade'])->name('cidade.findLoteamentoByCidade');
         Route::get('/ordem', [LoteamentoController::class, 'ordem'])->name('loteamento.ordem');
