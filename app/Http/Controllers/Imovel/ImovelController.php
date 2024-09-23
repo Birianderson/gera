@@ -40,10 +40,10 @@ class ImovelController extends Controller
     {
         $dados = $this->ImovelRepository->paginate($request->all())->toArray();
         $dados['filter_options'] = [
-            'cidade.nome' => [
+            'cidade_nome' => [
                 'type' => 'text',
             ],
-            'loteamento.nome' => [
+            'loteamento_nome' => [
                 'type' => 'text',
             ],
             'prefixo_titulo' => [
@@ -55,7 +55,7 @@ class ImovelController extends Controller
             'lote' => [
                 'type' => 'text',
             ],
-            'pessoa.nome' => [
+            'pessoa_nome' => [
                 'type' => 'text',
             ],
 

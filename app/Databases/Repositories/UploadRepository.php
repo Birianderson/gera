@@ -4,6 +4,7 @@ namespace App\Databases\Repositories;
 use App\Databases\Contracts\UploadContract;
 use App\Imports\CoordenadasImport;
 use App\Imports\TerrenosImport;
+use App\Imports\TerrenosImportV2;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,7 +18,7 @@ class UploadRepository implements UploadContract
     {
         DB::beginTransaction();
         try {
-            Excel::import(new TerrenosImport($data['loteamento_id']), $data['file']);
+            Excel::import(new TerrenosImportV2($data['loteamento_id']), $data['file']);
             DB::commit();
         } catch (Exception $ex) {
             DB::rollBack();

@@ -16,11 +16,11 @@ const events = inject('events');
 const source = '/admin/imovel/list';
 
 const columns = ref([
-    {name: 'cidade.nome', title: 'Município', width: '10%', sort: 'cidade.nome', nowrap: true},
-    {name: 'loteamento.nome', title: 'Loteamento', width: '10%', sort: 'loteamento.nome', nowrap: true},
+    {name: 'cidade_nome', title: 'Município', width: '10%', sort: 'cidade.nome', nowrap: true},
+    {name: 'loteamento_nome', title: 'Loteamento', width: '10%', sort: 'loteamento.nome', nowrap: true},
     {name: 'quadra', title: 'Quadra', width: '10%', sort: 'quadra'},
     {name: 'lote', title: 'Lote', width: '10%', sort: 'lote'},
-    {name: 'pessoa.nome', title: 'Titular', width: '20%'},
+    {name: 'pessoa_nome', title: 'Titular', sort: 'pessoa.nome', width: '20%'},
     {
         name: 'id',
         title: 'Ação',
@@ -29,7 +29,7 @@ const columns = ref([
         headerClass: 'text-end',
         formatter: (value, row) => {
             let output = "";
-            if(row.pessoa === null){
+            if(row.pessoa_nome === null){
                 output += `<a href="/admin/imovel/gerarQrcode/${value}" data-json='{"id": "${value}"}' data-tooltip="QrCODE" target="_blank" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-qrcode"></i></a>`;
             }
             output += `<a href="javascript:;" data-json='{"id": "${value}"}' data-tooltip="Editar" data-action="popup" data-size="xl" data-component="imovel-form" data-title="Editar imovel" class=" mx-1 action text-align-center tooltip tooltip--top"><i class="fa fa-pencil"></i></a>`;
