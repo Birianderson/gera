@@ -10,6 +10,9 @@ use App\Databases\Contracts\PessoaContract;
 use App\Databases\Contracts\SolicitacaoContract;
 use App\Databases\Contracts\SolicitacaoMensagemContract;
 use App\Databases\Contracts\UploadContract;
+use App\Databases\Contracts\UserImovelContract;
+use App\Databases\Contracts\UserPessoaContract;
+use App\Databases\Contracts\UserSolicitacaoContratct;
 use App\Databases\Repositories\CidadeRepository;
 use App\Databases\Repositories\ImovelRepository;
 use App\Databases\Repositories\LoteamentoRepository;
@@ -18,6 +21,9 @@ use App\Databases\Repositories\PessoaRepository;
 use App\Databases\Repositories\SolicitacaoMensagemRepository;
 use App\Databases\Repositories\SolicitacaoRepository;
 use App\Databases\Repositories\UploadRepository;
+use App\Databases\Repositories\UserImovelRepository;
+use App\Databases\Repositories\UserPessoaRepository;
+use App\Databases\Repositories\UserSolicitacaoRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -43,5 +49,8 @@ class AppServiceProvider extends ServiceProvider
         app()->bind(LoteamentoContract::class, LoteamentoRepository::class);
         app()->bind(SolicitacaoContract::class, SolicitacaoRepository::class);
         app()->bind(SolicitacaoMensagemContract::class, SolicitacaoMensagemRepository::class);
+        app()->bind(UserSolicitacaoContratct::class, UserSolicitacaoRepository::class);
+        app()->bind(UserPessoaContract::class, UserPessoaRepository::class);
+        app()->bind(UserImovelContract::class, UserImovelRepository::class);
     }
 }
