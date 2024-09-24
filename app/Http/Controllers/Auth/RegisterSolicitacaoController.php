@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Databases\Models\Solicitacao;
+use App\Databases\Models\SolicitacaoMensagem;
 use App\Databases\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -82,6 +83,13 @@ class RegisterSolicitacaoController extends Controller
             'status' => 'P'
         ]);
         $solicitacao->save();
+        // Cria uma mensagem concatenada para a solicitação de cadastro de imóvel
+        $mensagem = "Solicitação de cadastro de imóvel.\n";
+        $mensagem .= "Usuário: {$usuario->name}\n";
+        $mensagem .= "CPF: {$usuario->cpf}\n";
+        $mensagem .= "Email: {$usuario->email}\n";
+        $mensagem .= "Imóvel ID: {$imovelIdDescriptografado}\n";
+
 
         $this->guard()->login($usuario);
         return redirect($this->redirectTo);

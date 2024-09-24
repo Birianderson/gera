@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Register') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="/vinculacao/cadastro">
                         @csrf
 
                         <div class="row mb-3">
@@ -19,6 +19,20 @@
 
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="cpf" class="col-md-4 col-form-label text-md-end">{{ __('cpf') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}" required autocomplete="cpf" autofocus>
+
+                                @error('name')
+                                <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Painel\SolicitacaoMensagem;
+namespace App\Http\Controllers\SolicitacaoMensagem;
 
 use App\Databases\Contracts\SolicitacaoMensagemContract;
 use App\Http\Requests\SolicitacaoMensagemRequest;
@@ -27,7 +27,7 @@ class SolicitacaoMensagemController extends Controller
      */
     public function index($id): View
     {
-        return view('painel.solicitacao_atendimento.index', compact('id'));
+        return view('solicitacao_mensagem.index', compact('id'));
     }
 
     /**

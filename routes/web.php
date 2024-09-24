@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Imovel\ImovelController;
 use App\Http\Controllers\Loteamento\LoteamentoController;
 use App\Http\Controllers\Mapa\MapaController;
+use App\Http\Controllers\SolicitacaoMensagem\SolicitacaoMensagemController;
 use App\Http\Controllers\Pessoa\PessoaController;
 use App\Http\Controllers\Solicitacao\SolicitacaoController;
 use App\Http\Controllers\Upload\UploadController;
@@ -140,12 +141,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     });
 
     Route::group(['prefix' => 'mensagem_solicitacao', 'middleware' => ['web', 'auth']], function () {
-        Route::get('/solicitacao/{id}', [SolicitacaoMensagem::class, 'index'])->name('mensagem_solicitacao.index');
-        Route::get('/list', [SolicitacaoMensagem::class, 'list'])->name('mensagem_solicitacao.list');
-        Route::get('/{id}', [SolicitacaoMensagem::class, 'chat'])->name('mensagem_solicitacao.chat');
-        Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [SolicitacaoMensagem::class, 'download'])->name('mensagem_solicitacao.download');
-        Route::post('/', [SolicitacaoMensagem::class, 'create'])->name('mensagem_solicitacao.create');
-        Route::post('/mudar_situacao', [SolicitacaoMensagem::class, 'mudarSituacao'])->name('mensagem_solicitacao.mudarSituacao');
+        Route::get('/solicitacao/{id}', [SolicitacaoMensagemController::class, 'index'])->name('mensagem_solicitacao.index');
+        Route::get('/list', [SolicitacaoMensagemController::class, 'list'])->name('mensagem_solicitacao.list');
+        Route::get('/{id}', [SolicitacaoMensagemController::class, 'chat'])->name('mensagem_solicitacao.chat');
+        Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [SolicitacaoMensagemController::class, 'download'])->name('mensagem_solicitacao.download');
+        Route::post('/', [SolicitacaoMensagemController::class, 'create'])->name('mensagem_solicitacao.create');
+        Route::post('/mudar_situacao', [SolicitacaoMensagemController::class, 'mudarSituacao'])->name('mensagem_solicitacao.mudarSituacao');
     });
 
 });

@@ -7,8 +7,8 @@
                 <div class="row">
                     <div class="col-12 d-flex border-bottom border-top">
                         <div class="flex-fill py-1">
-                            <strong>Solicitação:</strong> {{ solicitacao.numero_protocolo }}/{{
-                                solicitacao.ano_protocolo }}
+                            <strong>Localização:</strong>
+                            {{ solicitacao.imovel.loteamento.cidade.nome }} -> {{ solicitacao.imovel.loteamento.nome }} -> Quadra {{ solicitacao.imovel.quadra }} -> Lote {{ solicitacao.imovel.lote }}
                         </div>
                         <div class="flex-fill text-end py-1">
                             <strong>Data:</strong> {{ formatarDataHora(solicitacao.data) }}
@@ -18,10 +18,13 @@
                 <div class="row mb-3">
                     <div class="col-12 d-flex justify-content-between border-bottom">
                         <div class="flex-fill py-1">
-                            <strong>Solicitante:</strong> {{ solicitacao.nome_solicitante }}
+                            <strong>Solicitante:</strong> {{ solicitacao.usuario.name }}
+                        </div>
+                        <div class="flex-fill py-1">
+                            <strong>CPF:</strong> {{ solicitacao.usuario.cpf }}
                         </div>
                         <div class="flex-fill text-end py-1" v-if="!props.readOnly">
-                            <strong>E-mail:</strong> {{ solicitacao.email }}
+                            <strong>E-mail:</strong> {{ solicitacao.usuario.email }}
                         </div>
                     </div>
                 </div>
@@ -40,11 +43,11 @@
         <div class="chat-container card">
             <div class="mensagem-esquerda">
                 <div class="conteudo-mensagem  shadow-sm">
-                    <small>{{ formatarNome(solicitacao.nome_solicitante) }}</small>
+                    <small>{{ formatarNome(solicitacao.mensagem) }}</small>
                     <p class="text-black">{{ solicitacao.texto }}</p>
                 </div>
             </div>
-            <div class="mensagem-direita" v-for="mensagem in solicitacao.atendimentos" :key="mensagem.id">
+            <div class="mensagem-direita" v-for="mensagem in solicitacao.mensagens" :key="mensagem.id">
                 <div class="conteudo-mensagem shadow-sm">
                     <small>{{ formatarNome(mensagem.usuario.nome_usuario) }}</small>
                     <p class="text-black" v-html="mensagem.texto"></p>
@@ -69,7 +72,7 @@
                 </div>
             </div>
 
-            <form id="frm" name="frm" method="post" action="/painel/solicitacao_atendimento/">
+            <form id="frm" name="frm" method="post" action="/admin/mensagem_solicitacao/">
                 <form-error></form-error>
                 <div v-if="arquivos_envio > 0" class="mt-2 border-top p-2  ">
                     <div v-for="(arquivo, index) in arquivosDetalhes" :key="index"
@@ -189,7 +192,7 @@ export default {
 
         const atualizaSituacoo = async (novaSituacao) => {
             try {
-                const response = await axios.post('/painel/solicitacao_atendimento/mudar_situacao', {
+                const response = await axios.post('/admin/mensagem_solicitacao/mudar_situacao', {
                     solicitacao_id: props.data,
                     novo_status: novaSituacao
                 });
@@ -222,10 +225,11 @@ export default {
         const carregarMensagens = async () => {
             try {
                 let source = !props.data.codigoEntidade ?
-                    `/painel/solicitacao_atendimento/${props.data.solicitacaoId}` :
+                    `/admin/mensagem_solicitacao/${props.data.solicitacaoId}` :
                     `/entidade/${props.data.codigoEntidade}/solicitacao/busca/${props.data.solicitacaoId}`;
                 const response = await axios.get(source);
                 solicitacao.value = response.data;
+                console.log(solicitacao.value);
                 setTimeout(() => {
                     loading.value = false;
                 }, 50);
@@ -245,7 +249,7 @@ export default {
                 formData.append('descricao[]', arquivoDetalhes.descricao);
             }
             try {
-                const response = await axios.post('/painel/solicitacao_atendimento/', formData, {
+                const response = await axios.post('/admin/mensagem_solicitacao/', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

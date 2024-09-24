@@ -30,7 +30,7 @@ class SolicitacaoMensagemRepository implements SolicitacaoMensagemContract
      */
     public function getById(int $SolicitacaoMensagemId): Model
     {
-        return Solicitacao::query()->with('atendimentos')
+        return Solicitacao::query()->with(['mensagens', 'usuario','imovel.loteamento.cidade'])
             ->where('id', '=', $SolicitacaoMensagemId)
             ->firstOrFail();
     }
