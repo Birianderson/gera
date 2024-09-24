@@ -189,7 +189,7 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
 
 
     Route::group(['prefix' => 'solicitacoes'], function () {
-        Route::get('/', [UserSolicitacaoController::class::class, 'index'])->name('solicitacao.index');
+        Route::get('/', [UserSolicitacaoController::class, 'index'])->name('solicitacao.index');
         Route::get('/list', [SolicitacaoController::class, 'list'])->name('solicitacao.list');
     });
 
