@@ -150,3 +150,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     });
 
 });
+Route::group(['prefix' => 'mapa'], function () {
+    Route::get('/solicitacao_mapa/{id}', [MapaController::class, 'solicitacao_mapa'])->name('mapa.solicitacao_localizacao');
+    Route::get('/getByHash/{id}', [MapaController::class, 'getByHash']);
+});

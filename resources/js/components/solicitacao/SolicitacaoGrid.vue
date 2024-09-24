@@ -57,6 +57,7 @@ const columns = ref([
         contentClass: 'text-center',
         formatter: (value, row) => {
             let output = "";
+            output += `<a href="/mapa/solicitacao_mapa/${row.imovel_id}"  data-tooltip="Verificar Localização" data-title="Atender Solicitação" class=" mx-1 action text-align-center"><i class="fa fa-map-marker-alt"></i></a>`;
             output += `<a href="/admin/mensagem_solicitacao/solicitacao/${value}" data-json='{"id": "${value}"}' data-tooltip="Editar" data-title="Atender Solicitação" class=" mx-1 action text-align-center"><i class="fa fa-comment"></i></a>`;
             return output;
         }

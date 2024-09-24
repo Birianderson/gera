@@ -27,6 +27,7 @@
         "vue3-google-map": "^0.21.0"
     },
     "dependencies": {
+        "@googlemaps/js-api-loader": "^1.16.8",
         "vue-the-mask": "^0.11.1"
     }
 }
