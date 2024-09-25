@@ -7,7 +7,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('atendimento', function (Blueprint $table) {
+        Schema::create('solicitacao', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('imovel_id')->nullable();
             $table->unsignedInteger('usuario_id')->nullable();
@@ -16,12 +16,12 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreign('imovel_id')->references('id')->on('imovel');
-            $table->foreign('usuario_id')->references('id')->on('usuario');
+            $table->foreign('usuario_id')->references('id')->on('users');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('atendimento');
+        Schema::dropIfExists('solicitacao');
     }
 };

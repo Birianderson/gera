@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Imovel;
 
+use App\Databases\Models\Imovel;
+use App\Databases\Models\Pessoa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use App\Databases\Contracts\ImovelContract;
 use App\Http\Requests\ImovelRequest;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ImovelController extends Controller
 {
@@ -36,10 +40,10 @@ class ImovelController extends Controller
     {
         $dados = $this->ImovelRepository->paginate($request->all())->toArray();
         $dados['filter_options'] = [
-            'cidade.nome' => [
+            'cidade_nome' => [
                 'type' => 'text',
             ],
-            'loteamento.nome' => [
+            'loteamento_nome' => [
                 'type' => 'text',
             ],
             'prefixo_titulo' => [
@@ -51,7 +55,7 @@ class ImovelController extends Controller
             'lote' => [
                 'type' => 'text',
             ],
-            'pessoa.nome' => [
+            'pessoa_nome' => [
                 'type' => 'text',
             ],
 
@@ -88,6 +92,14 @@ class ImovelController extends Controller
        $imovel = $this->ImovelRepository->findByQuadraLote($loteamento_id, $quadra, $lote);
        return $imovel;
     }
+
+    public function gerarQrCode($imovelId)
+    {
+        $imovelIdCriptografado = Crypt::encryptString($imovelId);
+        $urlFormulario = route('formulario.imovel', ['id' => $imovelIdCriptografado]);
+        return QrCode::size(300)->generate($urlFormulario);
+    }
+
 
     /**
      * Editar Unidade de Atendimento

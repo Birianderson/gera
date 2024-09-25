@@ -68,7 +68,7 @@ export default {
 
         const fetchImovel = async () => {
             try {
-                const response = await axios.get(`/imovel/${props.data.imovel_id}`);
+                const response = await axios.get(`/admin/imovel/${props.data.imovel_id}`);
                 imovel.value = response.data;
                 console.log(imovel.value,'imovelValue')
             } catch (error) {

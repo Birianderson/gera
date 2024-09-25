@@ -24,10 +24,25 @@ class MapaController extends Controller
         return view('mapa.index');
     }
 
+    /**
+     * Unidade de Atendimento index
+     * @return View
+     */
+    public function solicitacao_mapa(string $imovel_id): View
+    {
+        return view('mapa.solicitacao_mapa', compact('imovel_id'));
+    }
+
     public function getByLoteamento(String $loteamento_id): JsonResponse
     {
         $dados = $this->MapaRepository->getByLoteamento($loteamento_id);
 
+        return response()->json($dados);
+    }
+
+    public function getByHash(String $imovel_id): JsonResponse
+    {
+        $dados = $this->MapaRepository->getByHash($imovel_id);
         return response()->json($dados);
     }
 }

@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 const events = inject('events');
-const source = '/loteamento/list';
+const source = `/admin/loteamento/list/${props.cidade_id}`;
 
 const columns = ref([
     {name: 'nome', title: 'Nome', width: '10%', sort: 'nome', nowrap: true},
@@ -33,7 +33,7 @@ const columns = ref([
 const confirmRemove = async (data) => {
     events.emit('loading', true);
     try {
-        await axios.delete(`/imovel/${data.id}`);
+        await axios.delete(`/admin/loteamento/${data.id}`);
         events.emit('table-reload');
         events.emit('notification', {
             type: 'success',

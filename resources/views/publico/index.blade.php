@@ -1,48 +1,19 @@
 <x-layout.publico>
-
-    <!-- Cabeçalho da Página -->
-    <header class="navbar navbar-expand-lg navbar-dark bg-light">
-        <div class="container">
-            <!-- Logotipo -->
-            <a class="navbar-brand" href="#">
-                <img src="imagens/logotipo.png" alt="Logotipo" class="img-fluid" style="max-height: 50px;">
-            </a>
-            <button class="navbar-toggler bg-accent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse text-black" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item ">
-                        <a class="nav-link active text-accent border-end" href="#">HOME</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black border-end" href="#quem-somos">QUEM SOMOS</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black border-end" href="#servicos">SERVIÇOS</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black border-end" href="#equipe">EQUIPE</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black border-end" href="#contato">CONTATO</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </header>
-
-    <section class="section-spacing section-bg row ">
-        <div class="container text-start py-5 col-6 ">
-            <h1 class="display-4 text-white" style="text-decoration-style: solid; text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.3);">
+    <section class="section-spacing section-bg">
+        <div class="container py-5">
+            <h1 class="display-4 text-white"
+                style="text-decoration-style: solid; text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.3);">
                 REGULARIZAÇÃO <span class="text-accent">FUNDIÁRIA</span>
             </h1>
             <p class="lead text-white">Especialistas em Consultoria e realização de Projetos para Regularização
-                Fundiária oferecendo as melhores soluções para todas as etapas técnicas de REURB-S ou REURB-E</p>
-            <button class="btn btn-success">
-                <i class="fa fa-phone"></i> Fale conosco
-            </button>
+                Fundiária oferecendo as melhores soluções para todas as etapas técnicas de REURB-S ou REURB-E
+            </p>
+            <br/>
+            <div class="btn-container">
+                <button class="btn btn-success section-button">
+                    <i class="fa fa-phone"></i> Fale conosco
+                </button>
+            </div>
         </div>
     </section>
 
@@ -87,8 +58,10 @@
             <h2 class="section-heading">NOSSO PROCESSO AUTOMATIZADO É O MELHOR</h2>
             <div class="row mt-4">
                 <div class="col-md-6">
-                    <div class="lead text-dark mb-5">Nosso sistema de regularização fundiária é completamente automatizado, tornando o processo mais
-                        rápido e eficiente, evitando burocracia e atrasos.</div>
+                    <div class="lead text-dark mb-5">Nosso sistema de regularização fundiária é completamente
+                        automatizado, tornando o processo mais
+                        rápido e eficiente, evitando burocracia e atrasos.
+                    </div>
                     <ul class="list-unstyled text-list-unstyled">
                         <li><i class="fa fa-check-circle me-2"></i> Menos tempo gasto com papelada</li>
                         <li><i class="fa fa-check-circle  me-2"></i> Acompanhamento de cada fase online

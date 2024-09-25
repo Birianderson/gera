@@ -23,6 +23,10 @@
     "file": "assets/fa-solid-900-DOQJEhcS.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
   },
+  "public/imagens/fundo2.jpg": {
+    "file": "assets/fundo2-sUDD0aoh.jpg",
+    "src": "public/imagens/fundo2.jpg"
+  },
   "public/imagens/ico_assuntos.png": {
     "file": "assets/ico_assuntos-BMCAq8wq.png",
     "src": "public/imagens/ico_assuntos.png"
@@ -40,12 +44,12 @@
     "src": "public/imagens/ico_solicitacoes.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-BJeFcbJe.js",
+    "file": "assets/app-BqxMRyuR.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-HkFQGzhJ.css"
+      "assets/app-DzBQyb-S.css"
     ]
   },
   "resources/sass/app.scss": {
@@ -54,7 +58,7 @@
     "isEntry": true
   },
   "resources/sass/publico.scss": {
-    "file": "assets/publico-XjZnEgbK.css",
+    "file": "assets/publico-Dew3NHyp.css",
     "src": "resources/sass/publico.scss",
     "isEntry": true
   }

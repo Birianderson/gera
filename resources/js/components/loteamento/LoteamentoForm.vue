@@ -47,13 +47,13 @@ export default {
         const cidade = ref({});
         const municipios = ref([]);
         const ready = ref(false);
-        const acao = ref('/loteamento/create');
+        const acao = ref('/admin/loteamento/create');
         const readOnly = ref(false);
 
         const loadData = async () => {
             try {
+                acao.value = '/admin/loteamento/'
                 const response = await axios.get(`${acao.value}${props.data.id}`);
-                acao.value = '/imovel/'
                 acao.value += props.data.id;
 
                 info.value = response.data;
@@ -69,7 +69,7 @@ export default {
 
         const loadCidade = async () => {
             try {
-                cidade.value = await axios.get(`/loteamento/findCidade/${props.data}`);
+                cidade.value = await axios.get(`/admin/loteamento/findCidade/${props.data}`);
                 cidade.value = cidade.value.data;
             } catch (err) {
                 emit('notification', {

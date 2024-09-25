@@ -198,13 +198,14 @@ export default {
         const info = ref({});
         const municipios = ref([]);
         const ready = ref(false);
-        const acao = ref('/imovel/create');
+        const acao = ref('/admin/imovel/create');
         const readOnly = ref(false);
 
         const loadData = async () => {
             try {
+                acao.value = '/admin/imovel/'
                 const response = await axios.get(`${acao.value}${props.data.id}`);
-                acao.value = '/imovel/'
+
                 acao.value += props.data.id;
 
                 info.value = response.data;

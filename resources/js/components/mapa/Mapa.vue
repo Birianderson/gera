@@ -19,7 +19,7 @@ onMounted(async () => {
 
 const carregarMunicipio = async () => {
     try {
-        const response = await axios.get('/cidade/getAll');
+        const response = await axios.get('/admin/cidade/getAll');
         municipios.value = response.data;
     } catch (error) {
         console.error('Erro ao carregar municípios:', error);
@@ -35,7 +35,7 @@ const carregarLoteamento = async () => {
     if (!selectedCity.value) return;
 
     try {
-        const response = await axios.get(`/loteamento/findLoteamentoByCidade/${selectedCity.value}`);
+        const response = await axios.get(`/admin/loteamento/findLoteamentoByCidade/${selectedCity.value}`);
         loteamentos.value = response.data;
     } catch (error) {
         console.error('Erro ao carregar loteamentos:', error);
@@ -66,7 +66,7 @@ const calcularPosition = (path) => {
 const carregarCoordenadas = async () => {
 
     try {
-        const response = await axios.get(`/mapa/getByLoteamento/${selectedLoteamento.value}`);
+        const response = await axios.get(`/admin/mapa/getByLoteamento/${selectedLoteamento.value}`);
         const coordenadas = response.data;
         if (coordenadas.length > 0) {
             const primeiraCoordenada = coordenadas[0];

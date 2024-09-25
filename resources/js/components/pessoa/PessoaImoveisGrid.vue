@@ -1,6 +1,6 @@
 <template>
     <div v-if="ready">
-        <datatable id="pessoa" :columns="columns" @delete="confirmRemove" :source="source"></datatable>
+        <datatable id="pessoa" :columns="columns" :source="source"></datatable>
     </div>
 </template>
 
@@ -20,29 +20,9 @@ const columns = ref([
     {name: 'quadra', title: 'Quadra', width: '10%', sort: 'quadra'},
     {name: 'lote', title: 'Lote', width: '10%', sort: 'lote'},
 ]);
-const confirmRemove = async (data) => {
-    events.emit('loading', true);
-    try {
-        await axios.delete(`/pessoa/${data.id}`);
-        events.emit('table-reload');
-        events.emit('notification', {
-            type: 'success',
-            message: 'Competência excluída com Sucesso.'
-        });
-    } catch (err) {
-        events.emit('notification', {
-            type: 'error',
-            message: err.response?.data?.message || 'Não foi possível excluir o registro.'
-        });
-    } finally {
-        events.emit('loading', false);
-    }
-}
-
-
 
 onMounted(() => {
-    source.value = `/pessoa/imoveis/${props.data.id}`
+    source.value = `/admin/pessoa/imoveis/${props.data.id}`
     console.log(source.value,'link')
     ready.value =true;
 });
