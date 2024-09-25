@@ -9,8 +9,8 @@ return new class extends Migration
     {
         Schema::create('coordenadas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('imovel_id')->nullable();
-            $table->foreignId('loteamento_id');
+            $table->unsignedBigInteger('imovel_id')->nullable();
+            $table->unsignedBigInteger('loteamento_id');
             $table->text('lat');
             $table->text('long');
             $table->timestamps();

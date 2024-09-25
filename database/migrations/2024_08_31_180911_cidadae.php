@@ -9,7 +9,7 @@ return new class extends Migration
     {
         Schema::create('cidade', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('estado_id')->nullable();
+            $table->unsignedBigInteger('estado_id')->nullable();
             $table->string('nome');
             $table->string('sigla')->nullable();
             $table->timestamps();

@@ -9,8 +9,8 @@ return new class extends Migration
     {
         Schema::create('imovel', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('pessoa_id')->nullable();
-            $table->unsignedInteger('loteamento_id')->nullable();
+            $table->unsignedBigInteger('pessoa_id')->nullable();
+            $table->unsignedBigInteger('loteamento_id')->nullable();
             $table->string('data_escritura')->nullable();
             $table->string('matricula_reurb')->nullable();
             $table->string('inscricao_imobiliaria')->nullable();

@@ -9,7 +9,7 @@ return new class extends Migration
     {
         Schema::create('loteamento', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cidade_id')->nullable();
+            $table->unsignedBigInteger('cidade_id')->nullable();
             $table->string('nome');
             $table->string('sigla')->nullable();
             $table->timestamps();

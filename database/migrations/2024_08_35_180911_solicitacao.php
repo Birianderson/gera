@@ -9,8 +9,8 @@ return new class extends Migration
     {
         Schema::create('solicitacao', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('imovel_id')->nullable();
-            $table->unsignedInteger('usuario_id')->nullable();
+            $table->unsignedBigInteger('imovel_id')->nullable();
+            $table->unsignedBigInteger('usuario_id')->nullable();
             $table->char('status',1);
             $table->timestamps();
             $table->softDeletes();
