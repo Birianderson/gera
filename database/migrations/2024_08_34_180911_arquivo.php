@@ -9,8 +9,8 @@ return new class extends Migration
     {
         Schema::create('arquivo', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('tipo_arquivo_id')->nullable();
-            $table->unsignedInteger('usuario_id')->nullable();
+            $table->unsignedBigInteger('tipo_arquivo_id')->nullable();
+            $table->unsignedBigInteger('usuario_id')->nullable();
             $table->string('tabela');
             $table->string('chave');
             $table->string('titulo');

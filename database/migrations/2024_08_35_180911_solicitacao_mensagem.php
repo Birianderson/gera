@@ -9,8 +9,8 @@ return new class extends Migration
     {
         Schema::create('solicitacao_mensagem', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('solicitacao_id')->nullable();
-            $table->unsignedInteger('usuario_id')->nullable();
+            $table->unsignedBigInteger('solicitacao_id')->nullable();
+            $table->unsignedBigInteger('usuario_id')->nullable();
             $table->string('texto');
             $table->timestamps();
             $table->softDeletes();
