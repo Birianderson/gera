@@ -12,7 +12,7 @@ use App\Databases\Contracts\SolicitacaoMensagemContract;
 use App\Databases\Contracts\UploadContract;
 use App\Databases\Contracts\UserImovelContract;
 use App\Databases\Contracts\UserPessoaContract;
-use App\Databases\Contracts\UserSolicitacaoContratct;
+use App\Databases\Contracts\UserSolicitacaoContract;
 use App\Databases\Repositories\CidadeRepository;
 use App\Databases\Repositories\ImovelRepository;
 use App\Databases\Repositories\LoteamentoRepository;
@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
         app()->bind(LoteamentoContract::class, LoteamentoRepository::class);
         app()->bind(SolicitacaoContract::class, SolicitacaoRepository::class);
         app()->bind(SolicitacaoMensagemContract::class, SolicitacaoMensagemRepository::class);
-        app()->bind(UserSolicitacaoContratct::class, UserSolicitacaoRepository::class);
+        app()->bind(UserSolicitacaoContract::class, UserSolicitacaoRepository::class);
         app()->bind(UserPessoaContract::class, UserPessoaRepository::class);
         app()->bind(UserImovelContract::class, UserImovelRepository::class);
     }

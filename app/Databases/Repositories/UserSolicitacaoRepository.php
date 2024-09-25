@@ -1,18 +1,19 @@
 <?php
 namespace App\Databases\Repositories;
 
-use App\Databases\Contracts\SolicitacaoContract;
+use App\Databases\Contracts\UserSolicitacaoContract;
 use App\Databases\Models\Coordenadas;
 use App\Databases\Models\Solicitacao;
-use App\Imports\TerrenosImport;
+
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Maatwebsite\Excel\Facades\Excel;
 
-class UserSolicitacaoRepository implements SolicitacaoContract
+class UserSolicitacaoRepository implements UserSolicitacaoContract
 {
     /**
      * Constructor
@@ -75,7 +76,9 @@ class UserSolicitacaoRepository implements SolicitacaoContract
      */
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
+        $user_id = Auth::user()->id;
         $query = Solicitacao::query()
+            ->where('usuario_id', '=', $user_id)
             ->with(['usuario','imovel']);
 
         if (isset($pagination['municipio'])) {

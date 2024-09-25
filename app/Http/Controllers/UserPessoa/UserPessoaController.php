@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Pessoa;
+namespace App\Http\Controllers\UserPessoa;
 
-use App\Databases\Models\Imovel;
-use App\Databases\Models\Pessoa;
+use App\Databases\Contracts\UserPessoaContract;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use App\Databases\Contracts\PessoaContract;
 use App\Http\Requests\PessoaRequest;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 class UserPessoaController extends Controller
 {
-    public function __construct(private readonly PessoaContract $PessoaRepository)
+    public function __construct(private readonly UserPessoaContract $UserPessoaRepository)
     {
     }
 
@@ -26,7 +24,8 @@ class UserPessoaController extends Controller
      */
     public function index(): View
     {
-        return view('pessoa.index');
+        $cpf = $user_id = Auth::user()->cpf;
+        return view('user_pessoa.index',compact('cpf'));
     }
 
     /**
@@ -37,7 +36,7 @@ class UserPessoaController extends Controller
     public function list(Request $request): JsonResponse
 
     {
-        $dados = $this->PessoaRepository->paginate($request->all())->toArray();
+        $dados = $this->UserPessoaRepository->paginate($request->all())->toArray();
         $dados['filter_options'] = [
             'nome' => [
                 'type' => 'text',
@@ -74,7 +73,7 @@ class UserPessoaController extends Controller
     {
         $params = $request->except('_token');
 
-        $this->PessoaRepository->create($params);
+        $this->UserPessoaRepository->create($params);
 
         return response()->json('success', 201);
     }
@@ -84,9 +83,9 @@ class UserPessoaController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function findCPF(string $cpf): JsonResponse
+    public function findCPF(): JsonResponse
     {
-        $categoria = $this->PessoaRepository->getByCPF($cpf);
+        $categoria = $this->UserPessoaRepository->getByCPF();
         return response()->json($categoria);
     }
 
@@ -97,7 +96,7 @@ class UserPessoaController extends Controller
      */
     public function edit(int $id): JsonResponse
     {
-        $categoria = $this->PessoaRepository->getById($id);
+        $categoria = $this->UserPessoaRepository->getById($id);
         return response()->json($categoria);
     }
 
@@ -107,24 +106,13 @@ class UserPessoaController extends Controller
      */
     public function imoveis($id): JsonResponse
     {
-        $data = $this->PessoaRepository->getImoveisByID($id);
+        $data = $this->UserPessoaRepository->getImoveisByID($id);
         return response()->json([
             'data' => $data->all(),
         ]);
 
     }
 
-    /**
-     * Salvar ordem Unidade de Atendimento
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function salvarOrdem(Request $request): JsonResponse
-    {
-        $data = $request->all();
-        $this->PessoaRepository->saveOrder($data);
-        return response()->json([]);
-    }
 
 
     /**
@@ -133,10 +121,10 @@ class UserPessoaController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function update(PessoaRequest $request, int $id): JsonResponse
+    public function update(PessoaRequest $request): JsonResponse
     {
         $params = $request->except('_token');
-        $this->PessoaRepository->update($id, $params);
+        $this->UserPessoaRepository->update($params);
         return response()->json(['success', $params]);
     }
 
@@ -148,7 +136,7 @@ class UserPessoaController extends Controller
      */
     public function delete(int $id): JsonResponse
     {
-        $this->PessoaRepository->destroy($id);
+        $this->UserPessoaRepository->destroy($id);
 
         return response()->json('success');
     }

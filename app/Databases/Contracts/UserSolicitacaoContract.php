@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-interface UserSolicitacaoContratct
+interface UserSolicitacaoContract
 {
 
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator;

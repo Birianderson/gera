@@ -1,23 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Solicitacao;
+namespace App\Http\Controllers\UserSolicitacao;
 
-use App\Databases\Models\Imovel;
-use App\Databases\Models\Pessoa;
 
+use App\Databases\Contracts\UserSolicitacaoContract;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
-use App\Databases\Contracts\SolicitacaoContract;
-use App\Http\Requests\SolicitacaoRequest;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
 
 class UserSolicitacaoController extends Controller
 {
-    public function __construct(private readonly SolicitacaoContract $SolicitacaoRepository)
+    public function __construct(private readonly UserSolicitacaoContract $SolicitacaoRepository)
     {
     }
 
@@ -27,7 +21,7 @@ class UserSolicitacaoController extends Controller
      */
     public function index(): View
     {
-        return view('solicitacao.index');
+        return view('user_solicitacao.index');
     }
 
 

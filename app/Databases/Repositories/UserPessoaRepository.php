@@ -1,16 +1,17 @@
 <?php
 namespace App\Databases\Repositories;
 
-use App\Databases\Contracts\PessoaContract;
+use App\Databases\Contracts\UserPessoaContract;
 use App\Databases\Models\Imovel;
 use App\Databases\Models\Pessoa;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-class UserPessoaRepository implements PessoaContract
+class UserPessoaRepository implements UserPessoaContract
 {
     /**
      * Constructor
@@ -25,11 +26,11 @@ class UserPessoaRepository implements PessoaContract
      * @param int $id
      * @return Model
      */
-    public function getByCPF(string $cpf): Model|null
+    public function getByCPF(): Model|null
     {
-
+        $user_cpf = Auth::user()->cpf;
         return Pessoa::query()
-            ->where('cpf', '=', $cpf)
+            ->where('cpf', '=', $user_cpf)
             ->first();
     }
 
@@ -46,48 +47,7 @@ class UserPessoaRepository implements PessoaContract
             ->firstOrFail();
     }
 
-    /**
-     * Busca todos registros de Unidade de Atendimento
-     * @return Collection
-     */
-    public function getAll(): Collection
-    {
-        return Pessoa::query()->get();
-    }
 
-    /**
-     * Pagina Unidades Atendimento
-     * @param array $pagination
-     * @param array $columns
-     * @return LengthAwarePaginator
-     */
-    public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
-    {
-        $query = Pessoa::query()->with(['imoveis','conjuge']);
-
-        if (isset($pagination['nome'])) {
-            $keyword = mb_strtolower($pagination['nome']);
-            $query->whereRaw('lower(nome) like ?', ["%{$keyword}%"]);
-        }
-        if (isset($pagination['cpf'])) {
-            $keyword = mb_strtolower($pagination['cpf']);
-            $query->whereRaw('lower(cpf) like ?', ["%{$keyword}%"]);
-        }
-
-        if (isset($pagination['telefone'])) {
-            $keyword = mb_strtolower($pagination['telefone']);
-            $query->whereRaw('lower(telefone) like ?', ["%{$keyword}%"]);
-        }
-
-        if (isset($pagination['estado_civil'])) {
-            $keyword = mb_strtolower($pagination['estado_civil']);
-            $query->whereRaw('lower(estado_civil) like ?', ["%{$keyword}%"]);
-        }
-        $query->orderBy($pagination['sort'] ?? 'nome', $pagination['sort_direction'] ?? 'asc');
-        return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
-
-
-    }
 
 
 
@@ -138,16 +98,12 @@ class UserPessoaRepository implements PessoaContract
      * @return bool
      * @throws Exception
      */
-    public function update(int $id, array $params, bool $autoCommit = true): bool
+    public function update( array $params, bool $autoCommit = true): bool
     {
         $autoCommit && DB::beginTransaction();
         try {
-            if (!isset($params['ativo'])) {
-                $params['ativo'] = 0;
-            }
-
-            $competencia = $this->getById($id);
-            $competencia->update($params);
+            $usuario = $this->getByCPF();
+            $usuario->update($params);
 
             $autoCommit && DB::commit();
             return true;

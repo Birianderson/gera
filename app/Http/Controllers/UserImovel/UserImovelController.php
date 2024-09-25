@@ -1,23 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Imovel;
+namespace App\Http\Controllers\UserImovel;
 
-use App\Databases\Models\Imovel;
-use App\Databases\Models\Pessoa;
+use App\Databases\Contracts\UserImovelContract;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
-use App\Databases\Contracts\ImovelContract;
 use App\Http\Requests\ImovelRequest;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class UserImovelController extends Controller
 {
-    public function __construct(private readonly ImovelContract $ImovelRepository)
+    public function __construct(private readonly UserImovelContract $UserImovelRepository)
     {
     }
 
@@ -27,7 +24,7 @@ class UserImovelController extends Controller
      */
     public function index(): View
     {
-        return view('imovel.index');
+        return view('user_imovel.index');
     }
 
     /**
@@ -38,7 +35,7 @@ class UserImovelController extends Controller
     public function list(Request $request): JsonResponse
 
     {
-        $dados = $this->ImovelRepository->paginate($request->all())->toArray();
+        $dados = $this->UserImovelRepository->paginate($request->all())->toArray();
         $dados['filter_options'] = [
             'cidade_nome' => [
                 'type' => 'text',
@@ -71,7 +68,7 @@ class UserImovelController extends Controller
     {
         $params = $request->except('_token');
 
-        $this->ImovelRepository->create($params);
+        $this->UserImovelRepository->create($params);
 
         return response()->json('success', 201);
     }
@@ -83,13 +80,13 @@ class UserImovelController extends Controller
      */
     public function findCPF(string $cpf): JsonResponse
     {
-        $categoria = $this->ImovelRepository->getByCPF($cpf);
+        $categoria = $this->UserImovelRepository->getByCPF($cpf);
         return response()->json($categoria);
     }
 
     public function findByQuadraLote($loteamento_id, $quadra, $lote)
     {
-        $imovel = $this->ImovelRepository->findByQuadraLote($loteamento_id, $quadra, $lote);
+        $imovel = $this->UserImovelRepository->findByQuadraLote($loteamento_id, $quadra, $lote);
         return $imovel;
     }
 
@@ -108,7 +105,7 @@ class UserImovelController extends Controller
      */
     public function edit(int $id): JsonResponse
     {
-        $categoria = $this->ImovelRepository->getById($id);
+        $categoria = $this->UserImovelRepository->getById($id);
         return response()->json($categoria);
     }
 
@@ -120,7 +117,7 @@ class UserImovelController extends Controller
     public function vincula(Request $request): JsonResponse
     {
         $params = $request->except('_token');
-        $vincula = $this->ImovelRepository->vincula($params);
+        $vincula = $this->UserImovelRepository->vincula($params);
         return response()->json($vincula);
     }
 
@@ -135,7 +132,7 @@ class UserImovelController extends Controller
     public function update(ImovelRequest $request, int $id): JsonResponse
     {
         $params = $request->except('_token');
-        $this->ImovelRepository->update($id, $params);
+        $this->UserImovelRepository->update($id, $params);
         return response()->json(['success', $params]);
     }
 
@@ -148,7 +145,7 @@ class UserImovelController extends Controller
     public function delete(int $id): JsonResponse
     {
         DB::transaction(function () use ($id) {
-            $this->ImovelRepository->destroy($id);
+            $this->UserImovelRepository->destroy($id);
         });
 
         return response()->json('success');

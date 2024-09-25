@@ -90,7 +90,7 @@
                 </a>
             </li>
             <li class="menu-item @if(str_contains(request()->route()->getName(), 'imovel')) active @endif">
-                <a href="{{route('imovel.index')}}">
+                <a href="{{route('user.imovel.index')}}">
                   <span class="menu-icon">
                     <i class="fa fa-home"></i>
                   </span>
@@ -98,7 +98,7 @@
                 </a>
             </li>
             <li class="menu-item @if(str_contains(request()->route()->getName(), 'solicitacao')) active @endif">
-                <a href="{{route('solicitacao.index')}}">
+                <a href="{{route('user.solicitacao.index')}}">
                   <span class="menu-icon">
                     <i class="fa fa-comment"></i>
                   </span>
@@ -106,7 +106,7 @@
                 </a>
             </li>
             <li class="menu-item @if(str_contains(request()->route()->getName(), 'minha_conta')) active @endif">
-                <a href="#">
+                <a href="{{route('user.pessoa.index')}}">
                   <span class="menu-icon">
                     <i class="fa fa-person"></i>
                   </span>

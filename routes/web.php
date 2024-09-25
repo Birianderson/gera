@@ -6,11 +6,11 @@ use App\Http\Controllers\Auth\RegisterSolicitacaoController;
 use App\Http\Controllers\Cidade\CidadeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Imovel\ImovelController;
-use App\Http\Controllers\Imovel\UserImovelController;
+use App\Http\Controllers\UserImovel\UserImovelController;
 use App\Http\Controllers\Loteamento\LoteamentoController;
 use App\Http\Controllers\Mapa\MapaController;
-use App\Http\Controllers\Pessoa\UserPessoaController;
-use App\Http\Controllers\Solicitacao\UserSolicitacaoController;
+use App\Http\Controllers\UserPessoa\UserPessoaController;
+use App\Http\Controllers\UserSolicitacao\UserSolicitacaoController;
 use App\Http\Controllers\SolicitacaoMensagem\SolicitacaoMensagemController;
 use App\Http\Controllers\Pessoa\PessoaController;
 use App\Http\Controllers\Solicitacao\SolicitacaoController;
@@ -161,39 +161,39 @@ Route::group(['prefix' => 'mapa'], function () {
 Route::middleware(['auth'])->prefix('user')->group(function () {
 
     Route::group(['prefix' => 'pessoa'],  function () {
-        Route::get('/', [UserPessoaController::class, 'index'])->name('pessoa.index');
-        Route::get('/list', [UserPessoaController::class, 'list'])->name('pessoa.list');
-        Route::get('/imoveis/{id}', [UserPessoaController::class, 'imoveis'])->name('pessoa.imoveis');
-        Route::get('/findCPF/{CPF}', [UserPessoaController::class, 'findCPF'])->name('pessoa.findCPF');
-        Route::get('/{id}', [UserPessoaController::class, 'edit'])->name('pessoa.edit');
-        Route::post('/ordem', [UserPessoaController::class, 'salvarOrdem'])->name('pessoa.salvar-ordem')->can('painel.unidades_atendimento.update');
-        Route::post('/create', [UserPessoaController::class, 'create'])->name('pessoa.create');
-        Route::post('/{id}', [UserPessoaController::class, 'update'])->name('pessoa.update');
-        Route::delete('/{id}', [UserPessoaController::class, 'delete'])->name('pessoa.delete');
+        Route::get('/', [UserPessoaController::class, 'index'])->name('user.pessoa.index');
+        Route::get('/list', [UserPessoaController::class, 'list'])->name('user.pessoa.list');
+        Route::get('/imoveis/{id}', [UserPessoaController::class, 'imoveis'])->name('user.pessoa.imoveis');
+        Route::get('/findCPF', [UserPessoaController::class, 'findCPF'])->name('user.pessoa.findCPF');
+        Route::get('/{id}', [UserPessoaController::class, 'edit'])->name('user.pessoa.edit');
+        Route::post('/ordem', [UserPessoaController::class, 'salvarOrdem'])->name('user.pessoa.salvar-ordem')->can('painel.unidades_atendimento.update');
+        Route::post('/create', [UserPessoaController::class, 'create'])->name('user.pessoa.create');
+        Route::post('/update', [UserPessoaController::class, 'update'])->name('user.pessoa.update');
+        Route::delete('/{id}', [UserPessoaController::class, 'delete'])->name('user.pessoa.delete');
     });
 
     Route::group(['prefix' => 'imovel'], function () {
-        Route::get('/', [UserImovelController::class, 'index'])->name('imovel.index');
-        Route::get('/list', [UserImovelController::class, 'list'])->name('imovel.list');
-        Route::get('/ordem', [UserImovelController::class, 'ordem'])->name('imovel.ordem');
-        Route::get('/gerarQrcode/{id}', [UserImovelController::class, 'gerarQrCode'])->name('imovel.gerarQrCode');
-        Route::get('/findByQuadraLote/{loteamento_id}/{quadra}/{lote}', [UserImovelController::class, 'findByQuadraLote'])->name('imovel.findByQuadraLote');
-        Route::get('/findCPF/{CPF}', [UserImovelController::class, 'findCPF'])->name('imovel.findCPF');
-        Route::get('/{id}', [UserImovelController::class, 'edit'])->name('imovel.edit');
-        Route::post('/create', [UserImovelController::class, 'create'])->name('imovel.create');
-        Route::post('/vincula', [UserImovelController::class, 'vincula'])->name('imovel.vincula');
-        Route::post('/{id}', [UserImovelController::class, 'update'])->name('imovel.update');
-        Route::delete('/{id}', [UserImovelController::class, 'delete'])->name('imovel.delete');
+        Route::get('/', [UserImovelController::class, 'index'])->name('user.imovel.index');
+        Route::get('/list', [UserImovelController::class, 'list'])->name('user.imovel.list');
+        Route::get('/ordem', [UserImovelController::class, 'ordem'])->name('user.imovel.ordem');
+        Route::get('/gerarQrcode/{id}', [UserImovelController::class, 'gerarQrCode'])->name('user.imovel.gerarQrCode');
+        Route::get('/findByQuadraLote/{loteamento_id}/{quadra}/{lote}', [UserImovelController::class, 'findByQuadraLote'])->name('user.imovel.findByQuadraLote');
+        Route::get('/findCPF/{CPF}', [UserImovelController::class, 'findCPF'])->name('user.imovel.findCPF');
+        Route::get('/{id}', [UserImovelController::class, 'edit'])->name('user.imovel.edit');
+        Route::post('/create', [UserImovelController::class, 'create'])->name('user.imovel.create');
+        Route::post('/vincula', [UserImovelController::class, 'vincula'])->name('user.imovel.vincula');
+        Route::post('/{id}', [UserImovelController::class, 'update'])->name('user.imovel.update');
+        Route::delete('/{id}', [UserImovelController::class, 'delete'])->name('user.imovel.delete');
     });
 
 
 
     Route::group(['prefix' => 'solicitacoes'], function () {
-        Route::get('/', [UserSolicitacaoController::class, 'index'])->name('solicitacao.index');
-        Route::get('/list', [SolicitacaoController::class, 'list'])->name('solicitacao.list');
+        Route::get('/', [UserSolicitacaoController::class, 'index'])->name('user.solicitacao.index');
+        Route::get('/list', [UserSolicitacaoController::class, 'list'])->name('user.solicitacao.list');
     });
 
-    Route::group(['prefix' => 'mensagem_solicitacao', 'middleware' => ['web', 'auth']], function () {
+    Route::group(['prefix' => 'mensagem_solicitacao'], function () {
         Route::get('/solicitacao/{id}', [SolicitacaoMensagemController::class, 'index'])->name('mensagem_solicitacao.index');
         Route::get('/list', [SolicitacaoMensagemController::class, 'list'])->name('mensagem_solicitacao.list');
         Route::get('/{id}', [SolicitacaoMensagemController::class, 'chat'])->name('mensagem_solicitacao.chat');
