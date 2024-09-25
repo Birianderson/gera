@@ -76,6 +76,60 @@ class UserImovelRepository implements UserImovelContract
      * @param array $columns
      * @return LengthAwarePaginator
      */
+    public function paginateMobile(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
+    {
+        $user_id = Auth::user()->id;
+        $user = User::query()->findOrFail($user_id);
+        $pessoa = Pessoa::query()->where('cpf', $user->cpf)->first();
+        if ($pessoa) {
+            $query = Imovel::query()
+                ->where('pessoa_id', $pessoa->id)
+                ->with(['pessoa','loteamento','cidade'])
+                ->leftJoin('pessoa', 'pessoa.id', '=', 'imovel.pessoa_id') // Alterado para leftJoin
+                ->join('loteamento', 'loteamento.id', '=', 'imovel.loteamento_id')
+                ->join('cidade', 'cidade.id', '=', 'loteamento.cidade_id')
+                ->select([
+                    'imovel.id as id',
+                    'imovel.quadra as quadra',
+                    'imovel.lote as lote',
+                    'cidade.nome as cidade_nome',
+                    'loteamento.nome as loteamento_nome',
+                    'pessoa.nome as pessoa_nome',
+                ]);
+
+            if (isset($pagination['cidade_nome'])) {
+                $keyword = mb_strtolower($pagination['cidade_nome']);
+                $query->whereRaw('lower(cidade.nome) like ?', ["%{$keyword}%"]);
+            }
+            if (isset($pagination['loteamento_nome'])) {
+                $keyword = mb_strtolower($pagination['loteamento_nome']);
+                $query->whereRaw('lower(loteamento.nome) like ?', ["%{$keyword}%"]);
+            }
+            if (isset($pagination['pessoa_nome'])) {
+                $keyword = mb_strtolower($pagination['pessoa_nome']);
+                $query->whereRaw('lower(pessoa.nome) like ?', ["%{$keyword}%"]);
+            }
+            if (isset($pagination['quadra'])) {
+                $keyword = mb_strtolower($pagination['quadra']);
+                $query->whereRaw('lower(quadra) like ?', ["%{$keyword}%"]);
+            }
+            if (isset($pagination['lote'])) {
+                $keyword = mb_strtolower($pagination['lote']);
+                $query->whereRaw('lower(lote) like ?', ["%{$keyword}%"]);
+            }
+        }else{
+            $query = Imovel::query()->whereRaw('1 = 0');
+        }
+        $query->orderBy($pagination['sort'] ?? 'cidade_nome', $pagination['sort_direction'] ?? 'asc');
+        return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
+    }
+
+    /**
+     * Pagina Unidades Atendimento
+     * @param array $pagination
+     * @param array $columns
+     * @return LengthAwarePaginator
+     */
     public function paginate(array $pagination = [], array $columns = ['*']): LengthAwarePaginator
     {
         $user_id = Auth::user()->id;

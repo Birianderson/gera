@@ -175,6 +175,7 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::group(['prefix' => 'imovel'], function () {
         Route::get('/', [UserImovelController::class, 'index'])->name('user.imovel.index');
         Route::get('/list', [UserImovelController::class, 'list'])->name('user.imovel.list');
+        Route::get('/listMobile', [UserImovelController::class, 'listMobile'])->name('user.imovel.listMobile');
         Route::get('/ordem', [UserImovelController::class, 'ordem'])->name('user.imovel.ordem');
         Route::get('/gerarQrcode/{id}', [UserImovelController::class, 'gerarQrCode'])->name('user.imovel.gerarQrCode');
         Route::get('/findByQuadraLote/{loteamento_id}/{quadra}/{lote}', [UserImovelController::class, 'findByQuadraLote'])->name('user.imovel.findByQuadraLote');

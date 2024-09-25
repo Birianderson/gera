@@ -59,6 +59,40 @@ class UserImovelController extends Controller
         ];
         return response()->json($dados);
     }
+
+    /**
+     * Lista Unidade de Atendimento
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listMobile(Request $request): JsonResponse
+
+    {
+        $dados = $this->UserImovelRepository->paginate($request->all())->toArray();
+        $dados['filter_options'] = [
+            'cidade_nome' => [
+                'type' => 'text',
+            ],
+            'loteamento_nome' => [
+                'type' => 'text',
+            ],
+            'prefixo_titulo' => [
+                'type' => 'text',
+            ],
+            'quadra' => [
+                'type' => 'text',
+            ],
+            'lote' => [
+                'type' => 'text',
+            ],
+            'pessoa_nome' => [
+                'type' => 'text',
+            ],
+
+        ];
+        return response()->json($dados);
+    }
+
     /**
      * Criar Unidade de Atendimento
      * @param ImovelRequest $request
