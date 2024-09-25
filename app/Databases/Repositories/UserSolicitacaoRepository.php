@@ -79,7 +79,7 @@ class UserSolicitacaoRepository implements UserSolicitacaoContract
         $user_id = Auth::user()->id;
         $query = Solicitacao::query()
             ->where('usuario_id', '=', $user_id)
-            ->with(['usuario','imovel']);
+            ->with(['imovel.loteamento.cidade']);
 
         if (isset($pagination['municipio'])) {
             $keyword = mb_strtolower($pagination['municipio']);
@@ -112,8 +112,6 @@ class UserSolicitacaoRepository implements UserSolicitacaoContract
 
         $query->orderBy($pagination['sort'] ?? 'municipio', $pagination['sort_direction'] ?? 'asc');
         return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
-
-
     }
 
 
