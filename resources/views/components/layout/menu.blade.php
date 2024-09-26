@@ -66,6 +66,14 @@
                                 <span class="menu-title">Minha Conta</span>
                             </a>
                         </li>
+                        <li class="menu-item @if(str_contains(request()->route()->getName(), 'tipo_arquivo')) active @endif">
+                            <a href="{{route(('tipo_arquivo.index'))}}">
+                                <span class="menu-icon">
+                                    <i class="fa fa-file"></i>
+                                </span>
+                                <span class="menu-title">Tipo de Arquivo</span>
+                            </a>
+                        </li>
                         <li class="menu-item @if(str_contains(request()->route()->getName(), 'cidade loteamento')) active @endif">
                             <a href="{{route(('cidade.index'))}}">
                                 <span class="menu-icon">

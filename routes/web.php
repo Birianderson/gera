@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterSolicitacaoController;
 use App\Http\Controllers\Cidade\CidadeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Imovel\ImovelController;
+use App\Http\Controllers\TipoArquivo\TipoArquivoController;
 use App\Http\Controllers\UserImovel\UserImovelController;
 use App\Http\Controllers\Loteamento\LoteamentoController;
 use App\Http\Controllers\Mapa\MapaController;
@@ -152,6 +153,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::post('/', [SolicitacaoMensagemController::class, 'create'])->name('mensagem_solicitacao.create');
         Route::post('/mudar_situacao', [SolicitacaoMensagemController::class, 'mudarSituacao'])->name('mensagem_solicitacao.mudarSituacao');
     });
+
+    Route::group(['prefix' => 'tipo_arquivo', 'namespace' => 'App\Http\Controllers\TipoArquivoController'], function() {
+        Route::get('/', [TipoArquivoController::class, 'index'])->name('tipo_arquivo.index');
+        Route::get('/list', [TipoArquivoController::class, 'list'])->name('tipo_arquivo.list');
+        Route::get('/getByTabela/{tabela}',[TipoArquivoController::class, 'getByTabela'])->name('tipo_arquivo.getByTabela');
+        Route::post('/create',[TipoArquivoController::class,'create'])->name('tipo_arquivo.create');
+        Route::get('/historico/{id}',[TipoArquivoController::class, 'historico'])->name('tipo_arquivo.historico');
+        Route::get('/{id}',[TipoArquivoController::class, 'edit'])->name('tipo_arquivo.edit');
+        Route::post('/{id}',[TipoArquivoController::class, 'update'])->name('tipo_arquivo.update');
+        Route::delete('/delete/{id}',[TipoArquivoController::class, 'delete'])->name('tipo_arquivo.delete');
+    });
+
 
 });
 
