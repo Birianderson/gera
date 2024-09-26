@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Databases\Repositories;
 
 use App\Databases\Contracts\UserPessoaContract;
+use App\Databases\Models\Arquivo;
 use App\Databases\Models\Imovel;
 use App\Databases\Models\Pessoa;
+use App\Databases\Models\TipoArquivo;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -47,8 +50,53 @@ class UserPessoaRepository implements UserPessoaContract
             ->firstOrFail();
     }
 
+    public function getAllDocumentos(): Collection
+    {
 
+        return TipoArquivo::query()
+            ->where('tabela', '=', 'pessoa')
+            ->get();
+    }
 
+    /**
+     * Busca 1 registro de Unidade de Atendimento
+     * @param int $id
+     * @return Collection
+     */
+    public function getMeusDocumentos(): Collection
+    {
+
+        $user_id = Auth::user()->id;
+        return Arquivo::query()
+            ->where('usuario_id', '=', $user_id)
+            ->where('tabela', '=', 'pessoa')
+            ->get();
+    }
+
+    /**
+     * Salva nova Unidade de Atendimento
+     * @param array $params
+     * @param bool $autoCommit
+     * @return bool
+     * @throws Exception
+     */
+    public function upload_documentos(array $params, bool $autoCommit = true): bool
+    {
+        $autoCommit && DB::beginTransaction();
+        try {
+            $params['tipo_arquivo_id'];
+            $Pessoa = new Pessoa([
+                'nome' => $params['nome'],
+            ]);
+            $Pessoa->save();
+
+            $autoCommit && DB::commit();
+            return true;
+        } catch (Exception $ex) {
+            $autoCommit && DB::rollBack();
+            throw new Exception($ex);
+        }
+    }
 
 
     /**
@@ -98,7 +146,7 @@ class UserPessoaRepository implements UserPessoaContract
      * @return bool
      * @throws Exception
      */
-    public function update( array $params, bool $autoCommit = true): bool
+    public function update(array $params, bool $autoCommit = true): bool
     {
         $autoCommit && DB::beginTransaction();
         try {
@@ -141,7 +189,7 @@ class UserPessoaRepository implements UserPessoaContract
      */
     public function getImoveisByID($id): Collection
     {
-        return Imovel::query()->where('pessoa_id', '=', $id)->with(['loteamento','cidade'])->get();
+        return Imovel::query()->where('pessoa_id', '=', $id)->with(['loteamento', 'cidade'])->get();
     }
 
     /**

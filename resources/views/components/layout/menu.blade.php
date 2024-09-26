@@ -83,7 +83,8 @@
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a href="{{ route('logout') }}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <span class="menu-icon">
                                     <i class="fa fa-arrow-right"></i>
                                 </span>
@@ -130,8 +131,17 @@
                     <span class="menu-title">Minha Conta</span>
                 </a>
             </li>
+            <li class="menu-item @if(str_contains(request()->route()->getName(), 'minha_conta')) active @endif">
+                <a href="{{route('user.pessoa.documentos')}}">
+                  <span class="menu-icon">
+                    <i class="fa fa-file-contract"></i>
+                  </span>
+                    <span class="menu-title">Documentos Pessoais</span>
+                </a>
+            </li>
             <li class="menu-item">
-                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <span class="menu-icon">
                         <i class="fa fa-arrow-right"></i>
                     </span>

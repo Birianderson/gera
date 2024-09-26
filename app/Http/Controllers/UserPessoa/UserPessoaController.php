@@ -29,6 +29,54 @@ class UserPessoaController extends Controller
     }
 
     /**
+     * Unidade de Atendimento index
+     * @return View
+     */
+    public function documentos(): View
+    {
+        $user_id = Auth::user()->id;
+        return view('user_pessoa.documentos_pessoais',compact('user_id'));
+    }
+
+    /**
+     * Unidade de Atendimento index
+     * @return JsonResponse
+     */
+    public function meus_documentos(): JsonResponse
+    {
+        $dados = $this->UserPessoaRepository->getMeusDocumentos()->toArray();
+        return response()->json($dados);
+    }
+
+    /**
+     * Lista Unidade de Atendimento
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function all_documentos(Request $request): JsonResponse
+
+    {
+        $dados = $this->UserPessoaRepository->getAllDocumentos()->toArray();
+        return response()->json($dados);
+    }
+
+    /**
+     * Lista Unidade de Atendimento
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function upload_documentos(Request $request): JsonResponse
+
+    {
+        $params = $request->except('_token');
+
+        $this->UserPessoaRepository->upload_documentos($params);
+
+        return response()->json('success', 201);
+    }
+
+
+    /**
      * Lista Unidade de Atendimento
      * @param Request $request
      * @return JsonResponse
