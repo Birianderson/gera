@@ -72,7 +72,7 @@ export default {
             if (solicitacao.status === 'P') {
                 return `/user/mapa/solicitacao_mapa/${solicitacao.imovel_id}`;
             } else if (solicitacao.status === 'E') {
-                return `/user/mensagem_solicitacao/${solicitacao.id}`;
+                return `/user/mensagem_solicitacao/solicitacao/${solicitacao.id}`;
             } else {
                 return `/user/mapa/solicitacao_concluida/${solicitacao.imovel_id}`;
             }

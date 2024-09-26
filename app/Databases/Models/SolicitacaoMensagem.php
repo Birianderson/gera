@@ -14,7 +14,7 @@ class SolicitacaoMensagem extends Model
     protected $primaryKey = 'id';
     public string $sequence = 'solicitacao_mensagem_id_seq';
     protected $guarded = [];
-    protected $with = ['arquivos','user'];
+    protected $with = ['arquivos','usuario'];
 
     public function solicitacao()
     {
@@ -28,7 +28,7 @@ class SolicitacaoMensagem extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'usuario_id','id');
     }
 
 
