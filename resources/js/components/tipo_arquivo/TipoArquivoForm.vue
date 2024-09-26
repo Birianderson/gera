@@ -74,7 +74,7 @@ export default {
                     events.emit('table-reload', true);
                     events.emit('notification', {
                         type: 'success',
-                        message: 'Pessoa salva com Sucesso!'
+                        message: 'Tipo de arquivo salvo com Sucesso!'
                     });
                     emit('close', true);
                 }

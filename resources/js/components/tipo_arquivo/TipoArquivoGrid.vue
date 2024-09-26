@@ -17,7 +17,7 @@ const source = '/admin/tipo_arquivo/list';
 
 const columns = ref([
     {name: 'nome', title: 'Nome', width: '10%', sort: 'nome', nowrap: true},
-    {name: 'tabela', title: 'Tabela', width: '10%', sort: 'tabela', nowrap: true},
+    {name: 'tabela', title: 'Tipo', width: '10%', sort: 'tabela', nowrap: true},
     {
         name: 'id',
         title: 'Ação',
@@ -39,7 +39,7 @@ const confirmRemove = async (data) => {
         events.emit('table-reload');
         events.emit('notification', {
             type: 'success',
-            message: 'Competência excluída com Sucesso.'
+            message: 'Tipo de Arquivo excluído com Sucesso.'
         });
     } catch (err) {
         events.emit('notification', {
