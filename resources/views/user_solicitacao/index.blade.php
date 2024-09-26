@@ -8,7 +8,7 @@
 
         <div class="d-md-none text-center mb-3 p-2">
             <h4 class="bg-primary rounded-3 text-white p-2">
-                MINHAS SOLICITACOES
+                MINHAS SOLICITAÇÕES
             </h4>
         </div>
 

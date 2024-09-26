@@ -10,7 +10,7 @@
                 <a
                     v-for="solicitacao in solicitacoes"
                     :key="solicitacao.id"
-                    :href="`/solicitacao/${solicitacao.id}`"
+                    :href="getHref(solicitacao)"
                     class="list-group-item list-group-item-action clickable-card"
                 >
                     <div class="d-flex justify-content-between align-items-center">
@@ -32,8 +32,11 @@
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <span :class="statusClass(solicitacao.status)" class="badge">
                             <span v-if="solicitacao.status === 'P'">
-                <i class="fa fa-warning"></i>
-              </span>
+                                <i class="fa fa-warning"></i>
+                            </span>
+                            <span v-if="solicitacao.status === 'E'">
+                                <i class="fa fa-hourglass-start"></i>
+                            </span>
                             {{ statusLabel(solicitacao.status) }}
                         </span>
                     </div>
@@ -65,6 +68,15 @@ export default {
             }, {});
         });
 
+        const getHref = (solicitacao) => {
+            if (solicitacao.status === 'P') {
+                return `/user/mapa/solicitacao_mapa/${solicitacao.imovel_id}`;
+            } else if (solicitacao.status === 'E') {
+                return `/user/mensagem_solicitacao/${solicitacao.id}`;
+            } else {
+                return `/user/mapa/solicitacao_concluida/${solicitacao.imovel_id}`;
+            }
+        };
         // Função para carregar solicitações da API
         const loadSolicitacoes = async () => {
             try {
@@ -79,12 +91,12 @@ export default {
 
         // Função para retornar a label do status
         const statusLabel = (status) => {
-            return status === 'P' ? 'Verificar Localização' : status === 'A' ? 'Em Andamento' : 'Indefinido';
+            return status === 'P' ? 'Verificar Localização' : status === 'E' ? 'Em Andamento' : 'Indefinido';
         };
 
         // Função para retornar a classe do status
         const statusClass = (status) => {
-            return status === 'P' ? 'bg-warning' : status === 'A' ? 'bg-info' : 'bg-success';
+            return status === 'P' ? 'bg-warning' : status === 'E' ? 'bg-info' : 'bg-success';
         };
 
         // Chamar a função loadSolicitacoes quando o componente for montado
@@ -98,6 +110,7 @@ export default {
             groupedSolicitacoes,
             statusLabel,
             statusClass,
+            getHref,
         };
     },
 };

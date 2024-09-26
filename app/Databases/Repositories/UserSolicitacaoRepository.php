@@ -115,6 +115,33 @@ class UserSolicitacaoRepository implements UserSolicitacaoContract
     }
 
 
+    /**
+     * Salva nova Unidade de Atendimento
+     * @param array $params
+     * @param bool $autoCommit
+     * @return bool
+     * @throws Exception
+     */
+    public function aprovado(array $params, bool $autoCommit = true): bool
+    {
+        $autoCommit && DB::beginTransaction();
+        try {
+            $user_id = Auth::user()->id;
+            $Solicitacao = Solicitacao::query()
+                ->where('imovel_id', $params['imovel_id'])
+                ->where('usuario_id', $user_id)
+                ->first();
+            $Solicitacao ->update([
+                'status' => 'E'
+            ]);
+
+            $autoCommit && DB::commit();
+            return true;
+        } catch (Exception $ex) {
+            $autoCommit && DB::rollBack();
+            throw new Exception($ex);
+        }
+    }
 
 
     /**
