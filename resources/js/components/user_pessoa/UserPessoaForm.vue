@@ -18,13 +18,6 @@
                             :disabled="true"
                         />
                     </div>
-                    <input
-                        v-model="cpf"
-                        required
-                        type="hidden"
-                        name="cpf"
-                        id="cpf"
-                    />
                 </div>
                 <div class="col-lg-6 col-md-6 mb-3">
                     <label for="nome" class="form-label required">Nome</label>

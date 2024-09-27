@@ -21,11 +21,11 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <div>
-                            <i class="fa fa-th-large"></i>
+                            <i class="fa fa-border-all"></i>
                             Quadra: {{ solicitacao.imovel.quadra }}
                         </div>
                         <div>
-                            <i class="fa fa-border-all"></i>
+                            <i class="fa fa-location-crosshairs"></i>
                             Lote: {{ solicitacao.imovel.lote }}
                         </div>
                     </div>
