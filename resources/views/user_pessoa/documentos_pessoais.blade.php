@@ -21,6 +21,10 @@
 
                 <!-- Grid para mobile -->
                 <div class="d-md-none">
+                    <div> <i class="fa fa-info-circle"> </i> Envie os Documentos para análise</div>
+                    <br>
+                    <div> <i class="fa fa-info-circle"> </i> Apenas 1 documento do mesmo tipo pode ser enviado por vez</div>
+                    <br>
                     <mobile-documentos-user-pessoa></mobile-documentos-user-pessoa>
                 </div>
             </div>

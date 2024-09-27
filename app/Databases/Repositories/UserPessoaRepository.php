@@ -13,6 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Str;
 
 class UserPessoaRepository implements UserPessoaContract
 {
@@ -66,10 +67,12 @@ class UserPessoaRepository implements UserPessoaContract
     public function getMeusDocumentos(): Collection
     {
 
-        $user_id = Auth::user()->id;
+        $user_cpf = Auth::user()->cpf;
+        $pessoa = Pessoa::query()->where('cpf', '=', $user_cpf)->first();
         return Arquivo::query()
-            ->where('usuario_id', '=', $user_id)
+            ->where('chave', '=', $pessoa->id)
             ->where('tabela', '=', 'pessoa')
+            ->with('tipo_arquivo')
             ->get();
     }
 
@@ -84,12 +87,34 @@ class UserPessoaRepository implements UserPessoaContract
     {
         $autoCommit && DB::beginTransaction();
         try {
-            $params['tipo_arquivo_id'];
-            $Pessoa = new Pessoa([
-                'nome' => $params['nome'],
-            ]);
-            $Pessoa->save();
+            $user_cpf = Auth::user()->cpf;
+            $pessoa = Pessoa::query()->where('cpf', '=', $user_cpf)->first();
+            if (isset($params['arquivo'])) {
+                foreach ($params['arquivo'] as $index => $file) {
+                    $hash = Str::uuid();
+                    $name = $file->getClientOriginalName();
+                    $mime = $file->getClientMimeType();
+                    $size = $file->getSize();
+                    $extension = $file->getClientOriginalExtension();
+                    $destino = sprintf("public/uploads/%s", date("Y/m/d"));
+                    $filename = sprintf("%s.%s", $hash, strtolower($extension));
+                    $file->storeAs($destino, $filename);
+                    $arquivo = new Arquivo([
+                        'tipo_arquivo_id' => $params['tipo_arquivo_id'][$index],
+                        'tabela' => 'pessoa',
+                        'chave' => $pessoa->id,
+                        'titulo' => $data['titulo'][$index] ?? $name,
+                        'descricao' => $data['descricao'][$index] ?? null,
+                        'nome' => $name,
+                        'tamanho' => $size,
+                        'content_type' => $mime,
+                        'hash' => "{$destino}/{$filename}",
+                        'status' => 'P',
 
+                    ]);
+                    $arquivo->save();
+                }
+            }
             $autoCommit && DB::commit();
             return true;
         } catch (Exception $ex) {

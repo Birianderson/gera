@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Painel\Arquivo;
+namespace App\Http\Controllers\Arquivo;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

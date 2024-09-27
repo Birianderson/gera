@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterSolicitacaoController;
 use App\Http\Controllers\Cidade\CidadeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Imovel\ImovelController;
+use App\Http\Controllers\Arquivo\ArquivoController;
 use App\Http\Controllers\TipoArquivo\TipoArquivoController;
 use App\Http\Controllers\UserImovel\UserImovelController;
 use App\Http\Controllers\Loteamento\LoteamentoController;
@@ -223,4 +224,8 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
         Route::get('/solicitacao_mapa/{id}', [MapaController::class, 'solicitacao_mapa'])->name('mapa.solicitacao_localizacao');
         Route::get('/getByHash/{id}', [MapaController::class, 'getByHash']);
     });
+});
+
+Route::group(['prefix' => 'storage/public'], function () {
+    Route::get('/uploads/{ano}/{mes}/{dia}/{hash}', [ArquivoController::class, 'download'])->name('storage.download');
 });
