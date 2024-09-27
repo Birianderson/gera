@@ -4,72 +4,31 @@
             <p>Carregando...</p>
         </div>
         <div v-else>
-            <!-- Mostrar documentos do usuário se existirem -->
-            <div v-if="documentos.length > 0">
-                <div v-for="documento in documentos" :key="documento.id" class="documento-card">
-                    <div class="documento-info">
-                        <div><strong>Documento:</strong> {{ documento.tipo_arquivo.nome }}</div>
+            <!-- Mostrar todos os tipos de documentos -->
+            <div v-for="documentoTipo in allDocumentos" :key="documentoTipo.id" class="documento-card row">
+                <a class="documento-info col-10" :href="`/user/pessoa/documentos/${documentoTipo.id}`">
+
+                <div><strong>Documento:</strong> {{ documentoTipo.nome }}</div>
+
+                    <div v-if="ultimoDocumento(documentoTipo.id)">
                         <div class="mt-2 mb-2">
                             <strong>Status:</strong>
-                            <span class="ms-1 text-white rounded-3 p-2" :class="statusClass(documento.status)">
-                {{ getStatusTexto(documento.status) }}
-            </span>
-                        </div>
-                        <div><strong>Download:</strong>
-                            <a v-if="documento.hash" :href="`/storage/${documento.hash}`" target="_blank" class="ms-1">
-                                <i class="fa fa-file-download"></i>
-                            </a>
-                        </div>
-
-                        <!-- Permitir envio de novo documento somente se reprovado e não houver outro em avaliação -->
-                        <div v-if="documento.status === 'R' && !existeDocumentoEmAvaliacao(documento.tipo_arquivo_id)" class="reprovado">
-                            <p>Documento reprovado, envie outro.</p>
-                            <div class="upload-container">
-                                <label class="custom-file-upload">
-                                    <i class="fas fa-upload"></i> Selecione um arquivo
-                                    <input type="file" @change="(event) => handleFileChange(documento.tipo_arquivo_id, event)" />
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Documento em avaliação, não permitir novo envio -->
-                        <div v-else-if="documento.status === 'P'" class="mt-1 em-avaliacao">
-                            <p>Documento em avaliação, aguarde...</p>
-                        </div>
-
-                        <!-- Documento em avaliação, não permitir novo envio -->
-                        <div v-else-if="documento.status === 'R'" class="mt-1 em-avaliacao">
-                            <p>Documento reprovado, envie outro para a Avaliação.</p>
-                        </div>
-
-                        <!-- Documento aprovado, não permitir novo envio -->
-                        <div v-else-if="documento.status === 'A'" class="mt-1 aprovado">
-                            <p>Documento aprovado!</p>
+                            <span class="ms-1 text-white rounded-3 p-2" :class="statusClass(ultimoDocumento(documentoTipo.id).status)">
+                            {{ getStatusTexto(ultimoDocumento(documentoTipo.id).status) }}</span>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- Mostrar todos documentos pendentes se "Meus Documentos" estiver vazio -->
-            <div v-if="documentosPendentes.length > 0" class="documento-card">
-                <div><strong>DOCUMENTO PENDENTE</strong></div>
-                <div v-for="doc in documentosPendentes" :key="doc.id" class="upload-container">
-                    <label>Nome: {{ doc.nome }}</label>
-                    <label class="custom-file-upload mt-2">
-                        <i class="fas fa-upload"></i> Selecione um arquivo
-                        <input type="file" :multiple="false" @change="(event) => handleFileChange(doc.id, event)" />
-                    </label>
-                    <div v-if="nomesArquivosSelecionados[doc.id]" class="mt-2">
-                        <strong>Arquivo Selecionado:</strong> {{ nomesArquivosSelecionados[doc.id] }}
+
+                    <!-- Mostrar a opção de enviar novo documento se não houver nenhum documento enviado -->
+                    <div v-else>
+                        <p>Nenhum documento enviado ainda.</p>
+                        <label class="custom-file-upload">
+                            <i class="fa fa-cloud-upload"></i> Escolher arquivo
+                            <input type="file" @change="handleFileChange(documentoTipo.id, $event)" />
+                        </label>
                     </div>
-                </div>
+                </a>
+                <div class="col-2 align-content-center text-primary"><i class="fa fa-arrow-alt-circle-right "></i> </div>
             </div>
-
-            <div v-if="!documentosPendentes.length > 0" class="">
-                <p>Sem documento pendente, aguarde a aprovação dos restantes...</p>
-            </div>
-
-            <!-- Botão de Enviar -->
-            <button type="button" class="btn botao-enviar" :disabled="arquivosSelecionados.length === 0" @click="uploadDocumentos">Enviar</button>
         </div>
     </div>
 </template>
@@ -80,8 +39,8 @@ import axios from 'axios';
 
 export default {
     setup() {
+        const allDocumentos = ref([]);
         const documentos = ref([]);
-        const documentosPendentes = ref([]);
         const arquivosSelecionados = ref([]);
         const loading = ref(true);
         const nomesArquivosSelecionados = ref({});
@@ -94,16 +53,7 @@ export default {
 
                 // Carrega todos os documentos disponíveis
                 const responsePendentes = await axios.get('/user/pessoa/all_documentos');
-                const allDocumentos = responsePendentes.data || [];
-                console.log(allDocumentos);
-
-                // Filtra os documentos pendentes com base no que já foi enviado pelo usuário
-                documentosPendentes.value = allDocumentos.filter(doc =>
-                    !documentos.value.some(d => d.tipo_arquivo_id === doc.id)
-                );
-
-                // Opcional: Se você quiser adicionar um log para verificar quais documentos pendentes estão sendo exibidos
-                console.log('Documentos Pendentes:', documentosPendentes.value);
+                allDocumentos.value = responsePendentes.data || [];
 
                 loading.value = false;
             } catch (error) {
@@ -111,6 +61,15 @@ export default {
             }
         };
 
+        // Função para encontrar o último documento enviado de um tipo específico
+        const ultimoDocumento = (tipoDocumentoId) => {
+            const documentosDoTipo = documentos.value.filter(doc => doc.tipo_arquivo_id === tipoDocumentoId);
+            if (documentosDoTipo.length > 0) {
+                // Retornar o último documento com base no array filtrado
+                return documentosDoTipo[documentosDoTipo.length - 1];
+            }
+            return null; // Se nenhum documento do tipo for encontrado
+        };
 
         const handleFileChange = (tipoDocumentoId, event) => {
             if (event && event.target && event.target.files.length > 0) {
@@ -143,11 +102,6 @@ export default {
             }
         };
 
-        const existeDocumentoEmAvaliacao = (tipoDocumentoId) => {
-            console.log(tipoDocumentoId)
-            return documentos.value.some(doc => doc.tipo_arquivo_id === tipoDocumentoId && doc.status === 'P');
-        };
-
         const statusClass = (status) => {
             return status === 'R'
                 ? 'bg-danger'
@@ -176,26 +130,23 @@ export default {
         });
 
         return {
+            allDocumentos,
             documentos,
-            documentosPendentes,
             loading,
             arquivosSelecionados,
-            existeDocumentoEmAvaliacao,
             statusClass,
             getStatusTexto,
             handleFileChange,
-            nomesArquivosSelecionados,
             uploadDocumentos,
+            ultimoDocumento,
         };
     },
 };
 </script>
 
-
 <style scoped>
 .documentos-container {
     padding: 20px;
-
     max-width: 100%;
     margin: 0 auto;
 }
@@ -214,6 +165,7 @@ export default {
 
 .documento-info {
     font-size: 16px;
+    color: #212529  ;
 }
 
 .reprovado {
@@ -235,14 +187,6 @@ export default {
     border-radius: 8px;
 }
 
-.upload-container {
-    margin-top: 10px;
-}
-
-input[type="file"] {
-    display: none;
-}
-
 .custom-file-upload {
     display: inline-block;
     padding: 10px 20px;
@@ -251,11 +195,6 @@ input[type="file"] {
     color: white;
     border-radius: 5px;
     font-size: 16px;
-    text-align: center;
-}
-
-.custom-file-upload i {
-    margin-right: 8px;
 }
 
 .btn.botao-enviar {

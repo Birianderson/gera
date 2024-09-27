@@ -90,30 +90,30 @@ class UserPessoaRepository implements UserPessoaContract
             $user_cpf = Auth::user()->cpf;
             $pessoa = Pessoa::query()->where('cpf', '=', $user_cpf)->first();
             if (isset($params['arquivo'])) {
-                foreach ($params['arquivo'] as $index => $file) {
-                    $hash = Str::uuid();
-                    $name = $file->getClientOriginalName();
-                    $mime = $file->getClientMimeType();
-                    $size = $file->getSize();
-                    $extension = $file->getClientOriginalExtension();
-                    $destino = sprintf("public/uploads/%s", date("Y/m/d"));
-                    $filename = sprintf("%s.%s", $hash, strtolower($extension));
-                    $file->storeAs($destino, $filename);
-                    $arquivo = new Arquivo([
-                        'tipo_arquivo_id' => $params['tipo_arquivo_id'][$index],
-                        'tabela' => 'pessoa',
-                        'chave' => $pessoa->id,
-                        'titulo' => $data['titulo'][$index] ?? $name,
-                        'descricao' => $data['descricao'][$index] ?? null,
-                        'nome' => $name,
-                        'tamanho' => $size,
-                        'content_type' => $mime,
-                        'hash' => "{$destino}/{$filename}",
-                        'status' => 'P',
 
-                    ]);
-                    $arquivo->save();
-                }
+                $hash = Str::uuid();
+                $name = $params['arquivo']->getClientOriginalName();
+                $mime = $params['arquivo']->getClientMimeType();
+                $size = $params['arquivo']->getSize();
+                $extension = $params['arquivo']->getClientOriginalExtension();
+                $destino = sprintf("public/uploads/%s", date("Y/m/d"));
+                $filename = sprintf("%s.%s", $hash, strtolower($extension));
+                $params['arquivo']->storeAs($destino, $filename);
+                $arquivo = new Arquivo([
+                    'tipo_arquivo_id' => $params['tipo_arquivo_id'],
+                    'tabela' => 'pessoa',
+                    'chave' => $pessoa->id,
+                    'titulo' => $data['titulo'] ?? $name,
+                    'descricao' => $data['descricao'] ?? null,
+                    'nome' => $name,
+                    'tamanho' => $size,
+                    'content_type' => $mime,
+                    'hash' => "{$destino}/{$filename}",
+                    'status' => 'P',
+
+                ]);
+                $arquivo->save();
+
             }
             $autoCommit && DB::commit();
             return true;

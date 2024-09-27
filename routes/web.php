@@ -176,6 +176,7 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
         Route::get('/', [UserPessoaController::class, 'index'])->name('user.pessoa.index');
         Route::get('/list', [UserPessoaController::class, 'list'])->name('user.pessoa.list');
         Route::get('/documentos', [UserPessoaController::class, 'documentos'])->name('user.pessoa.documentos');
+        Route::get('/documentos/{tipo_arquivo_id}', [UserPessoaController::class, 'documentos_tipo'])->name('user.pessoa.documentos_tipo');
         Route::get('/all_documentos', [UserPessoaController::class, 'all_documentos'])->name('user.pessoa.all_documentos');
         Route::get('/meus_documentos', [UserPessoaController::class, 'meus_documentos'])->name('user.pessoa.meus_documentos');
         Route::post('/upload_documentos', [UserPessoaController::class, 'upload_documentos'])->name('user.pessoa.upload_documentos');

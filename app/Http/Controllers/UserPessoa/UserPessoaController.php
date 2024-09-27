@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UserPessoa;
 
 use App\Databases\Contracts\UserPessoaContract;
+use App\Databases\Models\TipoArquivo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -34,8 +35,18 @@ class UserPessoaController extends Controller
      */
     public function documentos(): View
     {
-        $user_id = Auth::user()->id;
-        return view('user_pessoa.documentos_pessoais',compact('user_id'));
+        return view('user_pessoa.documentos_pessoais');
+    }
+
+    /**
+     * Unidade de Atendimento index
+     * @return View
+     */
+    public function documentos_tipo(int $tipo_documento_id): View
+    {
+        $tipo_documento_nome = TipoArquivo::query()->where('id', $tipo_documento_id)->first();
+        $tipo_documento_nome = $tipo_documento_nome->nome;
+        return view('user_pessoa.tipo_documentos_pessoais',compact(['tipo_documento_id','tipo_documento_nome']));
     }
 
     /**

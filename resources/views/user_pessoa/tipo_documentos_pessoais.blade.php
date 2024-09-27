@@ -6,9 +6,12 @@
             </h2>
         </div>
 
-        <div class="d-md-none text-center mb-3 p-2">
-            <h4 class="bg-primary rounded-3 text-white p-2">
-                MEUS DOCUMENTOS
+        <div class="d-md-none mb-3 p-2">
+            <a class="text-black" href="/user/pessoa/documentos"><i class="fa fa-arrow-alt-circle-left text-start text-primary"></i>
+            Voltar
+            </a>
+            <h4 class="bg-primary rounded-3 text-center  mt-2 text-white p-2">
+                MEUS DOCUMENTOS : {{$tipo_documento_nome}}
             </h4>
         </div>
 
@@ -21,9 +24,11 @@
 
                 <!-- Grid para mobile -->
                 <div class="d-md-none">
-                    <span> <i class="fa fa-info-circle"> </i> Para realizar o cadastro de Imóveis é necessário ter TODOS documentos pessoais tenham status:  <span class="bg-success text-white p-2 rounded-3">Aprovado</span></span>
+                    <div> <i class="fa fa-info-circle"> </i> Envie os Documentos para análise</div>
                     <br>
-                    <mobile-documentos-user-pessoa></mobile-documentos-user-pessoa>
+                    <div> <i class="fa fa-info-circle"> </i> Apenas 1 documento pode ser enviado por vez</div>
+                    <br>
+                    <mobile-tipo-documento-user-pessoa data="{{$tipo_documento_id}}"></mobile-tipo-documento-user-pessoa>
                 </div>
             </div>
         </div>
