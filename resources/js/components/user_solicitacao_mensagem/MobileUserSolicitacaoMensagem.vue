@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!loading" class="mobile-container">
+    <div v-if="!loading" class="">
         <div class="cabecalho">
             <div class="info-container">
                 <div class="mt-1 mb-1">
@@ -56,14 +56,31 @@
                 </div>
             </div>
             <!-- Campo de envio de mensagem -->
+            <hr>
             <form @submit.prevent="enviarMensagem" class="form-envio">
-                <textarea v-model="texto" placeholder="Digite sua mensagem" class="campo-mensagem"></textarea>
-                <div class="botoes-envio">
-                    <label class="upload-label">
+                <div class="linha-mensagem">
+                    <textarea v-model="texto" placeholder="Digite sua mensagem" class="campo-mensagem form-label"></textarea>
+
+                </div>
+
+                <div class="linha-documento">
+                    <!-- Campo de seleção para o tipo de arquivo -->
+                    <label class="botao-enviar">
                         <i class="fa fa-paperclip"></i>
-                        <input type="file" :accept="acceptAttribute" multiple @change="atualizarNumeroArquivos">
+                        <input type="file" :accept="acceptAttribute" @change="atualizarNumeroArquivos">
                     </label>
-                    <button type="submit" class="botao-enviar">Enviar</button>
+                    <select v-model="tipo_arquivo_id" class="form-select" required>
+                        <option selected value="0">Escolher documento</option>
+                        <option v-for="documento in documentos" :key="documento.id" :value="documento.id">
+                            {{ documento.nome }}
+                        </option>
+                    </select>
+                    <button :disabled="(arquivoSelecionado && tipo_arquivo_id === 0) || (!arquivoSelecionado && texto === '')"  type="submit" class="botao-enviar"><i class="fa fa-paper-plane"></i></button>
+                    <!-- Nome do arquivo selecionado -->
+
+                </div>
+                <div v-if="nomeArquivo" class="arquivo-selecionado">
+                    <p>Documento: {{ nomeArquivo }}</p>
                 </div>
             </form>
         </div>
@@ -81,11 +98,13 @@ export default {
         const loading = ref(true);
         const arquivos_envio = ref(0);
         const acceptAttribute = ref(['pdf', 'doc', 'docx', 'xls', 'xlsx', 'png', 'jpg'].join(",."));
-        const arquivosDetalhes = ref([]);
-
+        const tipo_arquivo_id = ref(0);
+        const arquivoSelecionado = ref(null);
+        const documentos = ref([]); // Armazena a lista de documentos
+        const nomeArquivo = ref(null);
         const carregarMensagens = async () => {
             try {
-                const response = await axios.get(`/user/mensagem_solicitacao/${props.data}`);
+                const response = await axios.get(`/user/mensagem_solicitacao/chat/${props.data}`);
                 solicitacao.value = response.data;
                 loading.value = false;
             } catch (error) {
@@ -98,7 +117,11 @@ export default {
             formData.append('texto', texto.value);
             formData.append('solicitacao_id', props.data);
             formData.append('novo_status', 2);
+            formData.append('tipo_arquivo_id', tipo_arquivo_id.value);
 
+            if (arquivoSelecionado.value) {
+                formData.append("arquivo", arquivoSelecionado.value);
+            }
             try {
                 await axios.post('/admin/mensagem_solicitacao/', formData);
                 texto.value = '';
@@ -106,6 +129,15 @@ export default {
             } catch (error) {
                 console.error('Erro ao enviar a mensagem:', error);
                 events.emit('notification', {type: 'error', message: 'Erro ao enviar a mensagem.'});
+            }
+        };
+
+        const carregarDocumentos = async () => {
+            try {
+                const response = await axios.get('/user/mensagem_solicitacao/all_documentos');
+                documentos.value = response.data;
+            } catch (error) {
+                console.error('Erro ao carregar documentos:', error);
             }
         };
 
@@ -117,21 +149,30 @@ export default {
             return `${dia}/${mes}/${ano}`;
         };
 
-        const atualizarNumeroArquivos = () => {
+        const atualizarNumeroArquivos = (event) => {
             arquivos_envio.value = event.target.files.length;
+            if (arquivos_envio.value > 0) {
+                nomeArquivo.value = event.target.files[0].name; // Armazena o nome do arquivo selecionado
+            } else {
+                nomeArquivo.value = ''; // Limpa o nome do arquivo se nenhum arquivo for selecionado
+            }
         };
 
         onMounted(async () => {
-            console.log(props)
+            await carregarDocumentos();
             await carregarMensagens()
         });
 
         return {
             solicitacao,
             texto,
+            nomeArquivo,
+            arquivoSelecionado,
+            tipo_arquivo_id,
             arquivos_envio,
             acceptAttribute,
             loading,
+            documentos,
             formatarData,
             enviarMensagem,
             props,
@@ -148,13 +189,6 @@ export default {
 </script>
 
 <style scoped>
-.mobile-container {
-    padding: 10px;
-    background-color: #fff;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
 .cabecalho {
     padding: 10px;
     background-color: #f8f9fa;
@@ -164,11 +198,6 @@ export default {
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.titulo {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
 
 .info-container {
     font-size: 14px;
@@ -207,6 +236,7 @@ export default {
     border-radius: 10px;
     word-wrap: break-word;
     max-width: 100%;
+    font-weight: normal;
     background-color: #e9e9e9;
 }
 
@@ -220,44 +250,59 @@ export default {
     flex-direction: column;
 }
 
-form.form-envio {
+.form-envio {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #ddd;
 }
 
-textarea.campo-mensagem {
-    width: 100%;
-    height: 60px;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 14px;
-    resize: none;
-}
-
-.botoes-envio {
+.linha-mensagem {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
 }
 
-.upload-label {
-    display: inline-block;
-    cursor: pointer;
-    color: #2275d4;
-    font-size: 18px;
+.campo-mensagem {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: normal !important;
+    border: 1px solid #ccc;
 }
 
 .botao-enviar {
-    background-color: #2275d4;
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+}
+
+.linha-documento {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-select {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.upload-label {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.upload-label input[type="file"] {
+    display: none;
 }
 
 input[type="file"] {

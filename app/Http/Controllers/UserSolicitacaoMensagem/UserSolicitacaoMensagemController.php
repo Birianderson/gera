@@ -53,6 +53,18 @@ class UserSolicitacaoMensagemController extends Controller
     }
 
     /**
+     * Lista Unidade de Atendimento
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function all_documentos(Request $request): JsonResponse
+
+    {
+        $dados = $this->UserSolicitacaoMensagemRepository->getAllDocumentos()->toArray();
+        return response()->json($dados);
+    }
+
+    /**
      * Criar Unidade de Atendimento
      * @param Request $request
      * @return JsonResponse

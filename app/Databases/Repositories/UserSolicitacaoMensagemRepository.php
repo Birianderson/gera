@@ -6,6 +6,8 @@ use App\Databases\Contracts\UserSolicitacaoMensagemContract;
 use App\Databases\Models\Arquivo;
 use App\Databases\Models\Solicitacao;
 use App\Databases\Models\SolicitacaoMensagem;
+use App\Databases\Models\TipoArquivo;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -43,6 +45,14 @@ class UserSolicitacaoMensagemRepository implements UserSolicitacaoMensagemContra
     public function getArquivoById(int $id_arquivo): Model
     {
         return Arquivo::query()->find($id_arquivo);
+    }
+
+    public function getAllDocumentos(): Collection
+    {
+
+        return TipoArquivo::query()
+            ->where('tabela', '=', 'imovel')
+            ->get();
     }
 
     /**

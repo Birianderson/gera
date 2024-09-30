@@ -213,12 +213,13 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
     });
 
     Route::group(['prefix' => 'mensagem_solicitacao'], function () {
-        Route::get('/solicitacao/{id}', [UserSolicitacaoMensagemController::class, 'index'])->name('mensagem_solicitacao.index');
-        Route::get('/list', [UserSolicitacaoMensagemController::class, 'list'])->name('mensagem_solicitacao.list');
-        Route::get('/{id}', [UserSolicitacaoMensagemController::class, 'chat'])->name('mensagem_solicitacao.chat');
-        Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [UserSolicitacaoMensagemController::class, 'download'])->name('mensagem_solicitacao.download');
-        Route::post('/', [UserSolicitacaoMensagemController::class, 'create'])->name('mensagem_solicitacao.create');
-        Route::post('/mudar_situacao', [UserSolicitacaoMensagemController::class, 'mudarSituacao'])->name('mensagem_solicitacao.mudarSituacao');
+        Route::get('/solicitacao/{id}', [UserSolicitacaoMensagemController::class, 'index'])->name('user.mensagem_solicitacao.index');
+        Route::get('/list', [UserSolicitacaoMensagemController::class, 'list'])->name('user.mensagem_solicitacao.list');
+        Route::get('/all_documentos', [UserSolicitacaoMensagemController::class, 'all_documentos'])->name('user.mensagem_solicitacao.all_documentos');
+        Route::get('/chat/{id}', [UserSolicitacaoMensagemController::class, 'chat'])->name('user.mensagem_solicitacao.chat');
+        Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [UserSolicitacaoMensagemController::class, 'download'])->name('user.mensagem_solicitacao.download');
+        Route::post('/', [UserSolicitacaoMensagemController::class, 'create'])->name('user.mensagem_solicitacao.create');
+        Route::post('/mudar_situacao', [UserSolicitacaoMensagemController::class, 'mudarSituacao'])->name('user.mensagem_solicitacao.mudarSituacao');
     });
 
     Route::group(['prefix' => 'mapa'], function () {

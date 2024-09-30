@@ -12,7 +12,7 @@
             </h4>
         </div>
         <div class="card">
-            <div class="card-body">
+            <div class="">
                 <!-- Grid para desktop -->
                 <div class="d-none d-md-block">
                     <user-solicitacao-mensagem data="{{$id}}" user_id="{{$user_id}}"></user-solicitacao-mensagem>
