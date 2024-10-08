@@ -9,6 +9,7 @@ use App\Databases\Models\SolicitacaoMensagem;
 use App\Databases\Models\TipoArquivo;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Session;
@@ -32,7 +33,7 @@ class UserSolicitacaoMensagemRepository implements UserSolicitacaoMensagemContra
      */
     public function getById(int $UserSolicitacaoMensagemId): Model
     {
-        return Solicitacao::query()->with(['mensagens', 'usuario','imovel.loteamento.cidade'])
+        return Solicitacao::query()->with(['mensagens.arquivos.tipo_arquivo', 'usuario', 'imovel.loteamento.cidade'])
             ->where('id', '=', $UserSolicitacaoMensagemId)
             ->firstOrFail();
     }
@@ -100,35 +101,38 @@ class UserSolicitacaoMensagemRepository implements UserSolicitacaoMensagemContra
     {
         $autoCommit && DB::beginTransaction();
         try {
-            $cpf = Session::get('info')['id'];
+            $user_id = Auth::user()->id;
             $atendimento = new SolicitacaoMensagem([
                 'texto' => $params['texto'],
                 'solicitacao_id' => $params['solicitacao_id'],
-                'usuario_codigo' => $cpf,
+                'usuario_id' => $user_id,
             ]);
             $atendimento->save();
             if (isset($params['arquivo'])) {
-                foreach ($params['arquivo'] as $index => $file) {
-                    $hash = Str::uuid();
-                    $name = $file->getClientOriginalName();
-                    $mime = $file->getClientMimeType();
-                    $size = $file->getSize();
-                    $extension = $file->getClientOriginalExtension();
-                    $destino = sprintf("public/uploads/%s", date("Y/m/d"));
-                    $filename = sprintf("%s.%s", $hash, strtolower($extension));
-                    $file->storeAs($destino, $filename);
-                    $arquivo = new Arquivo([
-                        'tabela' => 'solicitacao_atendimento',
-                        'chave' => $atendimento->id,
-                        'titulo' => $data['titulo'][$index] ?? $name,
-                        'descricao' => $data['descricao'][$index] ?? null,
-                        'nome_arquivo' => $name,
-                        'tamanho' => $size,
-                        'tipo_arquivo' => $mime,
-                        'hash' => "{$destino}/{$filename}"
-                    ]);
-                    $arquivo->save();
-                }
+
+                $hash = Str::uuid();
+                $name = $params['arquivo']->getClientOriginalName();
+                $mime = $params['arquivo']->getClientMimeType();
+                $size = $params['arquivo']->getSize();
+                $extension = $params['arquivo']->getClientOriginalExtension();
+                $destino = sprintf("public/uploads/%s", date("Y/m/d"));
+                $filename = sprintf("%s.%s", $hash, strtolower($extension));
+                $params['arquivo']->storeAs($destino, $filename);
+                $arquivo = new Arquivo([
+                    'tipo_arquivo_id' => $params['tipo_arquivo_id'],
+                    'tabela' => 'solicitacao_mensagem',
+                    'chave' => $atendimento->id,
+                    'titulo' => $data['titulo'] ?? $name,
+                    'descricao' => $data['descricao'] ?? null,
+                    'nome' => $name,
+                    'tamanho' => $size,
+                    'content_type' => $mime,
+                    'hash' => "{$destino}/{$filename}",
+                    'status' => 'P',
+
+                ]);
+                $arquivo->save();
+
             }
             $this->mudarSituacao($params);
             $autoCommit && DB::commit();
@@ -145,7 +149,7 @@ class UserSolicitacaoMensagemRepository implements UserSolicitacaoMensagemContra
         try {
             $solicitacao = Solicitacao::query()->findOrFail($params['solicitacao_id']);
             $solicitacao->update([
-                'situacao' => $params['novo_status'],
+                'status' => $params['novo_status'],
             ]);
             $solicitacao->save();
             $autoCommit && DB::commit();

@@ -44,11 +44,18 @@
                     <div class="conteudo-mensagem">
                         <small>{{ mensagem.usuario.name }}</small>
                         <p v-html="mensagem.texto"></p>
-                        <div v-if="mensagem.arquivos.length > 0">
-                            <div v-for="arquivo in mensagem.arquivos" :key="arquivo.id" class="arquivo-container">
-                                <p><strong>Arquivo:</strong> {{ arquivo.nome_arquivo }}</p>
-                                <a v-if="arquivo.hash" :href="`/storage/${arquivo.hash}`" target="_blank">
-                                    <i class="fa fa-file-download"></i> Baixar
+                        <div v-if="mensagem.arquivos">
+                            <div class="arquivo-container">
+                                <p><strong>Documento:</strong> {{ mensagem.arquivos.tipo_arquivo.nome }}</p>
+                                <p><strong>Arquivo:</strong> {{ mensagem.arquivos.nome }}</p>
+                                <div class="mt-2 mb-2">
+                                    <strong>Status:</strong>
+                                    <span class="ms-1 text-white rounded-3 p-2" :class="statusClass( mensagem.arquivos.status)">
+                                    {{ getStatusTexto( mensagem.arquivos.status) }}</span>
+                                </div>
+                                <a v-if="mensagem.arquivos.hash" :href="`/storage/${mensagem.arquivos.hash}`"
+                                   target="_blank">
+                                    <i class="fa fa-file-download"></i> Download Documento
                                 </a>
                             </div>
                         </div>
@@ -59,7 +66,8 @@
             <hr>
             <form @submit.prevent="enviarMensagem" class="form-envio">
                 <div class="linha-mensagem">
-                    <textarea v-model="texto" placeholder="Digite sua mensagem" class="campo-mensagem form-label"></textarea>
+                    <textarea v-model="texto" placeholder="Digite sua mensagem"
+                              class="campo-mensagem form-label"></textarea>
 
                 </div>
 
@@ -67,15 +75,18 @@
                     <!-- Campo de seleção para o tipo de arquivo -->
                     <label class="botao-enviar">
                         <i class="fa fa-paperclip"></i>
-                        <input type="file" :accept="acceptAttribute" @change="atualizarNumeroArquivos">
+                        <input type="file" :accept="acceptAttribute" name="arquivo" id="arquivo"
+                               @change="atualizarNumeroArquivos">
                     </label>
                     <select v-model="tipo_arquivo_id" class="form-select" required>
                         <option selected value="0">Escolher documento</option>
-                        <option v-for="documento in documentos" :key="documento.id" :value="documento.id">
+                        <option v-for="documento in documentosFiltrados" :key="documento.id" :value="documento.id">
                             {{ documento.nome }}
                         </option>
                     </select>
-                    <button :disabled="(arquivoSelecionado && tipo_arquivo_id === 0) || (!arquivoSelecionado && texto === '')"  type="submit" class="botao-enviar"><i class="fa fa-paper-plane"></i></button>
+                    <button
+                        :disabled="(arquivoSelecionado && tipo_arquivo_id === 0) || (!arquivoSelecionado && texto === '')"
+                        type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i></button>
                     <!-- Nome do arquivo selecionado -->
 
                 </div>
@@ -88,7 +99,7 @@
 </template>
 
 <script>
-import {inject, ref, onMounted} from "vue";
+import {inject, ref, onMounted, computed} from "vue";
 
 export default {
     setup(props, {emit}) {
@@ -101,7 +112,7 @@ export default {
         const tipo_arquivo_id = ref(0);
         const arquivoSelecionado = ref(null);
         const documentos = ref([]); // Armazena a lista de documentos
-        const nomeArquivo = ref(null);
+        const nomeArquivo = ref('');
         const carregarMensagens = async () => {
             try {
                 const response = await axios.get(`/user/mensagem_solicitacao/chat/${props.data}`);
@@ -122,8 +133,35 @@ export default {
             if (arquivoSelecionado.value) {
                 formData.append("arquivo", arquivoSelecionado.value);
             }
+            const tipoArquivo = documentos.value.find(doc => doc.id === tipo_arquivo_id.value);
+            const arquivoStatus = 'P'; // Status inicial definido como "Pendente"
+
+            console.log(tipoArquivo)
+            // Criando a nova mensagem localmente
+            const novaMensagem = {
+                usuario_id: solicitacao.value.usuario_id, // ID do usuário logado
+                texto: texto.value,
+                usuario: {
+                    name: 'Eu', // Nome do usuário logado (pode ser dinâmico se necessário)
+                },
+                arquivos: {
+                    nome: arquivoSelecionado.value.name, // Nome do arquivo
+                    tipo_arquivo: {
+                        nome: tipoArquivo.nome, // Nome do tipo de arquivo
+                    },
+                    status: arquivoStatus, // Status inicial do arquivo (Pendente)
+                }
+            };
+            // Adicionando a nova mensagem localmente
+            solicitacao.value.mensagens.push(novaMensagem);
+
+            // Resetando os valores do formulário
+            texto.value = '';
+            tipo_arquivo_id.value = 0;
+            arquivoSelecionado.value = null;
+            nomeArquivo.value = '';
             try {
-                await axios.post('/admin/mensagem_solicitacao/', formData);
+                await axios.post('/user/mensagem_solicitacao/', formData);
                 texto.value = '';
                 events.emit('notification', {type: 'success', message: 'Mensagem enviada com sucesso.'});
             } catch (error) {
@@ -149,12 +187,49 @@ export default {
             return `${dia}/${mes}/${ano}`;
         };
 
+        const statusClass = (status) => {
+            return status === 'R'
+                ? 'bg-danger'
+                : status === 'P'
+                    ? 'bg-warning'
+                    : status === 'A'
+                        ? 'bg-success'
+                        : 'bg-secondary';
+        };
+        const documentosFiltrados = computed(() => {
+            // Filtra as mensagens que contêm arquivos
+            const mensagensComArquivos = solicitacao.value.mensagens.filter(mensagem => mensagem.arquivos);
+
+            // Mapeia os IDs dos tipos de arquivos que têm status A ou P
+            const tiposArquivosComStatusAP = mensagensComArquivos
+                .map(mensagem => mensagem.arquivos) // Extrai o objeto de arquivos
+                .filter(arquivo => ['A', 'P'].includes(arquivo.status)) // Filtra apenas os arquivos com status A ou P
+                .map(arquivo => arquivo.tipo_arquivo_id); // Mapeia para obter o ID do tipo de arquivo
+
+            // Retorna os documentos que não estão na lista de tipos de arquivos com status A ou P
+            return documentos.value.filter(documento => !tiposArquivosComStatusAP.includes(documento.id));
+        });
+
+        const getStatusTexto = (status) => {
+            switch (status) {
+                case 'A':
+                    return 'Aprovado';
+                case 'R':
+                    return 'Reprovado';
+                case 'P':
+                    return 'Em Avaliação';
+                default:
+                    return 'Desconhecido';
+            }
+        };
         const atualizarNumeroArquivos = (event) => {
             arquivos_envio.value = event.target.files.length;
             if (arquivos_envio.value > 0) {
-                nomeArquivo.value = event.target.files[0].name; // Armazena o nome do arquivo selecionado
+                arquivoSelecionado.value = event.target.files[0]; // Atualiza a variável com o arquivo selecionado
+                nomeArquivo.value = arquivoSelecionado.value.name; // Armazena o nome do arquivo selecionado
             } else {
                 nomeArquivo.value = ''; // Limpa o nome do arquivo se nenhum arquivo for selecionado
+                arquivoSelecionado.value = null; // Limpa a variável do arquivo selecionado
             }
         };
 
@@ -173,8 +248,11 @@ export default {
             acceptAttribute,
             loading,
             documentos,
+            documentosFiltrados,
             formatarData,
             enviarMensagem,
+            statusClass,
+            getStatusTexto,
             props,
             atualizarNumeroArquivos,
         };
@@ -267,7 +345,6 @@ export default {
     padding: 10px;
     border-radius: 5px;
     font-weight: normal !important;
-    border: 1px solid #ccc;
 }
 
 .botao-enviar {
@@ -289,7 +366,6 @@ export default {
     flex-grow: 1;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #ccc;
 }
 
 .upload-label {
