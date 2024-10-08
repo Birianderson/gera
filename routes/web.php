@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\RegisterSolicitacaoController;
 use App\Http\Controllers\Cidade\CidadeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Imovel\ImovelController;
+use App\Http\Controllers\Arquivo\ArquivoController;
+use App\Http\Controllers\TipoArquivo\TipoArquivoController;
 use App\Http\Controllers\UserImovel\UserImovelController;
 use App\Http\Controllers\Loteamento\LoteamentoController;
 use App\Http\Controllers\Mapa\MapaController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\SolicitacaoMensagem\SolicitacaoMensagemController;
 use App\Http\Controllers\Pessoa\PessoaController;
 use App\Http\Controllers\Solicitacao\SolicitacaoController;
 use App\Http\Controllers\Upload\UploadController;
+use App\Http\Controllers\UserSolicitacaoMensagem\UserSolicitacaoMensagemController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -143,26 +146,46 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::get('/list', [SolicitacaoController::class, 'list'])->name('solicitacao.list');
     });
 
-    Route::group(['prefix' => 'mensagem_solicitacao', 'middleware' => ['web', 'auth']], function () {
-        Route::get('/solicitacao/{id}', [SolicitacaoMensagemController::class, 'index'])->name('mensagem_solicitacao.index');
+    Route::group(['prefix' => 'mensagem_solicitacao'], function () {
+        Route::get('/solicitacao/{id}/chat', [SolicitacaoMensagemController::class, 'index'])->name('mensagem_solicitacao.index');
         Route::get('/list', [SolicitacaoMensagemController::class, 'list'])->name('mensagem_solicitacao.list');
         Route::get('/{id}', [SolicitacaoMensagemController::class, 'chat'])->name('mensagem_solicitacao.chat');
         Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [SolicitacaoMensagemController::class, 'download'])->name('mensagem_solicitacao.download');
-        Route::post('/', [SolicitacaoMensagemController::class, 'create'])->name('mensagem_solicitacao.create');
+        Route::post('/create', [SolicitacaoMensagemController::class, 'create'])->name('mensagem_solicitacao.create');
         Route::post('/mudar_situacao', [SolicitacaoMensagemController::class, 'mudarSituacao'])->name('mensagem_solicitacao.mudarSituacao');
     });
 
+    Route::group(['prefix' => 'tipo_arquivo'], function() {
+        Route::get('/', [TipoArquivoController::class, 'index'])->name('tipo_arquivo.index');
+        Route::get('/list', [TipoArquivoController::class, 'list'])->name('tipo_arquivo.list');
+        Route::get('/getByTabela/{tabela}',[TipoArquivoController::class, 'getByTabela'])->name('tipo_arquivo.getByTabela');
+        Route::post('/create',[TipoArquivoController::class,'create'])->name('tipo_arquivo.create');
+        Route::get('/historico/{id}',[TipoArquivoController::class, 'historico'])->name('tipo_arquivo.historico');
+        Route::get('/{id}',[TipoArquivoController::class, 'edit'])->name('tipo_arquivo.edit');
+        Route::post('/{id}',[TipoArquivoController::class, 'update'])->name('tipo_arquivo.update');
+        Route::delete('/delete/{id}',[TipoArquivoController::class, 'delete'])->name('tipo_arquivo.delete');
+    });
+
+    Route::group(['prefix' => 'arquivo'], function() {
+        Route::get('/', [ArquivoController::class, 'index'])->name('arquivo.index');
+        Route::get('/{id}/edit',[ArquivoController::class, 'edit'])->name('arquivo.edit');
+        Route::post('/update',[ArquivoController::class, 'update'])->name('arquivo.update');
+        Route::delete('/delete/{id}',[ArquivoController::class, 'delete'])->name('arquivo.delete');
+    });
+
 });
-Route::group(['prefix' => 'mapa'], function () {
-    Route::get('/solicitacao_mapa/{id}', [MapaController::class, 'solicitacao_mapa'])->name('mapa.solicitacao_localizacao');
-    Route::get('/getByHash/{id}', [MapaController::class, 'getByHash']);
-});
+
 
 Route::middleware(['auth'])->prefix('user')->group(function () {
 
     Route::group(['prefix' => 'pessoa'],  function () {
         Route::get('/', [UserPessoaController::class, 'index'])->name('user.pessoa.index');
         Route::get('/list', [UserPessoaController::class, 'list'])->name('user.pessoa.list');
+        Route::get('/documentos', [UserPessoaController::class, 'documentos'])->name('user.pessoa.documentos');
+        Route::get('/documentos/{tipo_arquivo_id}', [UserPessoaController::class, 'documentos_tipo'])->name('user.pessoa.documentos_tipo');
+        Route::get('/all_documentos', [UserPessoaController::class, 'all_documentos'])->name('user.pessoa.all_documentos');
+        Route::get('/meus_documentos', [UserPessoaController::class, 'meus_documentos'])->name('user.pessoa.meus_documentos');
+        Route::post('/upload_documentos', [UserPessoaController::class, 'upload_documentos'])->name('user.pessoa.upload_documentos');
         Route::get('/imoveis/{id}', [UserPessoaController::class, 'imoveis'])->name('user.pessoa.imoveis');
         Route::get('/findCPF', [UserPessoaController::class, 'findCPF'])->name('user.pessoa.findCPF');
         Route::get('/{id}', [UserPessoaController::class, 'edit'])->name('user.pessoa.edit');
@@ -175,6 +198,7 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::group(['prefix' => 'imovel'], function () {
         Route::get('/', [UserImovelController::class, 'index'])->name('user.imovel.index');
         Route::get('/list', [UserImovelController::class, 'list'])->name('user.imovel.list');
+        Route::get('/listMobile', [UserImovelController::class, 'listMobile'])->name('user.imovel.listMobile');
         Route::get('/ordem', [UserImovelController::class, 'ordem'])->name('user.imovel.ordem');
         Route::get('/gerarQrcode/{id}', [UserImovelController::class, 'gerarQrCode'])->name('user.imovel.gerarQrCode');
         Route::get('/findByQuadraLote/{loteamento_id}/{quadra}/{lote}', [UserImovelController::class, 'findByQuadraLote'])->name('user.imovel.findByQuadraLote');
@@ -191,15 +215,25 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::group(['prefix' => 'solicitacoes'], function () {
         Route::get('/', [UserSolicitacaoController::class, 'index'])->name('user.solicitacao.index');
         Route::get('/list', [UserSolicitacaoController::class, 'list'])->name('user.solicitacao.list');
+        Route::post('/aprovado', [UserSolicitacaoController::class, 'aprovado'])->name('user.solicitacao.vincular');
     });
 
     Route::group(['prefix' => 'mensagem_solicitacao'], function () {
-        Route::get('/solicitacao/{id}', [SolicitacaoMensagemController::class, 'index'])->name('mensagem_solicitacao.index');
-        Route::get('/list', [SolicitacaoMensagemController::class, 'list'])->name('mensagem_solicitacao.list');
-        Route::get('/{id}', [SolicitacaoMensagemController::class, 'chat'])->name('mensagem_solicitacao.chat');
-        Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [SolicitacaoMensagemController::class, 'download'])->name('mensagem_solicitacao.download');
-        Route::post('/', [SolicitacaoMensagemController::class, 'create'])->name('mensagem_solicitacao.create');
-        Route::post('/mudar_situacao', [SolicitacaoMensagemController::class, 'mudarSituacao'])->name('mensagem_solicitacao.mudarSituacao');
+        Route::get('/solicitacao/{id}', [UserSolicitacaoMensagemController::class, 'index'])->name('user.mensagem_solicitacao.index');
+        Route::get('/list', [UserSolicitacaoMensagemController::class, 'list'])->name('user.mensagem_solicitacao.list');
+        Route::get('/all_documentos', [UserSolicitacaoMensagemController::class, 'all_documentos'])->name('user.mensagem_solicitacao.all_documentos');
+        Route::get('/chat/{id}', [UserSolicitacaoMensagemController::class, 'chat'])->name('user.mensagem_solicitacao.chat');
+        Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [UserSolicitacaoMensagemController::class, 'download'])->name('user.mensagem_solicitacao.download');
+        Route::post('/', [UserSolicitacaoMensagemController::class, 'create'])->name('user.mensagem_solicitacao.create');
+        Route::post('/mudar_situacao', [UserSolicitacaoMensagemController::class, 'mudarSituacao'])->name('user.mensagem_solicitacao.mudarSituacao');
     });
 
+    Route::group(['prefix' => 'mapa'], function () {
+        Route::get('/solicitacao_mapa/{id}', [MapaController::class, 'solicitacao_mapa'])->name('mapa.solicitacao_localizacao');
+        Route::get('/getByHash/{id}', [MapaController::class, 'getByHash']);
+    });
+});
+
+Route::group(['prefix' => 'storage/public'], function () {
+    Route::get('/uploads/{ano}/{mes}/{dia}/{hash}', [ArquivoController::class, 'download'])->name('storage.download');
 });

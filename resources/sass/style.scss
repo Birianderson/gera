@@ -46,11 +46,11 @@ a.page-link {
 }
 
 .form-control {
-    font-weight: 300;
+    font-weight: 200;
 }
 
 .form-select {
-    font-weight: 300;
+    font-weight: 200;
 }
 
 option {
@@ -88,6 +88,11 @@ option {
     border-color: #2275D4;
 }
 
+.bg-primary {
+    background-color: #2275D4 !important;
+    border-color: #2275D4;
+}
+
 h1 {
     font-size: 20px;
     color: #2275D4;
@@ -120,7 +125,6 @@ p {
 }
 
 .painel p {
-    color: #7E84A3;
     margin-bottom: 10px;
 }
 

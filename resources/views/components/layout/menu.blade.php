@@ -56,25 +56,43 @@
                   </span>
                     <span class="menu-title">Administração</span>
                 </a>
-                <div class="sub-menu-list ">
+                <div class="sub-menu-list">
                     <ul>
                         <li class="menu-item @if(str_contains(request()->route()->getName(), 'minha_conta')) active @endif">
                             <a href="#">
-                  <span class="menu-icon">
-                    <i class="fa fa-person"></i>
-                  </span>
+                                <span class="menu-icon">
+                                    <i class="fa fa-person"></i>
+                                </span>
                                 <span class="menu-title">Minha Conta</span>
                             </a>
                         </li>
-                    </ul>
-                    <ul>
+                        <li class="menu-item @if(str_contains(request()->route()->getName(), 'tipo_arquivo')) active @endif">
+                            <a href="{{route(('tipo_arquivo.index'))}}">
+                                <span class="menu-icon">
+                                    <i class="fa fa-file"></i>
+                                </span>
+                                <span class="menu-title">Tipo de Arquivo</span>
+                            </a>
+                        </li>
                         <li class="menu-item @if(str_contains(request()->route()->getName(), 'cidade loteamento')) active @endif">
                             <a href="{{route(('cidade.index'))}}">
-                  <span class="menu-icon">
-                    <i class="fa fa-location-pin-lock"></i>
-                  </span>
+                                <span class="menu-icon">
+                                    <i class="fa fa-location-pin-lock"></i>
+                                </span>
                                 <span class="menu-title">Localidades</span>
                             </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ route('logout') }}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <span class="menu-icon">
+                                    <i class="fa fa-arrow-right"></i>
+                                </span>
+                                <span class="menu-title">{{ __('Logout') }}</span>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -112,6 +130,26 @@
                   </span>
                     <span class="menu-title">Minha Conta</span>
                 </a>
+            </li>
+            <li class="menu-item @if(str_contains(request()->route()->getName(), 'minha_conta')) active @endif">
+                <a href="{{route('user.pessoa.documentos')}}">
+                  <span class="menu-icon">
+                    <i class="fa fa-file-contract"></i>
+                  </span>
+                    <span class="menu-title">Documentos Pessoais</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <span class="menu-icon">
+                        <i class="fa fa-arrow-right"></i>
+                    </span>
+                    <span class="menu-title">{{ __('Logout') }}</span>
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
             </li>
         @endif
     </ul>

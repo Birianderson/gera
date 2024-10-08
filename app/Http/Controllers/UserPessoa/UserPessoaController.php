@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UserPessoa;
 
 use App\Databases\Contracts\UserPessoaContract;
+use App\Databases\Models\TipoArquivo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,64 @@ class UserPessoaController extends Controller
         $cpf = $user_id = Auth::user()->cpf;
         return view('user_pessoa.index',compact('cpf'));
     }
+
+    /**
+     * Unidade de Atendimento index
+     * @return View
+     */
+    public function documentos(): View
+    {
+        return view('user_pessoa.documentos_pessoais');
+    }
+
+    /**
+     * Unidade de Atendimento index
+     * @return View
+     */
+    public function documentos_tipo(int $tipo_documento_id): View
+    {
+        $tipo_documento_nome = TipoArquivo::query()->where('id', $tipo_documento_id)->first();
+        $tipo_documento_nome = $tipo_documento_nome->nome;
+        return view('user_pessoa.tipo_documentos_pessoais',compact(['tipo_documento_id','tipo_documento_nome']));
+    }
+
+    /**
+     * Unidade de Atendimento index
+     * @return JsonResponse
+     */
+    public function meus_documentos(): JsonResponse
+    {
+        $dados = $this->UserPessoaRepository->getMeusDocumentos()->toArray();
+        return response()->json($dados);
+    }
+
+    /**
+     * Lista Unidade de Atendimento
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function all_documentos(Request $request): JsonResponse
+
+    {
+        $dados = $this->UserPessoaRepository->getAllDocumentos()->toArray();
+        return response()->json($dados);
+    }
+
+    /**
+     * Lista Unidade de Atendimento
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function upload_documentos(Request $request): JsonResponse
+
+    {
+        $params = $request->except('_token');
+
+        $this->UserPessoaRepository->upload_documentos($params);
+
+        return response()->json('success', 201);
+    }
+
 
     /**
      * Lista Unidade de Atendimento

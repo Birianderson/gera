@@ -44,16 +44,16 @@
     "src": "public/imagens/ico_solicitacoes.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-BqxMRyuR.js",
+    "file": "assets/app-D_2DhAFZ.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-DzBQyb-S.css"
+      "assets/app-Bn4Rap-v.css"
     ]
   },
   "resources/sass/app.scss": {
-    "file": "assets/app-BtJXH2q7.css",
+    "file": "assets/app-BVUH30Va.css",
     "src": "resources/sass/app.scss",
     "isEntry": true
   },

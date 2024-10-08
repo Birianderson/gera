@@ -1,15 +1,19 @@
 <?php
+
 namespace App\Databases\Repositories;
 
 use App\Databases\Contracts\UserPessoaContract;
+use App\Databases\Models\Arquivo;
 use App\Databases\Models\Imovel;
 use App\Databases\Models\Pessoa;
+use App\Databases\Models\TipoArquivo;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Str;
 
 class UserPessoaRepository implements UserPessoaContract
 {
@@ -47,8 +51,77 @@ class UserPessoaRepository implements UserPessoaContract
             ->firstOrFail();
     }
 
+    public function getAllDocumentos(): Collection
+    {
 
+        return TipoArquivo::query()
+            ->where('tabela', '=', 'pessoa')
+            ->get();
+    }
 
+    /**
+     * Busca 1 registro de Unidade de Atendimento
+     * @param int $id
+     * @return Collection
+     */
+    public function getMeusDocumentos(): Collection
+    {
+
+        $user_cpf = Auth::user()->cpf;
+        $pessoa = Pessoa::query()->where('cpf', '=', $user_cpf)->first();
+        return Arquivo::query()
+            ->where('chave', '=', $pessoa->id)
+            ->where('tabela', '=', 'pessoa')
+            ->with('tipo_arquivo')
+            ->get();
+    }
+
+    /**
+     * Salva nova Unidade de Atendimento
+     * @param array $params
+     * @param bool $autoCommit
+     * @return bool
+     * @throws Exception
+     */
+    public function upload_documentos(array $params, bool $autoCommit = true): bool
+    {
+        $autoCommit && DB::beginTransaction();
+        try {
+            $user_cpf = Auth::user()->cpf;
+            $pessoa = Pessoa::query()->where('cpf', '=', $user_cpf)->first();
+            if (isset($params['arquivo'])) {
+
+                $hash = Str::uuid();
+                $name = $params['arquivo']->getClientOriginalName();
+                $mime = $params['arquivo']->getClientMimeType();
+                $size = $params['arquivo']->getSize();
+                $extension = $params['arquivo']->getClientOriginalExtension();
+                $destino = sprintf("public/uploads/%s", date("Y/m/d"));
+                $filename = sprintf("%s.%s", $hash, strtolower($extension));
+                $params['arquivo']->storeAs($destino, $filename);
+                $arquivo = new Arquivo([
+                    'tipo_arquivo_id' => $params['tipo_arquivo_id'],
+                    'tabela' => 'pessoa',
+                    'chave' => $pessoa->id,
+                    'titulo' => $data['titulo'] ?? $name,
+                    'descricao' => $data['descricao'] ?? null,
+                    'nome' => $name,
+                    'tamanho' => $size,
+                    'content_type' => $mime,
+                    'hash' => "{$destino}/{$filename}",
+                    'status' => 'P',
+
+                ]);
+                $arquivo->save();
+
+            }
+            $autoCommit && DB::commit();
+            return true;
+        } catch (Exception $ex) {
+            $autoCommit && DB::rollBack();
+            throw new Exception($ex);
+        }
+    }
 
 
     /**
@@ -98,7 +171,7 @@ class UserPessoaRepository implements UserPessoaContract
      * @return bool
      * @throws Exception
      */
-    public function update( array $params, bool $autoCommit = true): bool
+    public function update(array $params, bool $autoCommit = true): bool
     {
         $autoCommit && DB::beginTransaction();
         try {
@@ -141,7 +214,7 @@ class UserPessoaRepository implements UserPessoaContract
      */
     public function getImoveisByID($id): Collection
     {
-        return Imovel::query()->where('pessoa_id', '=', $id)->with(['loteamento','cidade'])->get();
+        return Imovel::query()->where('pessoa_id', '=', $id)->with(['loteamento', 'cidade'])->get();
     }
 
     /**

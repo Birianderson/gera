@@ -79,7 +79,7 @@ class UserSolicitacaoRepository implements UserSolicitacaoContract
         $user_id = Auth::user()->id;
         $query = Solicitacao::query()
             ->where('usuario_id', '=', $user_id)
-            ->with(['usuario','imovel']);
+            ->with(['imovel.loteamento.cidade']);
 
         if (isset($pagination['municipio'])) {
             $keyword = mb_strtolower($pagination['municipio']);
@@ -112,11 +112,36 @@ class UserSolicitacaoRepository implements UserSolicitacaoContract
 
         $query->orderBy($pagination['sort'] ?? 'municipio', $pagination['sort_direction'] ?? 'asc');
         return $query->paginate($pagination['per_page'] ?? 10, $columns, 'page', $pagination['current_page'] ?? 1);
-
-
     }
 
 
+    /**
+     * Salva nova Unidade de Atendimento
+     * @param array $params
+     * @param bool $autoCommit
+     * @return bool
+     * @throws Exception
+     */
+    public function aprovado(array $params, bool $autoCommit = true): bool
+    {
+        $autoCommit && DB::beginTransaction();
+        try {
+            $user_id = Auth::user()->id;
+            $Solicitacao = Solicitacao::query()
+                ->where('imovel_id', $params['imovel_id'])
+                ->where('usuario_id', $user_id)
+                ->first();
+            $Solicitacao ->update([
+                'status' => 'E'
+            ]);
+
+            $autoCommit && DB::commit();
+            return true;
+        } catch (Exception $ex) {
+            $autoCommit && DB::rollBack();
+            throw new Exception($ex);
+        }
+    }
 
 
     /**

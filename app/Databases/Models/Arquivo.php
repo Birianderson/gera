@@ -13,4 +13,8 @@ class Arquivo extends Model
     public string $sequence = 'arquivo_id_seq';
     protected $guarded = [];
 
+    // Model Arquivo
+    public function tipo_arquivo() {
+        return $this->belongsTo(TipoArquivo::class, 'tipo_arquivo_id', 'id');
+    }
 }

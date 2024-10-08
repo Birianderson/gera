@@ -37,13 +37,13 @@ const columns = ref([
             if(value === 'P') {
                 return `<span class="badge bg-warning text-white">PENDENTE</span>`;
             }
-            if(value === '2') {
+            if(value === 'E') {
                 return `<span class="badge bg-info text-white">EM PROGRESSO</span>`;
             }
-            if(value === '3') {
-                return `<span class="badge bg-success bg-gray-500 text-white">CONCLUÍDO</span>`;
+            if(value === 'A') {
+                return `<span class="badge bg-success bg-gray-500 text-white">APROVADO</span>`;
             }
-            if (value === '4') {
+            if (value === 'R') {
                 return `<span class="badge bg-secondary bg-blue-500 text-white">CANCELADO</span>`;
             }
         },

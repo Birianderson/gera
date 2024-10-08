@@ -24,6 +24,17 @@ class UserSolicitacaoController extends Controller
         return view('user_solicitacao.index');
     }
 
+    /**
+     * Editar Unidade de Atendimento
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function aprovado(Request $request): JsonResponse
+    {
+        $params = $request->except('_token');
+        $vincula = $this->SolicitacaoRepository->aprovado($params);
+        return response()->json($vincula);
+    }
 
 
     /**
