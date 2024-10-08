@@ -149,7 +149,7 @@ class UserSolicitacaoMensagemRepository implements UserSolicitacaoMensagemContra
         try {
             $solicitacao = Solicitacao::query()->findOrFail($params['solicitacao_id']);
             $solicitacao->update([
-                'status' => $params['novo_status'],
+                'status' => 'E',
             ]);
             $solicitacao->save();
             $autoCommit && DB::commit();
