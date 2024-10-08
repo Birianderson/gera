@@ -8,7 +8,8 @@
                     <div class="col-12 d-flex border-bottom border-top">
                         <div class="flex-fill py-1">
                             <strong>Localização:</strong>
-                            {{ solicitacao.imovel.loteamento.cidade.nome }} -> {{ solicitacao.imovel.loteamento.nome }} -> Quadra {{ solicitacao.imovel.quadra }} -> Lote {{ solicitacao.imovel.lote }}
+                            {{ solicitacao.imovel.loteamento.cidade.nome }} -> {{ solicitacao.imovel.loteamento.nome }}
+                            -> Quadra {{ solicitacao.imovel.quadra }} -> Lote {{ solicitacao.imovel.lote }}
                         </div>
                         <div class="flex-fill text-end py-1">
                             <strong>Data:</strong> {{ formatarDataHora(solicitacao.data) }}
@@ -34,93 +35,58 @@
                  style="display: inline-flex;  align-items: center; gap: 5px; margin-left: 10px;">
                 <button v-for="status in statusList" :key="status.value" @click="mudarSituacao(status.value)"
                         :disabled="props.readOnly" :class="['btn btn-secondary', {
-                        'btn-primary': status.value === solicitacao.situacao,
+                        'btn-primary': status.value === solicitacao.status,
                     }]">
                     {{ status.label }}
                 </button>
             </div>
         </div>
         <div class="chat-container card">
-            <div class="mensagem-esquerda">
-                <div class="conteudo-mensagem  shadow-sm">
-                    <small>{{ formatarNome(solicitacao.mensagem) }}</small>
-                    <p class="text-black">{{ solicitacao.texto }}</p>
-                </div>
-            </div>
-            <div class="mensagem-direita" v-for="mensagem in solicitacao.mensagens" :key="mensagem.id">
-                <div class="conteudo-mensagem shadow-sm">
-                    <small>{{ formatarNome(mensagem.usuario.nome_usuario) }}</small>
-                    <p class="text-black" v-html="mensagem.texto"></p>
-                    <div v-if="mensagem.arquivos.length > 0">
-                        <div v-for="arquivo in mensagem.arquivos" :key="arquivo.id" class="arquivo-container pt-2 ">
-                            <div class="file-info">
-                                <table class="table table-borderless">
-                                    <tbody>
-                                    <tr>
-                                        <td><strong class="me-1">Arquivo:</strong> {{ arquivo.nome_arquivo }}
-                                            <a v-if="arquivo.hash" :href="`/storage/${arquivo.hash}`"
-                                               target="_blank" class="ms-1">
-                                                <i class="fa fa-file-download"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div v-for="mensagem in solicitacao.mensagens" :key="mensagem.id">
+                <div class="mensagem-esquerda" v-if="parseInt(props.user_id) !== parseInt(mensagem.usuario_id)">
+                    <div class="conteudo-mensagem">
+                        <small>{{ mensagem.usuario.name }}</small>
+                        <p v-html="mensagem.texto"></p>
+                        <div v-if="mensagem.arquivos">
+                            <div class="arquivo-container">
+                                <p><strong>Documento:</strong> {{ mensagem.arquivos.tipo_arquivo.nome }}</p>
+                                <p><strong>Arquivo:</strong> {{ mensagem.arquivos.nome }}</p>
 
-            <form id="frm" name="frm" method="post" action="/admin/mensagem_solicitacao/">
-                <form-error></form-error>
-                <div v-if="arquivos_envio > 0" class="mt-2 border-top p-2  ">
-                    <div v-for="(arquivo, index) in arquivosDetalhes" :key="index"
-                         class="arquivo-detalhes row mb-2 align-items-center d-flex mt-2">
-                        <div class="col-3  align-items-center">
-                            <p>{{ arquivo.file.name }}</p>
-                        </div>
-                        <div class="col-3">
-                            <input :id="'nome_arquivo' - index" name="nome_arquivo[]" type="text" class="form-control"
-                                   v-model="arquivo.titulo" placeholder="Título do arquivo">
-                        </div>
-                        <div class="col-5">
-                            <input :id="'descricao_arquivo' - index" name="descricao_arquivo[]" type="text"
-                                   class="form-control" v-model="arquivo.descricao" placeholder="Descrição do arquivo">
-                        </div>
-                        <div class="col-1 text">
-                            <a href="#">
-                                <i class="fa fa-trash" style="color: red" @click.prevent="removeArquivo"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="barra-escrita" v-if="!props.readOnly">
-                    <div class="row">
-                        <div class="col-11">
-                            <textarea class="form-control" v-model="texto" style="border-radius: 5px;"
-                                      placeholder="Digite sua mensagem" name="texto" id="texto" />
-                        </div>
-                        <input type="hidden" name="solicitacao_id" :value="props.data">
-                        <input type="hidden" name="novo_status" value="2">
-                        <div class="col-1">
-                            <div class="row">
-                                <button type="button" class="btn botao-enviar mb-1"
-                                        :disabled="solicitacao.situacao === '3' || solicitacao.situacao === '4'"
-                                        @click="enviarMensagem">Enviar
-                                </button>
-                                <span class="btn botao-enviar"
-                                      v-if="solicitacao.situacao !== '3' && solicitacao.situacao !== '4'">
-                                    <label class="custom-file-upload"
-                                           :class="{ 'disabled-label': solicitacao.situacao === '3' }">
-                                        <i class="fa fa-paperclip"></i>
-                                        <input :accept="acceptAttribute" multiple id="upload" ref="file" type="file"
-                                               @change="atualizarNumeroArquivos" :disabled="solicitacao.situacao === '3'">
-                                    </label>
-                                </span>
+                                <div class="mt-2 mb-2">
+                                    <strong>Status:</strong>
+                                    <span class="ms-1 text-white rounded-3 p-2 me-2"
+                                          :class="statusClass( mensagem.arquivos.status)">
+                                    {{ getStatusTexto(mensagem.arquivos.status) }}</span>
+                                    <popup-button id="nova-pessoa" title="Nova Pessoa" :data="mensagem.arquivos.id" type="secondary"
+                                                  component="arquivo-form" action="/pessoa/" size="xl">
+                                        <i class="fa fa-pencil"></i>
+                                    </popup-button>
+                                </div>
+                                <p v-if="mensagem.arquivos.descricao"><strong>Observação:</strong> {{ mensagem.arquivos.descricao }}</p>
+                                <a v-if="mensagem.arquivos.hash" :href="`/storage/${mensagem.arquivos.hash}`"
+                                   target="_blank">
+                                    <i class="fa fa-file-download"></i> Download
+                                </a>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="mensagem-direita" v-else>
+                    <div class="conteudo-mensagem">
+                        <small>{{ mensagem.usuario.name }}</small>
+                        <p v-html="mensagem.texto"></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Campo de envio de mensagem -->
+            <hr>
+            <form @submit.prevent="enviarMensagem" class="form-envio linha-documento">
+                <textarea v-model="texto" placeholder="Digite sua mensagem" class="campo-mensagem form-label"></textarea>
+
+                <div class="botoes">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-paper-plane"></i>Enviar
+                    </button>
                 </div>
             </form>
         </div>
@@ -129,11 +95,13 @@
 
 
 <script>
-import { inject, ref, onMounted, readonly } from "vue";
+import {inject, ref, onMounted, readonly} from "vue";
 import moment from "moment";
+import Popup from "../common/Popup.vue";
 
 export default {
-    setup(props, { emit }) {
+    components: {Popup},
+    setup(props, {emit}) {
         const events = inject('events');
         let usuarioLogadoId = ref(null);
         let solicitacaoId = ref(null);
@@ -145,10 +113,10 @@ export default {
         const file = ref(null);
         let loading = ref(true);
         let statusList = ref([
-            { value: '3', label: 'Concluído' },
-            { value: '1', label: 'Pendente' },
-            { value: '2', label: 'Em andamento' },
-            { value: '4', label: 'Cancelado' },
+            {value: 'A', label: 'Aprovado'},
+            {value: 'P', label: 'Pendente'},
+            {value: 'E', label: 'Em andamento'},
+            {value: 'R', label: 'Cancelado'},
         ]);
         const arquivosDetalhes = ref([]);
 
@@ -224,9 +192,7 @@ export default {
         };
         const carregarMensagens = async () => {
             try {
-                let source = !props.data.codigoEntidade ?
-                    `/admin/mensagem_solicitacao/${props.data.solicitacaoId}` :
-                    `/entidade/${props.data.codigoEntidade}/solicitacao/busca/${props.data.solicitacaoId}`;
+                let source = `/admin/mensagem_solicitacao/${solicitacaoId.value}`
                 const response = await axios.get(source);
                 solicitacao.value = response.data;
                 console.log(solicitacao.value);
@@ -240,7 +206,7 @@ export default {
         const enviarMensagem = async () => {
             let formData = new FormData();
             formData.append('texto', texto.value);
-            formData.append('solicitacao_id', props.data);
+            formData.append('solicitacao_id', solicitacaoId.value);
             formData.append('novo_status', 2);
             for (let i = 0; i < arquivosDetalhes.value.length; i++) {
                 let arquivoDetalhes = arquivosDetalhes.value[i];
@@ -249,23 +215,20 @@ export default {
                 formData.append('descricao[]', arquivoDetalhes.descricao);
             }
             try {
-                const response = await axios.post('/admin/mensagem_solicitacao/', formData, {
+                const response = await axios.post('/admin/mensagem_solicitacao/create', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
                 const novaMensagem = {
-                    id: 0,
+                    usuario_id: props.user_id, // ID do usuário logado
                     texto: texto.value,
                     usuario: {
-                        nome_usuario: 'eu'
+                        name: 'Eu', // Nome do usuário logado (pode ser dinâmico se necessário)
                     },
-                    arquivos: arquivosDetalhes.value.map(arquivo => ({
-                        id: arquivo.id,
-                        nome_arquivo: arquivo.file.name,
-                    }))
                 };
-                solicitacao.value.atendimentos.push(novaMensagem);
+                // Adicion
+                solicitacao.value.mensagens.push(novaMensagem);
                 texto.value = '';
                 arquivosDetalhes.value = [];
                 arquivos_envio.value = 0;
@@ -299,12 +262,49 @@ export default {
                 file.value.value = '';
             }
         };
+        const statusClass = (status) => {
+            return status === 'R'
+                ? 'bg-danger'
+                : status === 'P'
+                    ? 'bg-warning'
+                    : status === 'A'
+                        ? 'bg-success'
+                        : 'bg-secondary';
+        };
+        const getStatusTexto = (status) => {
+            switch (status) {
+                case 'A':
+                    return 'Aprovado';
+                case 'R':
+                    return 'Reprovado';
+                case 'P':
+                    return 'Pendente';
+                default:
+                    return 'Desconhecido';
+            }
+        };
 
         const formatarDataHora = (data) => {
             return moment(data).format('DD/MM/YYYY HH:mm');
         }
 
         onMounted(async () => {
+            console.log(props.user_id)
+            events.on("status-arquivo", (dados) => {
+                const { arquivoId, novoStatus, descricao } = dados;
+                solicitacao.value.mensagens.forEach((mensagem) => {
+                    if (mensagem.arquivos && mensagem.arquivos.id === arquivoId) {
+                        console.log(descricao)
+                        mensagem.arquivos.status = novoStatus;
+                        mensagem.arquivos.descricao = descricao;
+                    }
+                });
+                events.emit('notification', {
+                    type: 'success',
+                    message: 'Status do arquivo atualizado com sucesso.'
+                });
+            });
+            solicitacaoId.value = props.data.solicitacaoId;
             await carregarMensagens();
             acceptAttribute.value = arquivosPermitidos.join(",.");
         });
@@ -322,6 +322,8 @@ export default {
             props,
             arquivosDetalhes,
             statusList,
+            statusClass,
+            getStatusTexto,
             mudarSituacao,
             enviarMensagem,
             formatarDataHora,
@@ -334,21 +336,14 @@ export default {
     },
 
     props: {
-        data: { default: null },
-        readOnly: { default: false }
+        data: {default: null},
+        user_id: {default: false}
     }
 
 };
 </script>
 
 <style scoped>
-.custom-file-upload {
-    display: inline-block;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-}
 
 .chat-container {
     padding: 10px 150px;
@@ -381,8 +376,7 @@ export default {
 }
 
 .arquivo-container {
-    display: flex;
-    align-items: center;
+
     background-color: transparent;
     margin-top: 10px;
     padding: 0;
@@ -407,36 +401,6 @@ input[type="file"] {
 }
 
 
-.custom-file-upload {
-    display: inline-block;
-    cursor: pointer;
-}
-
-.botao-enviar {
-    background-color: #2275D4;
-    border-radius: 5px;
-    color: white;
-    border-color: #079B8A;
-}
-
-.barra-escrita {
-    margin-top: 15px;
-    backdrop-filter: blur(5px);
-    position: sticky;
-    z-index: 1020;
-    padding-right: 12px;
-}
-
-textarea.form-control {
-    min-height: calc(1.5em + 0.75rem + 40px) !important;
-}
-
-
-.file-info {
-    flex: 1;
-}
-
-
 .table th,
 .table td {
     padding: 2px !important;
@@ -449,5 +413,42 @@ textarea.form-control {
     margin-bottom: 20px;
     border-radius: 5px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.campo-mensagem {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc; /* Borda mais fina */
+    font-weight: 300 !important; /* Remove o negrito com prioridade */
+    font-size: 14px; /* Ajusta o tamanho da fonte */
+    border-radius: 5px; /* Cantos arredondados (opcional) */
+    outline: none;
+    resize: none; /* Impede o redimensionamento, se necessário */
+}
+
+.campo-mensagem:focus {
+    border-color: #888; /* Cor de borda ao focar */
+}
+
+.form-envio {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.campo-mensagem {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px; /* Espaço entre o campo de texto e os botões */
+}
+
+.botoes {
+    display: flex;
+    gap: 10px; /* Espaço entre o botão de anexo e o de envio */
+    align-items: center;
 }
 </style>

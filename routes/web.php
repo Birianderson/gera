@@ -146,16 +146,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::get('/list', [SolicitacaoController::class, 'list'])->name('solicitacao.list');
     });
 
-    Route::group(['prefix' => 'mensagem_solicitacao', 'middleware' => ['web', 'auth']], function () {
-        Route::get('/solicitacao/{id}', [SolicitacaoMensagemController::class, 'index'])->name('mensagem_solicitacao.index');
+    Route::group(['prefix' => 'mensagem_solicitacao'], function () {
+        Route::get('/solicitacao/{id}/chat', [SolicitacaoMensagemController::class, 'index'])->name('mensagem_solicitacao.index');
         Route::get('/list', [SolicitacaoMensagemController::class, 'list'])->name('mensagem_solicitacao.list');
         Route::get('/{id}', [SolicitacaoMensagemController::class, 'chat'])->name('mensagem_solicitacao.chat');
         Route::get('/download/{id}/{basedir}/{ano}/{mes}/{dia}/{arquivo}', [SolicitacaoMensagemController::class, 'download'])->name('mensagem_solicitacao.download');
-        Route::post('/', [SolicitacaoMensagemController::class, 'create'])->name('mensagem_solicitacao.create');
+        Route::post('/create', [SolicitacaoMensagemController::class, 'create'])->name('mensagem_solicitacao.create');
         Route::post('/mudar_situacao', [SolicitacaoMensagemController::class, 'mudarSituacao'])->name('mensagem_solicitacao.mudarSituacao');
     });
 
-    Route::group(['prefix' => 'tipo_arquivo', 'namespace' => 'App\Http\Controllers\TipoArquivoController'], function() {
+    Route::group(['prefix' => 'tipo_arquivo'], function() {
         Route::get('/', [TipoArquivoController::class, 'index'])->name('tipo_arquivo.index');
         Route::get('/list', [TipoArquivoController::class, 'list'])->name('tipo_arquivo.list');
         Route::get('/getByTabela/{tabela}',[TipoArquivoController::class, 'getByTabela'])->name('tipo_arquivo.getByTabela');
@@ -166,6 +166,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::delete('/delete/{id}',[TipoArquivoController::class, 'delete'])->name('tipo_arquivo.delete');
     });
 
+    Route::group(['prefix' => 'arquivo'], function() {
+        Route::get('/', [ArquivoController::class, 'index'])->name('arquivo.index');
+        Route::get('/{id}/edit',[ArquivoController::class, 'edit'])->name('arquivo.edit');
+        Route::post('/update',[ArquivoController::class, 'update'])->name('arquivo.update');
+        Route::delete('/delete/{id}',[ArquivoController::class, 'delete'])->name('arquivo.delete');
+    });
 
 });
 

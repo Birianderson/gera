@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SolicitacaoMensagem;
 use App\Databases\Contracts\SolicitacaoMensagemContract;
 use App\Http\Requests\SolicitacaoMensagemRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -27,7 +28,8 @@ class SolicitacaoMensagemController extends Controller
      */
     public function index($id): View
     {
-        return view('solicitacao_mensagem.index', compact('id'));
+        $user_id = Auth::user()->id;
+        return view('solicitacao_mensagem.index', compact(['id','user_id']));
     }
 
     /**
