@@ -4,6 +4,7 @@ use App\Databases\Models\SolicitacaoMensagem;
 use App\Http\Controllers\Auth\LoginSolicitacaoController;
 use App\Http\Controllers\Auth\RegisterSolicitacaoController;
 use App\Http\Controllers\Cidade\CidadeController;
+use App\Http\Controllers\HelpdeskCategoria\HelpdeskCategoriaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Imovel\ImovelController;
 use App\Http\Controllers\Arquivo\ArquivoController;
@@ -165,6 +166,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::post('/{id}',[TipoArquivoController::class, 'update'])->name('tipo_arquivo.update');
         Route::delete('/delete/{id}',[TipoArquivoController::class, 'delete'])->name('tipo_arquivo.delete');
     });
+
+    Route::group(['prefix' => 'helpdesk_categoria'], function() {
+        Route::get('/', [HelpdeskCategoriaController::class, 'index'])->name('helpdesk_categoria.index');
+        Route::get('/list', [HelpdeskCategoriaController::class, 'list'])->name('helpdesk_categoria.list');
+        Route::post('/create',[HelpdeskCategoriaController::class,'create'])->name('helpdesk_categoria.create');
+        Route::get('/{id}/edit',[HelpdeskCategoriaController::class, 'edit'])->name('helpdesk_categoria.edit');
+        Route::post('/{id}/update',[HelpdeskCategoriaController::class, 'update'])->name('helpdesk_categoria.update');
+        Route::delete('/delete/{id}',[HelpdeskCategoriaController::class, 'delete'])->name('helpdesk_categoria.delete');
+    });
+
+
 
     Route::group(['prefix' => 'arquivo'], function() {
         Route::get('/', [ArquivoController::class, 'index'])->name('arquivo.index');

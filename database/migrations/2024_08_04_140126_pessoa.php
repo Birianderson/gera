@@ -14,6 +14,7 @@ return new class extends Migration
             $table->char('estado_civil',1)->nullable();
             $table->string('regime_casamento')->nullable();
             $table->char('uniao_estavel',1)->nullable();
+            $table->char('status',1)->nullable();
             $table->string('nome_pai')->nullable();
             $table->string('nome_mae')->nullable();
             $table->string('telefone')->nullable();

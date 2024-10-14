@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Databases\Contracts\CidadeContract;
+use App\Databases\Contracts\HelpdeskCategoriaContract;
 use App\Databases\Contracts\ImovelContract;
 use App\Databases\Contracts\LoteamentoContract;
 use App\Databases\Contracts\MapaContract;
@@ -16,6 +17,7 @@ use App\Databases\Contracts\UserPessoaContract;
 use App\Databases\Contracts\UserSolicitacaoContract;
 use App\Databases\Contracts\UserSolicitacaoMensagemContract;
 use App\Databases\Repositories\CidadeRepository;
+use App\Databases\Repositories\HelpdeskCategoriaRepository;
 use App\Databases\Repositories\ImovelRepository;
 use App\Databases\Repositories\LoteamentoRepository;
 use App\Databases\Repositories\MapaRepository;
@@ -59,5 +61,6 @@ class AppServiceProvider extends ServiceProvider
         app()->bind(UserImovelContract::class, UserImovelRepository::class);
         app()->bind(UserSolicitacaoMensagemContract::class, UserSolicitacaoMensagemRepository::class);
         app()->bind(TipoArquivoContract::class, TipoArquivoRepository::class);
+        app()->bind(HelpdeskCategoriaContract::class, HelpdeskCategoriaRepository::class);
     }
 }

@@ -74,6 +74,14 @@
                                 <span class="menu-title">Tipo de Arquivo</span>
                             </a>
                         </li>
+                        <li class="menu-item @if(str_contains(request()->route()->getName(), 'categoria')) active @endif">
+                            <a href="{{route(('helpdesk_categoria.index'))}}">
+                                <span class="menu-icon">
+                                    <i class="fa fa-list"></i>
+                                </span>
+                                <span class="menu-title">Helpdesk Categoria</span>
+                            </a>
+                        </li>
                         <li class="menu-item @if(str_contains(request()->route()->getName(), 'cidade loteamento')) active @endif">
                             <a href="{{route(('cidade.index'))}}">
                                 <span class="menu-icon">
